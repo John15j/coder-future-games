@@ -639,3 +639,38 @@ function saveVerdict(){
 
     updateDashboard();
 }
+function addEvidence(){
+
+    if(!activeCase){
+        alert("No active case");
+        return;
+    }
+
+    const fileInput =
+        document.getElementById("evidenceUpload");
+
+    const fileName =
+        fileInput.files[0]?.name;
+
+    if(!fileName) return;
+
+    if(!activeCase.evidence){
+        activeCase.evidence = [];
+    }
+
+    activeCase.evidence.push(fileName);
+
+    const list =
+        document.getElementById("evidenceList");
+
+    const div =
+        document.createElement("div");
+
+    div.innerText = fileName;
+
+    list.appendChild(div);
+
+    logAction("Evidence added: " + fileName);
+
+    saveCases();
+}
