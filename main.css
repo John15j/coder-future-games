@@ -420,3 +420,27 @@ textarea{
     }
 
 }
+
+
+.court-layout{
+    display:grid;
+    grid-template-columns: 1fr 2fr 1fr;
+    gap:15px;
+    margin-bottom:20px;
+}
+
+.ai-panel{
+    grid-column: span 3;
+}
+
+#courtLog{
+    max-height:400px;
+    overflow-y:auto;
+}
+
+#evidenceList div{
+    padding:8px;
+    background:#0f172a;
+    margin-top:5px;
+    border-radius:6px;
+}
