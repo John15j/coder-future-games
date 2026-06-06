@@ -1,40 +1,46 @@
 let editor;
 let currentFile = "index.html";
 
-// FILE SYSTEM (stored in memory + localStorage)
 let files = JSON.parse(localStorage.getItem("files")) || {
-  "index.html": "<h1>Hello VS Code Clone</h1>",
+  "index.html": "<h1>Hello World</h1>",
   "style.css": "body { font-family: Arial; }",
-  "script.js": "console.log('Hello world');"
+  "script.js": "console.log('hi');"
 };
 
-// LOAD MONACO (VS CODE ENGINE)
-require.config({
-  paths: { vs: "https://unpkg.com/monaco-editor@0.44.0/min/vs" }
-});
+/* MONACO LOADER */
+require.config({ paths: { vs: "https://unpkg.com/monaco-editor@0.44.0/min/vs" } });
 
 require(["vs/editor/editor.main"], function () {
 
   editor = monaco.editor.create(document.getElementById("editor"), {
     value: files[currentFile],
     language: "html",
-    theme: "vs-dark",
-    automaticLayout: true
+    theme: "vs-dark"
   });
 
-  renderFileList();
+  renderFiles();
+  updatePreview();
 
-  // LIVE EDIT
   editor.onDidChangeModelContent(() => {
     files[currentFile] = editor.getValue();
-    saveFiles();
+    saveLocal();
     updatePreview();
   });
-
-  updatePreview();
 });
 
-// SWITCH FILE
+/* FILE SYSTEM */
+function renderFiles() {
+  const div = document.getElementById("files");
+  div.innerHTML = "";
+
+  Object.keys(files).forEach(f => {
+    let el = document.createElement("div");
+    el.innerText = f;
+    el.onclick = () => openFile(f);
+    div.appendChild(el);
+  });
+}
+
 function openFile(name) {
   currentFile = name;
 
@@ -46,56 +52,40 @@ function openFile(name) {
   editor.setValue(files[name]);
 }
 
-// FILE LIST UI
-function renderFileList() {
-  const list = document.getElementById("fileList");
-  list.innerHTML = "";
-
-  Object.keys(files).forEach(name => {
-    let div = document.createElement("div");
-    div.className = "file";
-    div.innerText = name;
-    div.onclick = () => openFile(name);
-    list.appendChild(div);
-  });
-}
-
-// NEW FILE
+/* NEW FILE */
 function newFile() {
-  let name = prompt("File name (example: app.js)");
-
-  if (!name) return;
-
+  let name = prompt("File name?");
   files[name] = "";
-  saveFiles();
-  renderFileList();
+  saveLocal();
+  renderFiles();
 }
 
-// SAVE
-function saveFiles() {
+/* SAVE LOCAL */
+function saveLocal() {
   localStorage.setItem("files", JSON.stringify(files));
 }
 
-// LIVE PREVIEW (CodePen style)
+/* LIVE PREVIEW */
 function updatePreview() {
   const html = files["index.html"] || "";
   const css = files["style.css"] || "";
   const js = files["script.js"] || "";
 
-  const output = `
+  document.getElementById("preview").srcdoc = `
   <html>
-    <head>
-      <style>${css}</style>
-    </head>
+    <style>${css}</style>
     <body>
       ${html}
-
-      <script>
-        ${js}
-      <\/script>
+      <script>${js}<\/script>
     </body>
   </html>
   `;
-
-  document.getElementById("preview").srcdoc = output;
 }
+
+/* TERMINAL (simple) */
+document.getElementById("terminalInput").addEventListener("keydown", (e) => {
+  if (e.key === "Enter") {
+    alert("Command: " + e.target.value);
+    e.target.value = "";
+  }
+});
