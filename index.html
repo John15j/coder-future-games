@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>My VS Code Clone</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container">
+
+  <!-- LEFT EDITOR PANEL -->
+  <div class="editor">
+
+    <div class="tabs">
+      <button onclick="switchTab('html')">HTML</button>
+      <button onclick="switchTab('css')">CSS</button>
+      <button onclick="switchTab('js')">JS</button>
+    </div>
+
+    <textarea id="html" class="code active" placeholder="HTML code"></textarea>
+    <textarea id="css" class="code" placeholder="CSS code"></textarea>
+    <textarea id="js" class="code" placeholder="JavaScript code"></textarea>
+
+    <button onclick="saveProject()">💾 Save Project</button>
+
+  </div>
+
+  <!-- RIGHT PREVIEW PANEL -->
+  <div class="preview">
+    <iframe id="preview"></iframe>
+  </div>
+
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
