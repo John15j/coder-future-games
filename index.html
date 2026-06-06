@@ -2,31 +2,33 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>My VS Code Clone</title>
+  <title>VS Code Web Clone</title>
+
   <link rel="stylesheet" href="style.css">
+
+  <!-- Monaco Editor (VS Code engine) -->
+  <script src="https://unpkg.com/monaco-editor@0.44.0/min/vs/loader.js"></script>
 </head>
+
 <body>
 
-<div class="container">
+<div class="app">
 
-  <!-- LEFT EDITOR PANEL -->
-  <div class="editor">
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="title">📁 Explorer</div>
 
-    <div class="tabs">
-      <button onclick="switchTab('html')">HTML</button>
-      <button onclick="switchTab('css')">CSS</button>
-      <button onclick="switchTab('js')">JS</button>
-    </div>
+    <div id="fileList"></div>
 
-    <textarea id="html" class="code active" placeholder="HTML code"></textarea>
-    <textarea id="css" class="code" placeholder="CSS code"></textarea>
-    <textarea id="js" class="code" placeholder="JavaScript code"></textarea>
-
-    <button onclick="saveProject()">💾 Save Project</button>
-
+    <button onclick="newFile()">+ New File</button>
   </div>
 
-  <!-- RIGHT PREVIEW PANEL -->
+  <!-- EDITOR -->
+  <div class="editor">
+    <div id="editor"></div>
+  </div>
+
+  <!-- PREVIEW -->
   <div class="preview">
     <iframe id="preview"></iframe>
   </div>
