@@ -1,40 +1,64 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <title>VS Code Web Clone</title>
+  <title>Pro VS Code Web IDE</title>
 
   <link rel="stylesheet" href="style.css">
 
-  <!-- Monaco Editor (VS Code engine) -->
+  <!-- Monaco Editor -->
   <script src="https://unpkg.com/monaco-editor@0.44.0/min/vs/loader.js"></script>
+
+  <!-- Firebase (cloud saving) -->
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js"></script>
 </head>
 
 <body>
 
-<div class="app">
+<!-- TOP BAR -->
+<div class="topbar">
+  <div>⚡ Web VS Code IDE</div>
+
+  <button onclick="saveCloud()">☁ Save Cloud</button>
+  <button onclick="openAI()">🤖 AI Assistant</button>
+</div>
+
+<div class="layout">
 
   <!-- SIDEBAR -->
   <div class="sidebar">
-    <div class="title">📁 Explorer</div>
-
-    <div id="fileList"></div>
+    <h3>Explorer</h3>
+    <div id="files"></div>
 
     <button onclick="newFile()">+ New File</button>
   </div>
 
   <!-- EDITOR -->
-  <div class="editor">
-    <div id="editor"></div>
-  </div>
+  <div id="editor"></div>
 
   <!-- PREVIEW -->
-  <div class="preview">
-    <iframe id="preview"></iframe>
-  </div>
+  <iframe id="preview"></iframe>
 
 </div>
 
-<script src="script.js"></script>
+<!-- TERMINAL -->
+<div class="terminal">
+  <input id="terminalInput" placeholder="type command..." />
+</div>
+
+<!-- AI POPUP -->
+<div id="aiModal" class="modal">
+  <div class="modal-box">
+    <span onclick="closeAI()">✖</span>
+    <h3>AI Assistant</h3>
+    <textarea id="aiInput" placeholder="Ask AI about your code..."></textarea>
+    <button onclick="askAI()">Ask</button>
+    <div id="aiOutput"></div>
+  </div>
+</div>
+
+<script src="app.js"></script>
+<script src="ai.js"></script>
+
 </body>
 </html>
