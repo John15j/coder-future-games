@@ -1,61 +1,62 @@
 body {
   margin: 0;
-  font-family: Arial, sans-serif;
   background: #1e1e1e;
+  font-family: Arial, sans-serif;
   color: white;
 }
 
-.container {
+.app {
   display: flex;
   height: 100vh;
 }
 
-/* LEFT SIDE */
-.editor {
-  width: 50%;
+/* SIDEBAR */
+.sidebar {
+  width: 220px;
   background: #252526;
   display: flex;
   flex-direction: column;
-}
-
-.tabs {
-  display: flex;
-  background: #333;
-}
-
-.tabs button {
-  flex: 1;
   padding: 10px;
-  background: #333;
+}
+
+.sidebar .title {
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.sidebar button {
+  margin-top: auto;
+  padding: 8px;
+  background: #0e639c;
   color: white;
   border: none;
   cursor: pointer;
 }
 
-.tabs button:hover {
-  background: #444;
+/* FILES */
+.file {
+  padding: 6px;
+  cursor: pointer;
+  border-radius: 4px;
 }
 
-.code {
+.file:hover {
+  background: #333;
+}
+
+/* EDITOR */
+.editor {
   flex: 1;
-  display: none;
+}
+
+#editor {
   width: 100%;
-  background: #1e1e1e;
-  color: #0f0;
-  border: none;
-  padding: 10px;
-  font-family: monospace;
-  font-size: 14px;
-  outline: none;
+  height: 100vh;
 }
 
-.code.active {
-  display: block;
-}
-
-/* RIGHT SIDE */
+/* PREVIEW */
 .preview {
-  width: 50%;
+  width: 40%;
   background: white;
 }
 
