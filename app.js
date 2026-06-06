@@ -674,3 +674,25 @@ function addEvidence(){
 
     saveCases();
 }
+function askAI(){
+
+    if(!activeCase){
+        alert("No active case");
+        return;
+    }
+
+    const q =
+        document.getElementById("aiQuestion").value;
+
+    const response =
+        document.getElementById("aiResponse");
+
+    response.innerHTML = `
+        <p><b>AI Analysis (Mock)</b></p>
+        <p>Question: ${q}</p>
+        <p>Status: Reviewing case data...</p>
+        <p>Suggestion: Check evidence and witness consistency.</p>
+    `;
+
+    logAction("AI Query Used");
+}
