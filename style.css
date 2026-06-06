@@ -1,75 +1,422 @@
-body {
-  margin: 0;
-  font-family: Arial;
-  background: #1e1e1e;
-  color: white;
+/* ==========================================
+   ERLC Judicial Management System
+   main.css
+========================================== */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
 }
 
-/* TOP BAR */
-.topbar {
-  height: 40px;
-  background: #333;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 10px;
+:root{
+    --bg:#111827;
+    --sidebar:#1f2937;
+    --panel:#1e293b;
+    --panel-light:#334155;
+    --border:#475569;
+
+    --text:#f8fafc;
+    --muted:#94a3b8;
+
+    --primary:#2563eb;
+    --success:#16a34a;
+    --danger:#dc2626;
 }
 
-/* LAYOUT */
-.layout {
-  display: flex;
-  height: calc(100vh - 80px);
+body{
+    font-family:Arial, Helvetica, sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    height:100vh;
+    overflow:hidden;
 }
 
-/* SIDEBAR */
-.sidebar {
-  width: 220px;
-  background: #252526;
-  padding: 10px;
+/* ==========================================
+   SIDEBAR
+========================================== */
+
+.sidebar{
+    position:fixed;
+    left:0;
+    top:0;
+    width:260px;
+    height:100vh;
+    background:var(--sidebar);
+    border-right:1px solid var(--border);
+    overflow-y:auto;
 }
 
-/* EDITOR */
-#editor {
-  flex: 1;
+.brand{
+    text-align:center;
+    padding:25px 15px;
+    border-bottom:1px solid var(--border);
 }
 
-/* PREVIEW */
-iframe {
-  width: 40%;
-  border: none;
-  background: white;
+.brand img{
+    width:90px;
+    height:90px;
+    object-fit:contain;
+    margin-bottom:10px;
 }
 
-/* TERMINAL */
-.terminal {
-  height: 40px;
-  background: black;
-  display: flex;
-  align-items: center;
+.brand h2{
+    font-size:20px;
 }
 
-.terminal input {
-  width: 100%;
-  background: black;
-  color: lime;
-  border: none;
-  padding: 10px;
+.sidebar nav{
+    padding:15px;
 }
 
-/* AI MODAL */
-.modal {
-  display: none;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.8);
+.nav-btn{
+    width:100%;
+    padding:14px;
+    margin-bottom:10px;
+
+    border:none;
+    border-radius:8px;
+
+    background:var(--panel);
+    color:white;
+
+    cursor:pointer;
+    transition:.2s;
 }
 
-.modal-box {
-  background: #222;
-  margin: 10% auto;
-  width: 400px;
-  padding: 20px;
+.nav-btn:hover{
+    background:var(--primary);
+}
+
+/* ==========================================
+   MAIN CONTENT
+========================================== */
+
+.main-content{
+    margin-left:260px;
+    height:100vh;
+    overflow-y:auto;
+    padding:25px;
+}
+
+/* ==========================================
+   SCREEN SYSTEM
+========================================== */
+
+.screen{
+    display:none;
+}
+
+.screen.active{
+    display:block;
+}
+
+/* ==========================================
+   PAGE HEADER
+========================================== */
+
+.page-header{
+    margin-bottom:25px;
+}
+
+.page-header h1{
+    font-size:32px;
+}
+
+/* ==========================================
+   STATS
+========================================== */
+
+.stats-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:20px;
+    margin-bottom:25px;
+}
+
+.stat-card{
+    background:var(--panel);
+    border:1px solid var(--border);
+    border-radius:12px;
+
+    padding:20px;
+}
+
+.stat-card h3{
+    color:var(--muted);
+    margin-bottom:12px;
+}
+
+.stat-card span{
+    font-size:30px;
+    font-weight:bold;
+}
+
+/* ==========================================
+   PANELS
+========================================== */
+
+.panel{
+    background:var(--panel);
+    border:1px solid var(--border);
+
+    border-radius:12px;
+    padding:20px;
+
+    margin-bottom:20px;
+}
+
+.panel h2{
+    margin-bottom:15px;
+}
+
+/* ==========================================
+   BUTTONS
+========================================== */
+
+button{
+    cursor:pointer;
+}
+
+.primary-btn{
+    background:var(--primary);
+    color:white;
+    border:none;
+
+    padding:12px 20px;
+    border-radius:8px;
+}
+
+.success-btn{
+    background:var(--success);
+    color:white;
+    border:none;
+
+    padding:12px 20px;
+    border-radius:8px;
+}
+
+.secondary-btn{
+    background:var(--panel-light);
+    color:white;
+    border:none;
+
+    padding:12px 20px;
+    border-radius:8px;
+}
+
+.action-row{
+    display:flex;
+    gap:12px;
+    margin-top:15px;
+}
+
+.dashboard-actions{
+    display:flex;
+    flex-wrap:wrap;
+    gap:12px;
+    margin-bottom:25px;
+}
+
+/* ==========================================
+   COURTROOM STATUS
+========================================== */
+
+.courtroom-card{
+    background:var(--panel-light);
+
+    padding:15px;
+    border-radius:10px;
+
+    margin-bottom:10px;
+}
+
+/* ==========================================
+   FORM
+========================================== */
+
+.form-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(350px,1fr));
+    gap:20px;
+}
+
+input,
+select,
+textarea{
+    width:100%;
+
+    background:#0f172a;
+    color:white;
+
+    border:1px solid var(--border);
+    border-radius:8px;
+
+    padding:12px;
+    margin-top:8px;
+    margin-bottom:12px;
+}
+
+textarea{
+    min-height:140px;
+    resize:vertical;
+}
+
+/* ==========================================
+   COURTROOM
+========================================== */
+
+.courtroom-grid{
+    display:grid;
+    grid-template-columns:
+        1fr
+        1.2fr
+        1fr
+        1fr;
+
+    gap:15px;
+    margin-bottom:20px;
+}
+
+#courtLog{
+    max-height:500px;
+    overflow-y:auto;
+}
+
+.log-entry{
+    padding:10px;
+    margin-bottom:8px;
+
+    background:#0f172a;
+    border-radius:6px;
+}
+
+.timer-box{
+    margin-top:20px;
+    text-align:center;
+}
+
+.timer-box h2{
+    margin-top:10px;
+    font-size:36px;
+}
+
+/* ==========================================
+   JUDGE CONTROLS
+========================================== */
+
+.judge-controls{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+}
+
+.judge-controls button{
+    background:var(--panel-light);
+    color:white;
+
+    border:none;
+    border-radius:8px;
+
+    padding:10px 14px;
+}
+
+/* ==========================================
+   REPORT EDITOR
+========================================== */
+
+.report-editor{
+    width:100%;
+    min-height:500px;
+}
+
+/* ==========================================
+   ARCHIVES
+========================================== */
+
+#archiveList{
+    display:grid;
+    gap:15px;
+}
+
+.archive-card{
+    background:var(--panel);
+    border:1px solid var(--border);
+
+    border-radius:12px;
+    padding:20px;
+}
+
+/* ==========================================
+   MODALS
+========================================== */
+
+.modal{
+    position:fixed;
+    inset:0;
+
+    background:rgba(0,0,0,.75);
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    z-index:9999;
+}
+
+.hidden{
+    display:none;
+}
+
+.modal-content{
+    width:90%;
+    max-width:700px;
+
+    background:var(--panel);
+
+    border-radius:12px;
+    padding:25px;
+}
+
+/* ==========================================
+   MOBILE
+========================================== */
+
+@media(max-width:1200px){
+
+    .courtroom-grid{
+        grid-template-columns:1fr;
+    }
+
+}
+
+@media(max-width:900px){
+
+    .sidebar{
+        width:100%;
+        height:auto;
+        position:relative;
+    }
+
+    .main-content{
+        margin-left:0;
+    }
+
+}
+
+@media(max-width:600px){
+
+    .stats-grid{
+        grid-template-columns:1fr;
+    }
+
+    .form-grid{
+        grid-template-columns:1fr;
+    }
+
+    .dashboard-actions,
+    .action-row,
+    .judge-controls{
+        flex-direction:column;
+    }
+
 }
