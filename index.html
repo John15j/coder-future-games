@@ -1,64 +1,504 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Pro VS Code Web IDE</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ERLC Judicial Management System</title>
 
-  <link rel="stylesheet" href="style.css">
-
-  <!-- Monaco Editor -->
-  <script src="https://unpkg.com/monaco-editor@0.44.0/min/vs/loader.js"></script>
-
-  <!-- Firebase (cloud saving) -->
-  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js"></script>
+<link rel="stylesheet" href="main.css">
 </head>
-
 <body>
 
-<!-- TOP BAR -->
-<div class="topbar">
-  <div>⚡ Web VS Code IDE</div>
+<!-- SIDEBAR -->
+<aside class="sidebar">
 
-  <button onclick="saveCloud()">☁ Save Cloud</button>
-  <button onclick="openAI()">🤖 AI Assistant</button>
+    <div class="brand">
+        <img src="logo.png" alt="ERLC Logo">
+        <h2>ERLC JMS</h2>
+    </div>
+
+    <nav>
+
+        <button onclick="showScreen('dashboard')" class="nav-btn">
+            Dashboard
+        </button>
+
+        <button onclick="showScreen('createCase')" class="nav-btn">
+            Create Case
+        </button>
+
+        <button onclick="showScreen('archives')" class="nav-btn">
+            Archives
+        </button>
+
+        <button onclick="showScreen('settings')" class="nav-btn">
+            Settings
+        </button>
+
+    </nav>
+
+</aside>
+
+<!-- MAIN -->
+<main class="main-content">
+
+<!-- ================================================= -->
+<!-- DASHBOARD -->
+<!-- ================================================= -->
+
+<section id="dashboard" class="screen active">
+
+    <div class="page-header">
+        <h1>Dashboard</h1>
+    </div>
+
+    <div class="stats-grid">
+
+        <div class="stat-card">
+            <h3>Active Cases</h3>
+            <span id="activeCases">0</span>
+        </div>
+
+        <div class="stat-card">
+            <h3>Open Courtrooms</h3>
+            <span id="openCourtrooms">0</span>
+        </div>
+
+        <div class="stat-card">
+            <h3>Guilty Cases</h3>
+            <span id="guiltyCases">0</span>
+        </div>
+
+        <div class="stat-card">
+            <h3>Not Guilty</h3>
+            <span id="notGuiltyCases">0</span>
+        </div>
+
+    </div>
+
+    <div class="dashboard-actions">
+
+        <button class="primary-btn"
+            onclick="showScreen('createCase')">
+            + Create Case
+        </button>
+
+        <button class="success-btn"
+            onclick="openStartCourtModal()">
+            ▶ Start Court
+        </button>
+
+        <button class="secondary-btn"
+            onclick="showScreen('archives')">
+            🗄 Archives
+        </button>
+
+    </div>
+
+    <div class="panel">
+
+        <h2>Courtroom Status</h2>
+
+        <div id="courtroomList">
+
+            <div class="courtroom-card">
+                Courtroom A - Available
+            </div>
+
+            <div class="courtroom-card">
+                Courtroom B - Available
+            </div>
+
+            <div class="courtroom-card">
+                Courtroom C - Available
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- ================================================= -->
+<!-- CREATE CASE -->
+<!-- ================================================= -->
+
+<section id="createCase" class="screen">
+
+    <div class="page-header">
+        <h1>Create Case</h1>
+    </div>
+
+    <div class="form-grid">
+
+        <div class="panel">
+
+            <h2>Case Information</h2>
+
+            <input id="caseTitle" placeholder="Case Title">
+
+            <select id="caseType">
+                <option>Criminal</option>
+                <option>Civil</option>
+                <option>Traffic</option>
+                <option>Appeals</option>
+                <option>Small Claims</option>
+                <option>Juvenile</option>
+                <option>Internal Affairs</option>
+            </select>
+
+            <select id="courtroomSelect">
+                <option>Courtroom A</option>
+                <option>Courtroom B</option>
+                <option>Courtroom C</option>
+            </select>
+
+        </div>
+
+        <div class="panel">
+
+            <h2>Participants</h2>
+
+            <input id="judge" placeholder="Judge">
+
+            <input id="prosecutor" placeholder="Prosecutor">
+
+            <input id="defense" placeholder="Defense Attorney">
+
+            <input id="defendant" placeholder="Defendant">
+
+        </div>
+
+        <div class="panel">
+
+            <h2>Charges</h2>
+
+            <textarea id="charges"
+                placeholder="Enter charges..."></textarea>
+
+        </div>
+
+        <div class="panel">
+
+            <h2>Witnesses</h2>
+
+            <textarea id="witnesses"
+                placeholder="Enter witnesses..."></textarea>
+
+        </div>
+
+        <div class="panel">
+
+            <h2>Court Notes</h2>
+
+            <textarea id="courtNotes"
+                placeholder="Private judge notes..."></textarea>
+
+        </div>
+
+    </div>
+
+    <div class="action-row">
+
+        <button class="success-btn"
+            onclick="saveCase()">
+            Save Case
+        </button>
+
+        <button class="primary-btn"
+            onclick="previewCase()">
+            Preview Case
+        </button>
+
+    </div>
+
+</section>
+
+<!-- ================================================= -->
+<!-- CASE PREVIEW -->
+<!-- ================================================= -->
+
+<section id="casePreview" class="screen">
+
+    <div class="page-header">
+        <h1>Case Preview</h1>
+    </div>
+
+    <div class="panel">
+
+        <div id="previewContent">
+
+            No case loaded.
+
+        </div>
+
+        <div class="action-row">
+
+            <button class="primary-btn"
+                onclick="showScreen('createCase')">
+                Edit Case
+            </button>
+
+            <button class="success-btn"
+                onclick="startCourtSession()">
+                Start Court Session
+            </button>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- ================================================= -->
+<!-- COURTROOM -->
+<!-- ================================================= -->
+
+<section id="courtroom" class="screen">
+
+    <div class="courtroom-grid">
+
+        <!-- CASE INFO -->
+
+        <div class="panel">
+
+            <h2>Case Information</h2>
+
+            <div id="courtCaseInfo">
+
+                No active session.
+
+            </div>
+
+            <div class="timer-box">
+
+                Session Timer
+
+                <h2 id="sessionTimer">
+                    00:00:00
+                </h2>
+
+            </div>
+
+        </div>
+
+        <!-- COURT LOG -->
+
+        <div class="panel">
+
+            <h2>Court Log</h2>
+
+            <div id="courtLog">
+
+            </div>
+
+        </div>
+
+        <!-- EVIDENCE -->
+
+        <div class="panel">
+
+            <h2>Evidence</h2>
+
+            <button>
+                Upload Evidence
+            </button>
+
+            <div id="evidenceList">
+
+            </div>
+
+        </div>
+
+        <!-- AI -->
+
+        <div class="panel">
+
+            <h2>AI Court Assistant</h2>
+
+            <textarea id="aiQuestion"
+                placeholder="Ask AI..."></textarea>
+
+            <button>
+                Ask AI
+            </button>
+
+            <div id="aiResponse">
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="judge-controls">
+
+        <button onclick="logAction('Court Opened')">
+            Open Court
+        </button>
+
+        <button onclick="logAction('Charges Read')">
+            Read Charges
+        </button>
+
+        <button onclick="logAction('Opening Statements')">
+            Opening Statements
+        </button>
+
+        <button onclick="logAction('Witness Called')">
+            Call Witness
+        </button>
+
+        <button onclick="logAction('Evidence Presented')">
+            Present Evidence
+        </button>
+
+        <button onclick="logAction('Court Recess')">
+            Recess
+        </button>
+
+        <button onclick="logAction('Court Resumed')">
+            Resume
+        </button>
+
+        <button onclick="logAction('Closing Arguments')">
+            Closing Arguments
+        </button>
+
+        <button onclick="openVerdictModal()">
+            Verdict
+        </button>
+
+        <button onclick="generateReport()">
+            Generate Report
+        </button>
+
+        <button onclick="endCourtSession()">
+            End Session
+        </button>
+
+    </div>
+
+</section>
+
+<!-- ================================================= -->
+<!-- REPORT EDITOR -->
+<!-- ================================================= -->
+
+<section id="reportEditor" class="screen">
+
+    <div class="page-header">
+        <h1>Official Court Report</h1>
+    </div>
+
+    <div class="panel">
+
+        <textarea id="reportContent"
+            class="report-editor"></textarea>
+
+        <div class="action-row">
+
+            <button class="success-btn">
+                Save Report
+            </button>
+
+            <button class="primary-btn">
+                Download PDF
+            </button>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- ================================================= -->
+<!-- ARCHIVES -->
+<!-- ================================================= -->
+
+<section id="archives" class="screen">
+
+    <div class="page-header">
+        <h1>Case Archives</h1>
+    </div>
+
+    <div id="archiveList">
+
+    </div>
+
+</section>
+
+<!-- ================================================= -->
+<!-- SETTINGS -->
+<!-- ================================================= -->
+
+<section id="settings" class="screen">
+
+    <div class="page-header">
+        <h1>Settings</h1>
+    </div>
+
+    <div class="panel">
+
+        <h2>Branding</h2>
+
+        <label>Logo</label>
+        <input type="file">
+
+        <label>Court Seal</label>
+        <input type="file">
+
+        <label>System Name</label>
+        <input value="ERLC Judicial Management System">
+
+    </div>
+
+</section>
+
+</main>
+
+<!-- START COURT MODAL -->
+
+<div id="startCourtModal" class="modal hidden">
+
+    <div class="modal-content">
+
+        <h2>Select Existing Case</h2>
+
+        <div id="caseSelectionList"></div>
+
+        <button onclick="closeStartCourtModal()">
+            Close
+        </button>
+
+    </div>
+
 </div>
 
-<div class="layout">
+<!-- VERDICT MODAL -->
 
-  <!-- SIDEBAR -->
-  <div class="sidebar">
-    <h3>Explorer</h3>
-    <div id="files"></div>
+<div id="verdictModal" class="modal hidden">
 
-    <button onclick="newFile()">+ New File</button>
-  </div>
+    <div class="modal-content">
 
-  <!-- EDITOR -->
-  <div id="editor"></div>
+        <h2>Verdict Entry</h2>
 
-  <!-- PREVIEW -->
-  <iframe id="preview"></iframe>
+        <textarea
+            placeholder="Enter verdict details..."></textarea>
 
-</div>
+        <button>
+            Save Verdict
+        </button>
 
-<!-- TERMINAL -->
-<div class="terminal">
-  <input id="terminalInput" placeholder="type command..." />
-</div>
+        <button onclick="closeVerdictModal()">
+            Close
+        </button>
 
-<!-- AI POPUP -->
-<div id="aiModal" class="modal">
-  <div class="modal-box">
-    <span onclick="closeAI()">✖</span>
-    <h3>AI Assistant</h3>
-    <textarea id="aiInput" placeholder="Ask AI about your code..."></textarea>
-    <button onclick="askAI()">Ask</button>
-    <div id="aiOutput"></div>
-  </div>
+    </div>
+
 </div>
 
 <script src="app.js"></script>
-<script src="ai.js"></script>
 
 </body>
 </html>
