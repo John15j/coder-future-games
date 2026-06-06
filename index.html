@@ -256,31 +256,80 @@
 
 <section id="courtroom" class="screen">
 
-    <div class="courtroom-grid">
 
-        <!-- CASE INFO -->
 
-        <div class="panel">
+        <section id="courtroom" class="screen">
 
-            <h2>Case Information</h2>
+<div class="court-layout">
 
-            <div id="courtCaseInfo">
+    <!-- LEFT: CASE INFO -->
+    <div class="panel">
+        <h2>Case Info</h2>
 
-                No active session.
-
-            </div>
-
-            <div class="timer-box">
-
-                Session Timer
-
-                <h2 id="sessionTimer">
-                    00:00:00
-                </h2>
-
-            </div>
-
+        <div id="courtCaseInfo">
+            No active case
         </div>
+
+        <hr>
+
+        <h3>Timer</h3>
+        <div id="sessionTimer">00:00:00</div>
+
+        <hr>
+
+        <button class="primary-btn" onclick="logAction('Court Opened')">
+            Open Court
+        </button>
+
+        <button class="success-btn" onclick="openVerdictModal()">
+            Verdict
+        </button>
+
+    </div>
+
+    <!-- MIDDLE: COURT LOG -->
+    <div class="panel">
+        <h2>Court Log</h2>
+        <div id="courtLog"></div>
+    </div>
+
+    <!-- RIGHT: EVIDENCE -->
+    <div class="panel">
+        <h2>Evidence</h2>
+
+        <input type="file" id="evidenceUpload">
+        <button onclick="addEvidence()">Add Evidence</button>
+
+        <div id="evidenceList"></div>
+    </div>
+
+    <!-- AI PANEL (BOTTOM RIGHT STYLE) -->
+    <div class="panel ai-panel">
+        <h2>AI Assistant</h2>
+
+        <textarea id="aiQuestion" placeholder="Ask AI about case..."></textarea>
+
+        <button onclick="askAI()">Ask</button>
+
+        <div id="aiResponse"></div>
+    </div>
+
+</div>
+
+<!-- JUDGE CONTROL BAR -->
+<div class="judge-controls">
+
+    <button onclick="logAction('Charges Read')">Charges</button>
+    <button onclick="logAction('Witness Called')">Witness</button>
+    <button onclick="logAction('Evidence Presented')">Evidence</button>
+    <button onclick="logAction('Closing Arguments')">Close</button>
+    <button onclick="openVerdictModal()">Verdict</button>
+    <button onclick="generateReport()">Report</button>
+    <button onclick="endCourtSession()">End</button>
+
+</div>
+
+</section>
 
         <!-- COURT LOG -->
 
