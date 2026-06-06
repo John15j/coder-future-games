@@ -616,3 +616,26 @@ window.onload = ()=>{
     loadArchives();
 
 };
+
+
+
+function saveVerdict(){
+
+    if(!activeCase){
+        alert("No active case selected");
+        return;
+    }
+
+    const verdict =
+        document.getElementById("verdictSelect").value;
+
+    activeCase.verdict = verdict;
+
+    logAction("Verdict entered: " + verdict);
+
+    saveCases();
+
+    closeVerdictModal();
+
+    updateDashboard();
+}
