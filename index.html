@@ -477,22 +477,32 @@
 
 <!-- VERDICT MODAL -->
 
-<div id="verdictModal" class="modal hidden">
+<div id="verdictModal" >
 
-    <div class="modal-content">
+   <div class="modal-content">
 
-        <h2>Verdict Entry</h2>
+    <h2>Verdict Entry</h2>
 
-        <textarea
-            placeholder="Enter verdict details..."></textarea>
+    <p>Choose final verdict for case:</p>
 
-        <button>
-            Save Verdict
-        </button>
+    <select id="verdictSelect">
+        <option value="Guilty">Guilty</option>
+        <option value="Not Guilty">Not Guilty</option>
+        <option value="Dismissed">Dismissed</option>
+    </select>
 
-        <button onclick="closeVerdictModal()">
-            Close
-        </button>
+    <br><br>
+
+    <button class="success-btn"
+        onclick="saveVerdict()">
+        Save Verdict
+    </button>
+
+    <button onclick="closeVerdictModal()">
+        Close
+    </button>
+
+</div>
 
     </div>
 
