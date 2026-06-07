@@ -102,25 +102,71 @@ body{
 /* WINDOW */
 .window{
     position:fixed;
-    width:400px;
-    background:#1e293b;
+    top:50%;
+    left:50%;
+    transform:translate(-50%, -50%);
+
+    width:420px;
+    background:#111827;
     color:white;
-    border-radius:10px;
-    padding:10px;
+
+    border-radius:12px;
+    overflow:hidden;
+
     display:none;
     z-index:9999;
+
+    box-shadow:0 10px 40px rgba(0,0,0,0.5);
 }
 
+/* HEADER BAR */
 .window-header{
     display:flex;
     justify-content:space-between;
     align-items:center;
-    padding:5px;
-    background:#111827;
-    border-radius:6px;
-    cursor:grab;
+
+    background:#1f2937;
+    padding:10px 12px;
+
+    font-weight:bold;
 }
 
+.window-header button{
+    background:red;
+    border:none;
+    color:white;
+    width:28px;
+    height:28px;
+    border-radius:6px;
+    cursor:pointer;
+}
+
+/* BODY */
+.window input,
+.window textarea{
+    width:100%;
+    margin:8px 0;
+    padding:8px;
+
+    background:#0f172a;
+    border:1px solid #334155;
+    color:white;
+
+    border-radius:6px;
+}
+
+.window button{
+    margin-top:8px;
+    width:100%;
+    padding:10px;
+
+    background:#2563eb;
+    border:none;
+    color:white;
+
+    border-radius:6px;
+    cursor:pointer;
+}
 /* MODAL */
 .modal{
     position:fixed;
