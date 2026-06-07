@@ -696,3 +696,21 @@ function askAI(){
 
     logAction("AI Query Used");
 }
+function openWindow(id){
+    document.getElementById(id).style.display = "block";
+}
+
+function closeWindow(id){
+    document.getElementById(id).style.display = "none";
+}
+function updateClock(){
+
+    const now = new Date();
+
+    document.getElementById("clock").innerText =
+        now.toLocaleTimeString();
+
+}
+
+setInterval(updateClock, 1000);
+updateClock();
