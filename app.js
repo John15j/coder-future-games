@@ -15,7 +15,30 @@ function closeWindow(id){
     const el = document.getElementById(id);
     if(el) el.style.display = "none";
 }
+let dragTarget = null;
+let offsetX = 0;
+let offsetY = 0;
 
+document.addEventListener("mousedown", (e) => {
+    const win = e.target.closest(".window-header");
+    if(!win) return;
+
+    dragTarget = win.parentElement;
+
+    offsetX = e.clientX - dragTarget.offsetLeft;
+    offsetY = e.clientY - dragTarget.offsetTop;
+});
+
+document.addEventListener("mousemove", (e) => {
+    if(!dragTarget) return;
+
+    dragTarget.style.left = (e.clientX - offsetX) + "px";
+    dragTarget.style.top = (e.clientY - offsetY) + "px";
+});
+
+document.addEventListener("mouseup", () => {
+    dragTarget = null;
+});
 /* ================= CLOCK ================= */
 
 function updateClock(){
