@@ -1,1 +1,133 @@
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
 
+body{
+    font-family:Arial;
+    background:#0f172a;
+    color:white;
+}
+
+/* HEADER */
+.top-bar{
+    position:fixed;
+    top:0;
+    left:0;
+    right:0;
+
+    height:60px;
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    padding:0 20px;
+
+    background:#1f2937;
+}
+
+.dot{
+    width:10px;
+    height:10px;
+    background:lime;
+    border-radius:50%;
+}
+
+/* LAYOUT */
+.main-content{
+    padding-top:80px;
+    padding-left:20px;
+    padding-right:20px;
+}
+
+/* DASHBOARD */
+.stats-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:10px;
+}
+
+.stat-card{
+    background:#1e293b;
+    padding:15px;
+    border-radius:10px;
+    text-align:center;
+}
+
+/* BUTTONS */
+.dashboard button{
+    margin:5px;
+    padding:10px;
+    background:#2563eb;
+    border:none;
+    color:white;
+    border-radius:6px;
+}
+
+/* PANELS */
+.panel{
+    background:#1e293b;
+    padding:15px;
+    border-radius:10px;
+    margin-top:10px;
+}
+
+/* COURT */
+.court-layout{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:10px;
+}
+
+/* WINDOW */
+.window{
+    position:fixed;
+    top:120px;
+    left:120px;
+
+    width:400px;
+
+    background:#111827;
+    padding:15px;
+    border-radius:10px;
+
+    display:none;
+}
+
+.window input,
+.window textarea{
+    width:100%;
+    margin:5px 0;
+    padding:8px;
+
+    background:#0f172a;
+    color:white;
+}
+
+/* MODAL */
+.modal{
+    position:fixed;
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
+
+    background:rgba(0,0,0,0.6);
+
+    display:none;
+    justify-content:center;
+    align-items:center;
+}
+
+.modal-content{
+    background:#1e293b;
+    padding:20px;
+    border-radius:10px;
+}
+
+/* HIDDEN */
+.hidden{
+    display:none;
+}
