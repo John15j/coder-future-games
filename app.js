@@ -105,32 +105,28 @@ function switchScreen(id){
     document.getElementById(id).classList.remove("hidden");
 }
 /* ================= DRAGGABLE WINDOWS ================= */
+function openWindow(id){
+    const el = document.getElementById(id);
+    if(!el) return;
 
-let dragTarget = null;
-let offsetX = 0;
-let offsetY = 0;
+    el.style.display = "block";
 
-document.addEventListener("mousedown", (e) => {
-    const header = e.target.closest(".window-header");
-    if(!header) return;
+    // allow animation to trigger
+    setTimeout(() => {
+        el.classList.add("show");
+    }, 10);
+}
 
-    dragTarget = header.parentElement;
+function closeWindow(id){
+    const el = document.getElementById(id);
+    if(!el) return;
 
-    const rect = dragTarget.getBoundingClientRect();
+    el.classList.remove("show");
 
-    offsetX = e.clientX - rect.left;
-    offsetY = e.clientY - rect.top;
-
-    dragTarget.style.position = "fixed";
-});
-
-document.addEventListener("mousemove", (e) => {
-    if(!dragTarget) return;
-
-    dragTarget.style.left = (e.clientX - offsetX) + "px";
-    dragTarget.style.top = (e.clientY - offsetY) + "px";
-});
-
-document.addEventListener("mouseup", () => {
+    // wait for animation before hiding
+    setTimeout(() => {
+        el.style.display = "none";
+    }, 180);
+}
     dragTarget = null;
 });
