@@ -155,7 +155,18 @@ body{
 /* DASHBOARD */
 /* ================================================= */
 /* DASHBOARD V3 */
+/* MAIN DASHBOARD CONTAINER */
 
+.dashboard-container{
+    width:100%;
+    max-width:1600px;
+
+    margin:0 auto;
+
+    padding:35px;
+
+    flex:1;
+}
 .dashboard-hero{
     margin-bottom:30px;
 }
@@ -211,25 +222,42 @@ body{
 }
 
 .action-card{
+
     background:#1f2937;
-    border-radius:14px;
-    padding:20px;
+
+    border:1px solid #334155;
+
+    border-radius:16px;
+
+    padding:24px;
+
+    min-height:160px;
+
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+
     cursor:pointer;
-    transition:.2s ease;
+
+    transition:all .25s ease;
 }
 
 .action-card:hover{
-    transform:translateY(-4px);
-    border:1px solid #2563eb;
+
+    transform:translateY(-5px);
+
+    border-color:#3b82f6;
+
+    box-shadow:0 0 25px rgba(59,130,246,.25);
 }
 
 .action-card span{
-    font-size:26px;
+    font-size:34px;
+    margin-bottom:12px;
 }
-
 .action-card h3{
-    margin-top:10px;
-    margin-bottom:6px;
+    font-size:18px;
+    margin-bottom:8px;
 }
 
 .action-card p{
