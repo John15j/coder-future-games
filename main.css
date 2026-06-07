@@ -1,188 +1,284 @@
+/* ================================================= */
+/* RESET */
+/* ================================================= */
+
 *{
-    box-sizing:border-box;
     margin:0;
     padding:0;
+    box-sizing:border-box;
 }
 
 body{
-    font-family:Arial;
-    background:#0f172a;
+    background:#0b1220;
     color:white;
+    font-family:Segoe UI, Arial, sans-serif;
+    min-height:100vh;
+
+    display:flex;
+    flex-direction:column;
 }
 
+/* ================================================= */
 /* HEADER */
+/* ================================================= */
 
 .top-bar{
-    position:fixed;
-    top:0;
-    left:0;
-    right:0;
-    height:60px;
-
-    background:#111827;
-    color:white;
+    height:90px;
 
     display:flex;
     align-items:center;
     justify-content:space-between;
 
-    padding:0 15px;
-    z-index:1000;
+    padding:0 25px;
+
+    background:#111827;
+    border-bottom:1px solid #1f2937;
 }
 
-.top-bar .left{
+/* LEFT */
+
+.header-left{
     display:flex;
     align-items:center;
-    gap:8px;
+    gap:15px;
 }
 
-.dot{
-    width:10px;
-    height:10px;
-    background:lime;
-    border-radius:50%;
-}
-.top-bar button{
-    background:#2563eb;
-    border:none;
-    color:white;
+.logo-badge{
+    width:60px;
+    height:60px;
 
-    padding:8px 12px;
-    border-radius:6px;
+    background:#1f2937;
 
-    cursor:pointer;
+    border-radius:12px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    overflow:hidden;
 }
 
-/* LAYOUT */
-.main-content{
-    padding-top:80px;
-    padding-left:20px;
-    padding-right:20px;
+.logo-badge img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
 }
 
-/* DASHBOARD */
-.stats-grid{
-    display:grid;
-    grid-template-columns:repeat(4,1fr);
-    gap:10px;
+.system-branding h1{
+    font-size:20px;
+    font-weight:700;
 }
 
-.stat-card{
-    background:#1e293b;
-    padding:15px;
-    border-radius:10px;
+.system-branding span{
+    color:#94a3b8;
+    font-size:13px;
+}
+
+/* CENTER */
+
+.header-center{
     text-align:center;
 }
 
-/* BUTTONS */
-.dashboard button{
-    margin:5px;
-    padding:10px;
-    background:#2563eb;
-    border:none;
-    color:white;
-    border-radius:6px;
+#clock{
+    font-size:28px;
+    font-weight:700;
+    letter-spacing:2px;
 }
 
-/* PANELS */
-.panel{
-    background:#1e293b;
-    padding:15px;
-    border-radius:10px;
-    margin-top:10px;
+.dashboard-label{
+    color:#94a3b8;
+    font-size:13px;
+    margin-top:4px;
 }
 
-/* COURT */
-.court-layout{
-    display:grid;
-    grid-template-columns:repeat(4,1fr);
-    gap:10px;
-}
+/* RIGHT */
 
-/* WINDOW */
-.window{
-    opacity:0;
-    transform:translate(-50%, -50%) scale(0.9);
-    transition:all 0.18s ease;
-    pointer-events:none;
-}
-
-/* when visible */
-.window.show{
-    opacity:1;
-    transform:translate(-50%, -50%) scale(1);
-    pointer-events:auto;
-}
-/* HEADER BAR */
-.window-header{
+.header-right{
     display:flex;
-    justify-content:space-between;
     align-items:center;
+    gap:15px;
+}
+
+.judge-card{
+    background:#1f2937;
+
+    border-radius:12px;
+
+    padding:10px 15px;
+
+    min-width:180px;
+}
+
+.judge-title{
+    color:#94a3b8;
+    font-size:12px;
+}
+
+.judge-name{
+    font-size:16px;
+    font-weight:700;
+
+    margin-top:2px;
+}
+
+.judge-status{
+    margin-top:6px;
+
+    display:inline-block;
+
+    padding:4px 10px;
+
+    border-radius:999px;
+
+    background:#2563eb;
+
+    font-size:12px;
+}
+
+/* VERSION */
+
+.version-pill{
+    display:flex;
+    align-items:center;
+    gap:8px;
 
     background:#1f2937;
-    padding:10px 12px;
 
-    font-weight:bold;
+    padding:10px 14px;
+
+    border-radius:999px;
+
+    font-size:13px;
 }
 
-.window-header button{
-    background:red;
-    border:none;
-    color:white;
-    width:28px;
-    height:28px;
-    border-radius:6px;
-    cursor:pointer;
+.version-dot{
+    width:10px;
+    height:10px;
+
+    background:#22c55e;
+
+    border-radius:50%;
 }
 
-/* BODY */
-.window input,
-.window textarea{
-    width:100%;
-    margin:8px 0;
-    padding:8px;
+/* ================================================= */
+/* DASHBOARD */
+/* ================================================= */
 
-    background:#0f172a;
-    border:1px solid #334155;
-    color:white;
+.dashboard-container{
+    flex:1;
 
-    border-radius:6px;
-}
-
-.window button{
-    margin-top:8px;
-    width:100%;
-    padding:10px;
-
-    background:#2563eb;
-    border:none;
-    color:white;
-
-    border-radius:6px;
-    cursor:pointer;
-}
-/* MODAL */
-.modal{
-    position:fixed;
-    top:0;
-    left:0;
-    right:0;
-    bottom:0;
-
-    background:rgba(0,0,0,0.6);
-
-    display:none;
-    justify-content:center;
+    display:flex;
     align-items:center;
+    justify-content:center;
+
+    padding:40px;
 }
 
-.modal-content{
-    background:#1e293b;
-    padding:20px;
-    border-radius:10px;
+.hero-section{
+    width:100%;
+    max-width:900px;
+
+    text-align:center;
 }
 
-/* HIDDEN */
-.hidden{
-    display:none;
+.hero-section h2{
+    font-size:38px;
+    margin-bottom:12px;
+}
+
+.hero-section p{
+    color:#94a3b8;
+    font-size:16px;
+    margin-bottom:40px;
+}
+
+/* START COURT CARD */
+
+.start-court-card{
+    width:100%;
+    max-width:700px;
+
+    background:#111827;
+
+    border:1px solid #1f2937;
+
+    border-radius:18px;
+
+    padding:35px;
+
+    cursor:pointer;
+
+    transition:.25s ease;
+
+    color:white;
+}
+
+.start-court-card:hover{
+    transform:translateY(-4px);
+    border-color:#2563eb;
+}
+
+.start-title{
+    display:block;
+
+    font-size:28px;
+    font-weight:700;
+
+    margin-bottom:10px;
+}
+
+.start-description{
+    display:block;
+
+    color:#94a3b8;
+    font-size:15px;
+}
+
+/* ================================================= */
+/* FOOTER */
+/* ================================================= */
+
+.footer{
+    background:#111827;
+
+    border-top:1px solid #1f2937;
+
+    padding:15px;
+
+    text-align:center;
+
+    color:#94a3b8;
+
+    font-size:13px;
+
+    display:flex;
+    flex-direction:column;
+    gap:4px;
+}
+
+/* ================================================= */
+/* MOBILE */
+/* ================================================= */
+
+@media(max-width:900px){
+
+    .top-bar{
+        flex-direction:column;
+        height:auto;
+        padding:15px;
+        gap:15px;
+    }
+
+    .header-right{
+        flex-direction:column;
+    }
+
+    .hero-section h2{
+        font-size:28px;
+    }
+
+    #clock{
+        font-size:22px;
+    }
 }
