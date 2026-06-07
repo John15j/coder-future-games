@@ -211,7 +211,13 @@ button{
     justify-content:space-between;
     align-items:center;
 
+    background:#1f2937;
+    padding:8px;
+
+    border-radius:8px;
     margin-bottom:10px;
+
+    cursor:grab;
 }
 .window-header button{
     background:red;
