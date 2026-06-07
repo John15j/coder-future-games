@@ -108,15 +108,17 @@ body{
         #111827
     );
 
-    width:260px;
+    width:220px;
 
-    border-radius:16px;
+    padding:10px 14px;
 
-    padding:14px 18px;
+    border-radius:14px;
 
     border:1px solid #334155;
 
-    box-shadow:0 10px 30px rgba(0,0,0,.25);
+    display:flex;
+    flex-direction:column;
+    gap:4px;
 }
 
 .judge-title{
@@ -132,37 +134,29 @@ body{
 
 .judge-name{
 
-    font-size:20px;
+    font-size:16px;
 
     font-weight:700;
-
-    margin-top:4px;
 }
-
 .judge-status{
 
-    display:inline-flex;
-
-    align-items:center;
-
-    gap:8px;
-
-    margin-top:10px;
+    margin-top:4px;
 
     background:#2563eb;
 
-    padding:6px 12px;
+    padding:4px 10px;
 
     border-radius:999px;
 
-    font-size:12px;
+    font-size:11px;
+
+    width:fit-content;
 }
 .judge-extra{
-    margin-top:10px;
+
+    font-size:11px;
 
     color:#94a3b8;
-
-    font-size:12px;
 }
 
 
@@ -499,4 +493,51 @@ body{
     border-radius:8px;
 
     cursor:pointer;
+}
+/* start court preview */
+.hidden{
+    display:none;
+}
+
+/* Court launcher base */
+.launcher-box{
+    max-width:600px;
+    margin:80px auto;
+    background:#111827;
+    border:1px solid #1f2937;
+    padding:30px;
+    border-radius:16px;
+    text-align:center;
+}
+
+/* buttons */
+.launcher-box button{
+    display:block;
+    width:100%;
+    margin:10px 0;
+    padding:12px;
+    border:none;
+    border-radius:10px;
+    cursor:pointer;
+    background:#2563eb;
+    color:white;
+    transition:0.2s;
+}
+
+.launcher-box button:hover{
+    transform:scale(1.02);
+    background:#1d4ed8;
+}
+
+/* case list */
+.case-item{
+    background:#1f2937;
+    padding:12px;
+    margin:10px 0;
+    border-radius:10px;
+    cursor:pointer;
+}
+
+.case-item:hover{
+    border:1px solid #2563eb;
 }
