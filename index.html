@@ -218,6 +218,52 @@
 
 </main>
 
+<!-- COURT LAUNCHER -->
+<section id="courtLauncher" class="screen hidden">
+
+    <div class="launcher-box">
+
+        <h1>Court Session Launcher</h1>
+        <p>Choose how to start the session.</p>
+
+        <button onclick="showCaseSelector()">Select Existing Case</button>
+        <button onclick="startEmptyCourt()">Start Empty Court</button>
+        <button onclick="closeLauncher()">Cancel</button>
+
+    </div>
+
+</section>
+
+<!-- CASE SELECTOR -->
+<section id="caseSelector" class="screen hidden">
+
+    <div class="launcher-box">
+
+        <h1>Select Case</h1>
+
+        <div id="caseList"></div>
+
+        <button onclick="backToLauncher()">Back</button>
+
+    </div>
+
+</section>
+
+<!-- COURT READY -->
+<section id="courtReady" class="screen hidden">
+
+    <div class="launcher-box">
+
+        <h1>Case Ready</h1>
+
+        <div id="selectedCaseInfo"></div>
+
+        <button onclick="startCourtSession()">Start Court Session</button>
+        <button onclick="closeLauncher()">Cancel</button>
+
+    </div>
+
+</section>
 <!-- ================================================= -->
 <!-- FOOTER -->
 <!-- ================================================= -->
