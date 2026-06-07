@@ -106,7 +106,7 @@ function switchScreen(id){
 }
 /* ================= DRAGGABLE WINDOWS ================= */
 
-let dragEl = null;
+let dragTarget = null;
 let offsetX = 0;
 let offsetY = 0;
 
@@ -114,19 +114,23 @@ document.addEventListener("mousedown", (e) => {
     const header = e.target.closest(".window-header");
     if(!header) return;
 
-    dragEl = header.parentElement;
+    dragTarget = header.parentElement;
 
-    offsetX = e.clientX - dragEl.offsetLeft;
-    offsetY = e.clientY - dragEl.offsetTop;
+    const rect = dragTarget.getBoundingClientRect();
+
+    offsetX = e.clientX - rect.left;
+    offsetY = e.clientY - rect.top;
+
+    dragTarget.style.position = "fixed";
 });
 
 document.addEventListener("mousemove", (e) => {
-    if(!dragEl) return;
+    if(!dragTarget) return;
 
-    dragEl.style.left = (e.clientX - offsetX) + "px";
-    dragEl.style.top = (e.clientY - offsetY) + "px";
+    dragTarget.style.left = (e.clientX - offsetX) + "px";
+    dragTarget.style.top = (e.clientY - offsetY) + "px";
 });
 
 document.addEventListener("mouseup", () => {
-    dragEl = null;
+    dragTarget = null;
 });
