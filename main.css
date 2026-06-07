@@ -102,12 +102,22 @@ body{
 /* WINDOW */
 .window{
     position:fixed;
-    top:120px;
-    left:120px;
+    width:400px;
+    background:#1e293b;
+    color:white;
+    border-radius:10px;
+    padding:10px;
+    display:none;
     z-index:9999;
 }
 
 .window-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:5px;
+    background:#111827;
+    border-radius:6px;
     cursor:grab;
 }
 
