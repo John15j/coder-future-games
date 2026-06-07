@@ -1,3 +1,7 @@
+*{
+    box-sizing:border-box;
+}
+
 body{
     margin:0;
     font-family:Arial;
@@ -15,24 +19,15 @@ body{
     height:60px;
 
     display:flex;
-    justify-content:space-between;
     align-items:center;
+    justify-content:space-between;
 
     padding:0 20px;
 
     background:#1f2937;
+
     z-index:1000;
 }
-
-.dot{
-    width:10px;
-    height:10px;
-    background:lime;
-    border-radius:50%;
-    display:inline-block;
-    margin-right:5px;
-}
-
 /* ===== MAIN ===== */
 .main-content{
     padding-top:80px;
@@ -42,13 +37,20 @@ body{
 
 /* ===== DASHBOARD ===== */
 .dashboard button{
-    margin:5px;
-    padding:10px 15px;
-
     background:#2563eb;
-    border:none;
     color:white;
+    border:none;
+
+    padding:10px 14px;
+    margin:5px;
+
+    border-radius:6px;
+
     cursor:pointer;
+}
+
+.dashboard button:hover{
+    background:#1d4ed8;
 }
 
 /* ===== PANELS ===== */
@@ -62,10 +64,9 @@ body{
 /* ===== COURTROOM LAYOUT ===== */
 .court-layout{
     display:grid;
-    grid-template-columns:1fr 1fr 1fr 1fr;
+    grid-template-columns:repeat(4, 1fr);
     gap:10px;
 }
-
 /* ===== LOG ===== */
 .log-entry{
     background:#0f172a;
