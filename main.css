@@ -101,24 +101,18 @@ body{
 
 /* WINDOW */
 .window{
-    position:fixed;
-    top:50%;
-    left:50%;
-    transform:translate(-50%, -50%);
-
-    width:420px;
-    background:#111827;
-    color:white;
-
-    border-radius:12px;
-    overflow:hidden;
-
-    display:none;
-    z-index:9999;
-
-    box-shadow:0 10px 40px rgba(0,0,0,0.5);
+    opacity:0;
+    transform:translate(-50%, -50%) scale(0.9);
+    transition:all 0.18s ease;
+    pointer-events:none;
 }
 
+/* when visible */
+.window.show{
+    opacity:1;
+    transform:translate(-50%, -50%) scale(1);
+    pointer-events:auto;
+}
 /* HEADER BAR */
 .window-header{
     display:flex;
