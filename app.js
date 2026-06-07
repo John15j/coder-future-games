@@ -19,10 +19,13 @@ function closeWindow(id){
 /* ================= CLOCK ================= */
 
 function updateClock(){
+    const clock = document.getElementById("clock");
+    if(!clock) return;
+
     const now = new Date();
-    document.getElementById("clock").innerText =
-        now.toLocaleTimeString();
+    clock.innerText = now.toLocaleTimeString();
 }
+
 setInterval(updateClock, 1000);
 updateClock();
 
@@ -46,29 +49,29 @@ function saveCase(){
         witnesses: document.getElementById("witnesses").value,
         verdict: "",
         logs: [],
-        evidence: [],
-        status: "Pending"
+        evidence: []
     };
 
     cases.push(newCase);
     saveCases();
 
-    alert("Case Saved: " + newCase.id);
+    alert("Case created: " + newCase.id);
+
+    closeWindow("createCaseWindow");
 }
 
-/* ================= LOAD CASE INTO COURT ================= */
+/* ================= LOAD CASE ================= */
 
 function loadCase(caseId){
 
     activeCase = cases.find(c => c.id === caseId);
-
     if(!activeCase) return;
 
     document.getElementById("courtCaseInfo").innerHTML = `
         <b>${activeCase.title}</b><br>
         Defendant: ${activeCase.defendant}<br>
         Username: ${activeCase.username}<br>
-        Status: ${activeCase.status}
+        Status: ${activeCase.verdict || "Pending"}
     `;
 
     renderLogs();
@@ -79,7 +82,10 @@ function loadCase(caseId){
 
 function logAction(action){
 
-    if(!activeCase) return;
+    if(!activeCase){
+        alert("No active case loaded");
+        return;
+    }
 
     activeCase.logs.push(
         new Date().toLocaleTimeString() + " - " + action
@@ -92,14 +98,15 @@ function logAction(action){
 function renderLogs(){
 
     const log = document.getElementById("courtLog");
+    if(!log) return;
+
     log.innerHTML = "";
 
     if(!activeCase) return;
 
-    activeCase.logs.forEach(l => {
+    activeCase.logs.forEach(item => {
         const div = document.createElement("div");
-        div.className = "log-entry";
-        div.innerText = l;
+        div.innerText = item;
         log.appendChild(div);
     });
 }
@@ -119,8 +126,10 @@ function startTimer(){
         const m = String(Math.floor((seconds % 3600)/60)).padStart(2,"0");
         const s = String(seconds % 60).padStart(2,"0");
 
-        document.getElementById("sessionTimer").innerText =
-            `${h}:${m}:${s}`;
+        const el = document.getElementById("sessionTimer");
+        if(el){
+            el.innerText = `${h}:${m}:${s}`;
+        }
 
     }, 1000);
 }
@@ -129,23 +138,32 @@ function startTimer(){
 
 function addEvidence(){
 
-    if(!activeCase) return;
+    if(!activeCase){
+        alert("No active case");
+        return;
+    }
 
-    const file = document.getElementById("evidenceUpload").files[0];
+    const fileInput = document.getElementById("evidenceUpload");
+    const file = fileInput.files[0];
 
-    if(!file) return;
+    if(!file){
+        alert("No file selected");
+        return;
+    }
 
     activeCase.evidence.push(file.name);
 
     saveCases();
     renderEvidence();
 
-    logAction("Evidence Added: " + file.name);
+    logAction("Evidence added: " + file.name);
 }
 
 function renderEvidence(){
 
     const box = document.getElementById("evidenceList");
+    if(!box) return;
+
     box.innerHTML = "";
 
     if(!activeCase) return;
@@ -159,59 +177,70 @@ function renderEvidence(){
 
 /* ================= VERDICT ================= */
 
+function openVerdictModal(){
+    const modal = document.getElementById("verdictModal");
+    if(modal) modal.classList.remove("hidden");
+}
+
+function closeVerdictModal(){
+    const modal = document.getElementById("verdictModal");
+    if(modal) modal.classList.add("hidden");
+}
+
 function saveVerdict(){
 
     if(!activeCase) return;
 
     const v = document.getElementById("verdictSelect").value;
-
     activeCase.verdict = v;
 
-    logAction("Verdict: " + v);
-
     saveCases();
+
+    logAction("Verdict: " + v);
 
     closeVerdictModal();
     updateDashboard();
 }
 
-function openVerdictModal(){
-    document.getElementById("verdictModal").classList.remove("hidden");
-}
-
-function closeVerdictModal(){
-    document.getElementById("verdictModal").classList.add("hidden");
-}
-
-/* ================= AI (BASIC MOCK) ================= */
+/* ================= AI ================= */
 
 function askAI(){
 
-    if(!activeCase) return;
+    if(!activeCase){
+        alert("Load a case first");
+        return;
+    }
 
     const q = document.getElementById("aiQuestion").value;
 
-    document.getElementById("aiResponse").innerHTML = `
+    const out = document.getElementById("aiResponse");
+    if(!out) return;
+
+    out.innerHTML = `
         <b>AI Response</b><br><br>
         Question: ${q}<br><br>
-        Suggestion: Review evidence and witness statements.
+        Suggestion: Review evidence and witness statements carefully.
     `;
 
-    logAction("AI Asked");
+    logAction("AI queried");
 }
 
 /* ================= REPORT ================= */
 
 function generateReport(){
 
-    if(!activeCase) return;
+    if(!activeCase){
+        alert("No active case");
+        return;
+    }
 
     const report = `
 CASE REPORT
-
+-----------------
 ID: ${activeCase.id}
 Title: ${activeCase.title}
 Defendant: ${activeCase.defendant}
+Username: ${activeCase.username}
 
 Charges:
 ${activeCase.charges}
@@ -219,35 +248,33 @@ ${activeCase.charges}
 Witnesses:
 ${activeCase.witnesses}
 
-Verdict: ${activeCase.verdict}
+Verdict:
+${activeCase.verdict || "Pending"}
 
-Logs:
+LOGS:
 ${activeCase.logs.join("\n")}
     `;
 
     document.getElementById("reportContent").value = report;
-
 }
 
 /* ================= PDF ================= */
 
 function downloadPDF(){
-    alert("PDF export coming soon");
+    alert("PDF export not connected yet");
 }
 
 /* ================= DASHBOARD ================= */
 
 function updateDashboard(){
 
-    document.getElementById("activeCases").innerText =
-        cases.length;
+    const active = document.getElementById("activeCases");
+    const guilty = document.getElementById("guiltyCases");
+    const notGuilty = document.getElementById("notGuiltyCases");
 
-    document.getElementById("guiltyCases").innerText =
-        cases.filter(c => c.verdict === "Guilty").length;
-
-    document.getElementById("notGuiltyCases").innerText =
-        cases.filter(c => c.verdict === "Not Guilty").length;
-
+    if(active) active.innerText = cases.length;
+    if(guilty) guilty.innerText = cases.filter(c => c.verdict === "Guilty").length;
+    if(notGuilty) notGuilty.innerText = cases.filter(c => c.verdict === "Not Guilty").length;
 }
 
 /* ================= INIT ================= */
