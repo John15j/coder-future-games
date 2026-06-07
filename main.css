@@ -11,21 +11,29 @@ body{
 }
 
 /* HEADER */
+
 .top-bar{
     position:fixed;
     top:0;
     left:0;
     right:0;
-
     height:60px;
 
+    background:#111827;
+    color:white;
+
     display:flex;
-    justify-content:space-between;
     align-items:center;
+    justify-content:space-between;
 
-    padding:0 20px;
+    padding:0 15px;
+    z-index:1000;
+}
 
-    background:#1f2937;
+.top-bar .left{
+    display:flex;
+    align-items:center;
+    gap:8px;
 }
 
 .dot{
@@ -33,6 +41,16 @@ body{
     height:10px;
     background:lime;
     border-radius:50%;
+}
+.top-bar button{
+    background:#2563eb;
+    border:none;
+    color:white;
+
+    padding:8px 12px;
+    border-radius:6px;
+
+    cursor:pointer;
 }
 
 /* LAYOUT */
@@ -87,23 +105,25 @@ body{
     top:120px;
     left:120px;
 
-    width:400px;
+    width:350px;
 
-    background:#111827;
+    background:#1e293b;
+    color:white;
+
     padding:15px;
     border-radius:10px;
 
     display:none;
+
+    z-index:2000;
 }
 
-.window input,
-.window textarea{
-    width:100%;
-    margin:5px 0;
-    padding:8px;
+.window-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
 
-    background:#0f172a;
-    color:white;
+    margin-bottom:10px;
 }
 
 /* MODAL */
