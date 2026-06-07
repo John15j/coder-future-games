@@ -17,28 +17,27 @@
         LIVE
     </div>
 
-    <div id="clock">00:00</div>
+    <div id="clock">00:00:00</div>
 
     <div>
         Judge:
         <span id="judgeNameDisplay">Default Judge</span>
     </div>
 
-    <button onclick="openWindow('settingsWindow')">
-        Settings
-    </button>
+    <button onclick="openWindow('settingsWindow')">Settings</button>
 
 </header>
 
-<!-- ================= DASHBOARD ================= -->
+<!-- ================= MAIN DASHBOARD ================= -->
 <main class="main-content">
 
-<section id="dashboard" class="screen active">
+<section id="dashboard">
 
     <div class="page-header">
         <h1>Court Dashboard</h1>
     </div>
 
+    <!-- STATS -->
     <div class="stats-grid">
 
         <div class="stat-card">
@@ -63,22 +62,24 @@
 
     </div>
 
+    <!-- ACTION BUTTONS -->
     <div class="dashboard">
 
         <button onclick="openWindow('createCaseWindow')">
             + Create Case
         </button>
 
-        <button onclick="openWindow('archivesWindow')">
+        <button onclick="alert('Archives not wired yet')">
             Archives
         </button>
 
-        <button onclick="openWindow('courtroomWindow')">
+        <button onclick="alert('Start court not wired yet (use case + loadCase)')">
             Start Court
         </button>
 
     </div>
 
+    <!-- COURTROOM STATUS -->
     <div class="panel">
         <h2>Courtroom Status</h2>
 
@@ -91,71 +92,79 @@
 </section>
 
 <!-- ================= COURTROOM ================= -->
-<section id="courtroom" class="screen">
+<section id="courtroom">
 
 <div class="court-layout">
 
+    <!-- CASE INFO -->
     <div class="panel">
+
         <h2>Case Info</h2>
 
-        <div id="courtCaseInfo">No active case</div>
+        <div id="courtCaseInfo">
+            No active case
+        </div>
 
         <h3>Timer</h3>
         <div id="sessionTimer">00:00:00</div>
 
-        <button onclick="logAction('Court Opened')">
-            Open Court
-        </button>
+        <button onclick="startTimer()">Start Timer</button>
 
-        <button onclick="openVerdictModal()">
-            Verdict
-        </button>
     </div>
 
+    <!-- LOG -->
     <div class="panel">
         <h2>Court Log</h2>
         <div id="courtLog"></div>
     </div>
 
+    <!-- EVIDENCE -->
     <div class="panel">
+
         <h2>Evidence</h2>
 
         <input type="file" id="evidenceUpload">
         <button onclick="addEvidence()">Add Evidence</button>
 
         <div id="evidenceList"></div>
+
     </div>
 
-    <div class="panel ai-panel">
+    <!-- AI -->
+    <div class="panel">
+
         <h2>AI Assistant</h2>
 
-        <textarea id="aiQuestion"></textarea>
+        <textarea id="aiQuestion" placeholder="Ask about case..."></textarea>
+
         <button onclick="askAI()">Ask AI</button>
 
         <div id="aiResponse"></div>
+
     </div>
 
 </div>
 
+<!-- COURT ACTIONS -->
 <div class="judge-controls">
 
+    <button onclick="logAction('Court Opened')">Open Court</button>
     <button onclick="logAction('Charges Read')">Charges</button>
     <button onclick="logAction('Witness Called')">Witness</button>
     <button onclick="logAction('Evidence Presented')">Evidence</button>
     <button onclick="logAction('Closing Arguments')">Close</button>
     <button onclick="openVerdictModal()">Verdict</button>
     <button onclick="generateReport()">Report</button>
-    <button onclick="endCourtSession()">End</button>
 
 </div>
 
 </section>
 
 <!-- ================= REPORT ================= -->
-<section id="reportEditor" class="screen">
+<section id="reportEditor">
 
     <div class="page-header">
-        <h1>Official Court Report</h1>
+        <h1>Official Report</h1>
     </div>
 
     <div class="panel">
@@ -170,7 +179,7 @@
 
 </main>
 
-<!-- ================= POPUP: CREATE CASE ================= -->
+<!-- ================= CREATE CASE WINDOW ================= -->
 <div id="createCaseWindow" class="window">
 
     <div class="window-header">
@@ -179,7 +188,7 @@
     </div>
 
     <input id="caseTitle" placeholder="Case Title">
-    <input id="defendant" placeholder="Defendant Name">
+    <input id="defendant" placeholder="Defendant">
     <input id="username" placeholder="Username">
 
     <textarea id="charges" placeholder="Charges"></textarea>
@@ -189,7 +198,7 @@
 
 </div>
 
-<!-- ================= POPUP: VERDICT ================= -->
+<!-- ================= VERDICT ================= -->
 <div id="verdictModal" class="modal hidden">
 
     <div class="modal-content">
@@ -209,7 +218,7 @@
 
 </div>
 
-<!-- ================= SETTINGS POPUP ================= -->
+<!-- ================= SETTINGS ================= -->
 <div id="settingsWindow" class="window">
 
     <div class="window-header">
@@ -218,7 +227,7 @@
     </div>
 
     <input id="judgeName" placeholder="Judge Name">
-    <button onclick="saveSettings()">Save</button>
+    <button onclick="alert('Settings not wired yet')">Save</button>
 
 </div>
 
