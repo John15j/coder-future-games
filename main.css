@@ -1,21 +1,19 @@
+/* ================= BASE ================= */
+
 *{
     box-sizing:border-box;
+    margin:0;
+    padding:0;
 }
 
 body{
-    margin:0;
-    font-family:Arial;
+    font-family:Arial, sans-serif;
     background:#0f172a;
     color:white;
 }
-.stats-grid{
-    display:grid;
-    grid-template-columns:repeat(4, 1fr);
-    gap:10px;
-    margin-top:10px;
-}
 
-/* ===== HEADER ===== */
+/* ================= HEADER ================= */
+
 .top-bar{
     position:fixed;
     top:0;
@@ -34,14 +32,50 @@ body{
 
     z-index:1000;
 }
-/* ===== MAIN ===== */
+
+.dot{
+    width:10px;
+    height:10px;
+    background:limegreen;
+    border-radius:50%;
+    display:inline-block;
+    margin-right:6px;
+}
+
+/* ================= LAYOUT ================= */
+
 .main-content{
     padding-top:80px;
     padding-left:20px;
     padding-right:20px;
 }
 
-/* ===== DASHBOARD ===== */
+/* ================= HEADERS ================= */
+
+.page-header{
+    margin-bottom:15px;
+}
+
+/* ================= DASHBOARD ================= */
+
+.stats-grid{
+    display:grid;
+    grid-template-columns:repeat(4, 1fr);
+    gap:10px;
+    margin-bottom:15px;
+}
+
+.stat-card{
+    background:#1e293b;
+    padding:15px;
+    border-radius:10px;
+    text-align:center;
+}
+
+.dashboard{
+    margin:10px 0;
+}
+
 .dashboard button{
     background:#2563eb;
     color:white;
@@ -59,33 +93,77 @@ body{
     background:#1d4ed8;
 }
 
-/* ===== PANELS ===== */
+/* ================= PANELS ================= */
+
 .panel{
     background:#1e293b;
     padding:15px;
-    margin-top:10px;
     border-radius:10px;
+
+    margin-top:10px;
 }
 
-/* ===== COURTROOM LAYOUT ===== */
+/* ================= COURTROOM ================= */
+
 .court-layout{
     display:grid;
     grid-template-columns:repeat(4, 1fr);
     gap:10px;
-}
-/* ===== LOG ===== */
-.log-entry{
-    background:#0f172a;
-    padding:5px;
-    margin:5px 0;
+
+    margin-top:10px;
 }
 
-/* ===== BUTTONS ===== */
+.ai-panel textarea{
+    width:100%;
+    height:80px;
+
+    background:#0f172a;
+    color:white;
+
+    border:1px solid #334155;
+
+    padding:8px;
+    margin-bottom:5px;
+}
+
+/* ================= BUTTONS ================= */
+
 button{
     cursor:pointer;
 }
 
-/* ===== WINDOW SYSTEM ===== */
+.panel button{
+    background:#2563eb;
+    color:white;
+    border:none;
+
+    padding:8px 12px;
+    margin-top:5px;
+
+    border-radius:6px;
+}
+
+.panel button:hover{
+    background:#1d4ed8;
+}
+
+/* ================= COURT LOG ================= */
+
+#courtLog{
+    max-height:300px;
+    overflow-y:auto;
+}
+
+#courtLog div{
+    background:#0f172a;
+    padding:5px;
+    margin:5px 0;
+
+    border-radius:6px;
+}
+
+/* ================= WINDOW (POPUPS) ================= */
+
 .window{
     position:fixed;
     top:100px;
@@ -96,19 +174,19 @@ button{
     background:#111827;
     border:1px solid #334155;
 
-    border-radius:12px;
+    border-radius:10px;
+
     padding:15px;
 
     display:none;
 
     z-index:2000;
 
-    box-shadow:0 10px 30px rgba(0,0,0,0.5);
+    box-shadow:0 10px 25px rgba(0,0,0,0.5);
 }
 
 .window input,
-.window textarea,
-.window select{
+.window textarea{
     width:100%;
     margin:5px 0;
     padding:8px;
@@ -116,34 +194,67 @@ button{
     background:#0f172a;
     border:1px solid #334155;
     color:white;
-}
-.stat-card{
-    background:#1e293b;
-    padding:15px;
-    border-radius:10px;
-}
-.court-layout{
-    display:grid;
-    grid-template-columns:repeat(4, 1fr);
-    gap:10px;
-    margin-top:10px;
+
+    border-radius:6px;
 }
 
-.court-layout .panel{
-    background:#1e293b;
-    padding:15px;
-    border-radius:10px;
-    min-height:200px;
+.window-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    margin-bottom:10px;
 }
-.dashboard{
+
+/* ================= MODAL ================= */
+
+.modal{
+    position:fixed;
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
+
+    background:rgba(0,0,0,0.6);
+
+    display:none;
+    justify-content:center;
+    align-items:center;
+
+    z-index:3000;
+}
+
+.modal-content{
+    background:#1e293b;
+    padding:20px;
+
+    border-radius:10px;
+
+    width:300px;
+}
+
+/* hidden helper */
+.hidden{
+    display:none;
+}
+
+/* ================= COURTROOM BUTTON BAR ================= */
+
+.judge-controls{
     margin-top:15px;
 }
 
-.dashboard button{
-    background:#2563eb;
-    color:white;
+.judge-controls button{
+    background:#334155;
     border:none;
-    padding:10px 12px;
-    margin:5px;
+    color:white;
+
+    padding:8px 10px;
+    margin:3px;
+
     border-radius:6px;
+}
+
+.judge-controls button:hover{
+    background:#475569;
 }
