@@ -3,18 +3,29 @@ let activeCase = null;
 
 /* WINDOW */
 function openWindow(id){
-    document.getElementById(id).style.display = "block";
+    const el = document.getElementById(id);
+    if(el){
+        el.style.display = "block";
+    }
 }
 
 function closeWindow(id){
-    document.getElementById(id).style.display = "none";
+    const el = document.getElementById(id);
+    if(el){
+        el.style.display = "none";
+    }
+}
+/* CLOCK */
+function updateClock(){
+    const el = document.getElementById("clock");
+    if(!el) return;
+
+    const now = new Date();
+    el.innerText = now.toLocaleTimeString();
 }
 
-/* CLOCK */
-setInterval(()=>{
-    document.getElementById("clock").innerText =
-    new Date().toLocaleTimeString();
-},1000);
+setInterval(updateClock,1000);
+updateClock();
 
 /* CASE */
 function saveCase(){
