@@ -104,26 +104,11 @@ body{
     position:fixed;
     top:120px;
     left:120px;
-
-    width:350px;
-
-    background:#1e293b;
-    color:white;
-
-    padding:15px;
-    border-radius:10px;
-
-    display:none;
-
-    z-index:2000;
+    z-index:9999;
 }
 
 .window-header{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-
-    margin-bottom:10px;
+    cursor:grab;
 }
 
 /* MODAL */
