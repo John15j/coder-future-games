@@ -10,34 +10,25 @@
 <body>
 
 <!-- SIDEBAR -->
-<aside class="sidebar">
+<header class="top-bar">
 
-    <div class="brand">
-        <img src="logo.png" alt="ERLC Logo">
-        <h2>ERLC JMS</h2>
+    <div class="status">
+        <span class="dot"></span>
+        LIVE
     </div>
 
-    <nav>
+    <div id="clock">00:00</div>
 
-        <button onclick="showScreen('dashboard')" class="nav-btn">
-            Dashboard
-        </button>
+    <div>
+        Judge:
+        <span id="judgeNameDisplay">Default Judge</span>
+    </div>
 
-        <button onclick="showScreen('createCase')" class="nav-btn">
-            Create Case
-        </button>
+    <button onclick="openWindow('settingsWindow')">
+        Settings
+    </button>
 
-        <button onclick="showScreen('archives')" class="nav-btn">
-            Archives
-        </button>
-
-        <button onclick="showScreen('settings')" class="nav-btn">
-            Settings
-        </button>
-
-    </nav>
-
-</aside>
+</header>
 
 <!-- MAIN -->
 <main class="main-content">
@@ -78,22 +69,28 @@
 
     <div class="dashboard-actions">
 
-        <button class="primary-btn"
-            onclick="showScreen('createCase')">
-            + Create Case
-        </button>
 
-        <button class="success-btn"
-            onclick="openStartCourtModal()">
-            ▶ Start Court
-        </button>
+    <h1>Court Dashboard</h1>
 
-        <button class="secondary-btn"
-            onclick="showScreen('archives')">
-            🗄 Archives
-        </button>
+    <button onclick="openWindow('createCaseWindow')">
+        + Create Case
+    </button>
 
-    </div>
+    <button onclick="openWindow('archivesWindow')">
+        Archives
+    </button>
+
+    <button onclick="openWindow('casePreviewWindow')">
+        Case Preview
+    </button>
+
+    <button onclick="openWindow('courtroomWindow')">
+        Start Court
+    </button>
+
+</div>
+
+    
 
     <div class="panel">
 
@@ -556,8 +553,36 @@
     </div>
 
 </div>
+<!-- CREATE CASE -->
+<div id="createCaseWindow" class="window">
 
+    <div class="window-header">
+        <h3>Create Case</h3>
+
+        <button onclick="closeWindow('createCaseWindow')">
+            X
+        </button>
+    </div>
+
+    <input id="caseTitle" placeholder="Case Title">
+
+    <input id="defendant" placeholder="Defendant Name">
+
+    <input id="username" placeholder="Username">
+
+    <textarea id="charges"
+        placeholder="Charges (use templates)"></textarea>
+
+    <textarea id="witnesses"
+        placeholder="Witness Name + Username"></textarea>
+
+    <button onclick="saveCase()">
+        Save Case
+    </button>
+
+</div>
 <script src="app.js"></script>
+    
 
 </body>
 </html>
