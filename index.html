@@ -55,9 +55,7 @@
             <div id="judgeStatus" class="judge-status">
                 Presiding
             </div>
-<div class="judge-extra">
-    Court Operations Ready
-</div>
+
         </div>
 
       
@@ -70,93 +68,93 @@
 <!-- MAIN DASHBOARD -->
 <!-- ================================================= -->
 
+<!-- ================================================= -->
+<!-- DASHBOARD -->
+<!-- ================================================= -->
+
 <main class="dashboard-container">
 
-    <section class="hero-section">
+    <section class="dashboard-grid">
 
-        <h2>
-            Welcome to the Court Operations Center
-        </h2>
+        <!-- ACTION BAR -->
 
-        <p>
-            Manage hearings, review evidence, and oversee courtroom proceedings.
-        </p>
+        <div class="action-bar">
 
-        <button id="startCourtBtn" class="start-court-card">
-
-            <span class="start-title">
-                START COURT
-            </span>
-
-            <span class="start-description">
-                Create a new case or load an existing case to begin court proceedings.
-            </span>
-
-        </button>
-
-    </section>
-<!-- ================================================= -->
-<!-- COURT LAUNCHER -->
-<!-- ================================================= -->
-
-<section id="courtLauncher" class="court-launcher">
-
-    <div class="launcher-header">
-
-        <h2>Court Launcher</h2>
-
-        <button id="closeLauncher">
-            Back
-        </button>
-
-    </div>
-
-    <div class="launcher-grid">
-
-        <div class="launcher-card">
-
-            <h3>Create New Case</h3>
-
-            <p>
-                Create and prepare a new court case.
-            </p>
-
-            <button>
-                Open
+            <button class="action-btn primary">
+                Start Court
             </button>
+
+            <button class="action-btn">
+                New Case
+            </button>
+
+            <button class="action-btn">
+                All Cases
+            </button>
+
+            <div class="version-status">
+
+                <span class="status-dot"></span>
+
+                Version 2.0 Online
+
+            </div>
 
         </div>
 
-        <div class="launcher-card">
+        <!-- LEFT PANEL -->
 
-            <h3>Load Existing Case</h3>
+        <div class="dashboard-panel">
 
-            <p>
-                Continue a saved case.
-            </p>
+            <div class="panel-header">
+                Court Operations Feed
+            </div>
 
-            <button>
-                Open
-            </button>
+            <div class="panel-body">
 
-        </div>
+                <div class="feed-card">
+                    Court system ready
+                </div>
 
-        <div class="launcher-card">
+                <div class="feed-card">
+                    Awaiting case creation
+                </div>
 
-            <h3>Court Schedule</h3>
+                <div class="feed-card">
+                    No active hearings
+                </div>
 
-            <p>
-                Future system feature.
-            </p>
-
-            <button disabled>
-                Coming Soon
-            </button>
+            </div>
 
         </div>
 
-    </div>
+        <!-- RIGHT PANEL -->
 
+        <div class="dashboard-panel">
+
+            <div class="panel-header">
+                System Activity
+            </div>
+
+            <div class="panel-body">
+
+                <div class="activity-item">
+                    Judicial network connected
+                </div>
+
+                <div class="activity-item">
+                    Courtrooms operational
+                </div>
+
+                <div class="activity-item">
+                    Report system online
+                </div>
+
+            </div>
+
+        </div>
+
+  
 </section>
 </main>
 
@@ -173,10 +171,7 @@
     <div>
         Custom Roleplay Court Management Platform
     </div>
-  <div class="version-pill">
-            <span class="version-dot"></span>
-            Version 2.0
-        </div>
+
 </footer>
 
 <script src="app.js"></script>
