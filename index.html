@@ -3,179 +3,117 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ERLC Court System</title>
+<title>ERLC Judicial System</title>
 
 <link rel="stylesheet" href="main.css">
 </head>
-
 <body>
 
+<!-- ================================================= -->
 <!-- HEADER -->
+<!-- ================================================= -->
+
 <header class="top-bar">
 
-    <div class="left">
-        <span class="dot"></span>
-        LIVE
+    <div class="header-left">
+
+        <div class="logo-badge">
+            <img src="logo.png" alt="ERLC Logo">
+        </div>
+
+        <div class="system-branding">
+            <h1>ERLC Judicial System</h1>
+            <span>Court Operations Center</span>
+        </div>
+
     </div>
 
-    <div id="clock">00:00:00</div>
+    <div class="header-center">
 
-    <div class="right">
-        Judge: <span id="judgeNameDisplay">Default Judge</span>
+        <div id="clock">
+            00:00:00
+        </div>
+
+        <div class="dashboard-label">
+            Court Operations Dashboard
+        </div>
+
     </div>
 
-    <button onclick="openWindow('settingsWindow')">Settings</button>
+    <div class="header-right">
+
+        <div class="judge-card">
+
+            <div class="judge-title">
+                Chief Justice
+            </div>
+
+            <div id="judgeNameDisplay" class="judge-name">
+                Judge Andrade
+            </div>
+
+            <div id="judgeStatus" class="judge-status">
+                Presiding
+            </div>
+
+        </div>
+
+        <div class="version-pill">
+            <span class="version-dot"></span>
+            Version 2.0
+        </div>
+
+    </div>
 
 </header>
 
-<!-- DASHBOARD -->
-<main class="main-content">
+<!-- ================================================= -->
+<!-- MAIN DASHBOARD -->
+<!-- ================================================= -->
 
-<section id="dashboard">
+<main class="dashboard-container">
 
-    <h1>Court Dashboard</h1>
+    <section class="hero-section">
 
-    <div class="stats-grid">
+        <h2>
+            Welcome to the Court Operations Center
+        </h2>
 
-        <div class="stat-card">
-            <h3>Active Cases</h3>
-            <span id="activeCases">0</span>
-        </div>
+        <p>
+            Manage hearings, review evidence, and oversee courtroom proceedings.
+        </p>
 
-        <div class="stat-card">
-            <h3>Guilty</h3>
-            <span id="guiltyCases">0</span>
-        </div>
+        <button id="startCourtBtn" class="start-court-card">
 
-        <div class="stat-card">
-            <h3>Not Guilty</h3>
-            <span id="notGuiltyCases">0</span>
-        </div>
+            <span class="start-title">
+                START COURT
+            </span>
 
-        <div class="stat-card">
-            <h3>Courts</h3>
-            <span id="openCourtrooms">3</span>
-        </div>
+            <span class="start-description">
+                Create a new case or load an existing case to begin court proceedings.
+            </span>
 
-    </div>
+        </button>
 
-    <div class="dashboard">
-
-        <button onclick="openWindow('createCaseWindow')">Create Case</button>
-        <button onclick="loadLatestCase()">Load Case</button>
-        <button onclick="switchScreen('courtroom')">Go Court</button>
-
-    </div>
-
-</section>
-
-<!-- COURTROOM -->
-<section id="courtroom" class="hidden">
-
-    <h1>Courtroom</h1>
-
-    <div class="court-layout">
-
-        <div class="panel">
-            <h2>Case Info</h2>
-            <div id="courtCaseInfo">No case loaded</div>
-            <div id="sessionTimer">00:00:00</div>
-        </div>
-
-        <div class="panel">
-            <h2>Log</h2>
-            <div id="courtLog"></div>
-        </div>
-
-        <div class="panel">
-            <h2>Evidence</h2>
-            <input type="file" id="evidenceUpload">
-            <button onclick="addEvidence()">Add</button>
-            <div id="evidenceList"></div>
-        </div>
-
-        <div class="panel">
-            <h2>AI</h2>
-            <textarea id="aiQuestion"></textarea>
-            <button onclick="askAI()">Ask</button>
-            <div id="aiResponse"></div>
-        </div>
-
-    </div>
-
-    <div class="judge-controls">
-
-        <button onclick="logAction('Court Opened')">Open</button>
-        <button onclick="logAction('Charges Read')">Charges</button>
-        <button onclick="logAction('Witness Called')">Witness</button>
-        <button onclick="openVerdictModal()">Verdict</button>
-        <button onclick="generateReport()">Report</button>
-
-    </div>
-
-</section>
-
-<!-- REPORT -->
-<section id="report" class="hidden">
-
-    <h1>Report</h1>
-    <textarea id="reportContent"></textarea>
-    <button onclick="downloadPDF()">Download</button>
-
-</section>
+    </section>
 
 </main>
 
-<!-- CREATE CASE -->
-<div id="createCaseWindow" class="window">
+<!-- ================================================= -->
+<!-- FOOTER -->
+<!-- ================================================= -->
 
-    <div class="window-header">
-        <h3>Create Case</h3>
-        <button onclick="closeWindow('createCaseWindow')">X</button>
+<footer class="footer">
+
+    <div>
+        ERLC Judicial Operations Center
     </div>
 
-    <input id="caseTitle" placeholder="Case Title">
-    <input id="defendant" placeholder="Defendant">
-    <input id="username" placeholder="Username">
-    <textarea id="charges" placeholder="Charges"></textarea>
-    <textarea id="witnesses" placeholder="Witnesses"></textarea>
-
-    <button onclick="saveCase()">Save</button>
-
-</div>
-
-<!-- VERDICT -->
-<div id="verdictModal" class="modal hidden">
-
-    <div class="modal-content">
-
-        <h2>Verdict</h2>
-
-        <select id="verdictSelect">
-            <option>Guilty</option>
-            <option>Not Guilty</option>
-            <option>Dismissed</option>
-        </select>
-
-        <button onclick="saveVerdict()">Save</button>
-        <button onclick="closeVerdictModal()">Close</button>
-
+    <div>
+        Custom Roleplay Court Management Platform
     </div>
 
-</div>
-
-<!-- SETTINGS -->
-<div id="settingsWindow" class="window">
-
-    <div class="window-header">
-        <h3>Settings</h3>
-        <button onclick="closeWindow('settingsWindow')">X</button>
-    </div>
-
-    <input id="judgeName" placeholder="Judge Name">
-    <button onclick="saveSettings()">Save</button>
-
-</div>
+</footer>
 
 <script src="app.js"></script>
 
