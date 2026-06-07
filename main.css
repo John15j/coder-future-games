@@ -60,16 +60,21 @@ body{
 
 .stats-grid{
     display:grid;
-    grid-template-columns:repeat(4, 1fr);
+    grid-template-columns:repeat(4, minmax(0, 1fr));
     gap:10px;
     margin-bottom:15px;
 }
 
 .stat-card{
     background:#1e293b;
-    padding:15px;
+    padding:12px;
     border-radius:10px;
     text-align:center;
+
+    min-height:80px;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
 }
 
 .dashboard{
@@ -96,13 +101,16 @@ body{
 /* ================= PANELS ================= */
 
 .panel{
-    background:#1e293b;
-    padding:15px;
-    border-radius:10px;
-
-    margin-top:10px;
+    max-width:100%;
+    overflow:hidden;
 }
 
+.courtroom-card{
+    background:#0f172a;
+    padding:10px;
+    margin-top:5px;
+    border-radius:6px;
+}
 /* ================= COURTROOM ================= */
 
 .court-layout{
@@ -205,7 +213,18 @@ button{
 
     margin-bottom:10px;
 }
+.window-header button{
+    background:red;
+    border:none;
+    color:white;
 
+    width:28px;
+    height:28px;
+
+    border-radius:6px;
+
+    cursor:pointer;
+}
 /* ================= MODAL ================= */
 
 .modal{
