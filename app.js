@@ -394,3 +394,18 @@ function addCourtLog(text){
 
     log.prepend(entry);
 }
+function callWitness(){
+    addCourtLog("Witness called to stand");
+}
+
+function presentEvidence(){
+    addCourtLog("Evidence presented");
+}
+
+function openArguments(){
+    addCourtLog("Arguments opened");
+}
+
+function openVerdict(){
+    addCourtLog("Verdict review started");
+}

@@ -590,139 +590,54 @@ body{
         translate(-50%,-50%);
     }
 }
-/* ========================================= */
-/* NEW CASE POPUP */
-/* ========================================= */
 
-.form-group{
-    margin-bottom:15px;
+.judge-controls{
+    display:grid;
+    gap:12px;
 }
 
-.form-group label{
-    display:block;
-    margin-bottom:6px;
-    font-size:13px;
-    color:#94a3b8;
-    font-weight:600;
-}
+.judge-btn{
 
-.form-group input,
-.form-group textarea{
-
-    width:100%;
-
-    background:#0f172a;
-
-    border:1px solid #334155;
+    background:#1f2937;
 
     color:white;
 
-    padding:12px;
+    border:1px solid #334155;
 
-    border-radius:10px;
+    border-radius:12px;
 
-    font-size:14px;
+    padding:14px;
 
-    outline:none;
+    cursor:pointer;
+
+    font-weight:600;
 
     transition:.2s;
 }
 
-.form-group input:focus,
-.form-group textarea:focus{
+.judge-btn:hover{
 
-    border-color:#3b82f6;
+    background:#2563eb;
 
-    box-shadow:
-    0 0 15px rgba(59,130,246,.25);
+    border-color:#2563eb;
+
+    transform:translateY(-2px);
 }
-
-.form-group textarea{
-
-    resize:vertical;
-
-    min-height:100px;
-}
-
-.popup-actions{
-
+#courtLog{
     display:flex;
-
+    flex-direction:column;
     gap:10px;
-
-    margin-top:20px;
 }
 
-.popup-actions button{
+.log-entry{
 
-    flex:1;
+    background:#1f2937;
 
-    border:none;
-
-    border-radius:10px;
+    border-left:4px solid #2563eb;
 
     padding:12px;
 
-    cursor:pointer;
+    border-radius:8px;
 
-    color:white;
-
-    font-weight:600;
-}
-
-.save-btn{
-    background:#2563eb;
-}
-
-.cancel-btn{
-    background:#374151;
-}
-/* ========================================= */
-/* COURTROOM */
-/* ========================================= */
-
-.courtroom-header{
-
-    padding:30px;
-    text-align:center;
-}
-
-.courtroom-header h1{
-
-    font-size:34px;
-    margin-bottom:10px;
-}
-
-.courtroom-header p{
-
-    color:#94a3b8;
-}
-
-.courtroom-grid{
-
-    display:grid;
-
-    grid-template-columns:1fr 1fr;
-
-    gap:20px;
-
-    padding:30px;
-}
-
-.court-panel{
-
-    background:#111827;
-
-    border:1px solid #1f2937;
-
-    border-radius:16px;
-
-    padding:20px;
-
-    min-height:250px;
-}
-
-.court-panel h3{
-
-    margin-bottom:15px;
+    font-size:14px;
 }
