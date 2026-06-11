@@ -2,26 +2,28 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>HOA Court System RP</title>
+<title>HOA Court RP Simulator v2</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
 body{
     margin:0;
     font-family:Arial;
-    background: radial-gradient(circle at top, #0b1320, #05060a);
+    background: radial-gradient(circle at top, #050b1a, #000000);
     color:white;
+    overflow-x:hidden;
 }
 
-/* HEADER */
+/* SPACE COURT THEME */
 header{
     padding:15px;
     text-align:center;
     font-weight:bold;
-    background:rgba(255,255,255,0.05);
+    background:rgba(0,255,255,0.08);
+    border-bottom:1px solid rgba(0,255,255,0.2);
+    text-shadow:0 0 10px cyan;
 }
 
-/* LAYOUT */
 .container{
     display:grid;
     grid-template-columns:1fr 1fr;
@@ -29,13 +31,14 @@ header{
     padding:10px;
 }
 
-/* CARDS */
+/* PANELS */
 .card{
-    background:rgba(255,255,255,0.06);
+    background:rgba(255,255,255,0.05);
     padding:10px;
     border-radius:12px;
     margin:8px 0;
-    border:1px solid rgba(255,255,255,0.1);
+    border:1px solid rgba(0,255,255,0.15);
+    box-shadow:0 0 10px rgba(0,255,255,0.1);
 }
 
 /* BUTTONS */
@@ -44,53 +47,53 @@ button{
     margin:4px;
     border:none;
     border-radius:8px;
-    background:linear-gradient(45deg,#00c6ff,#0072ff);
+    background:linear-gradient(45deg,#00f0ff,#0066ff);
     color:white;
     cursor:pointer;
+    transition:0.2s;
 }
 
-input, select{
-    padding:8px;
-    margin:5px;
-    width:90%;
-    border:none;
-    border-radius:8px;
+button:hover{
+    transform:scale(1.05);
 }
 
 /* STAGES */
 .stage{
     display:none;
-    animation: fade 0.4s ease;
 }
 
 .stage.active{
     display:block;
 }
 
-@keyframes fade{
-    from{opacity:0; transform:scale(0.98);}
-    to{opacity:1; transform:scale(1);}
-}
-
-/* BADGES */
-.badge{
-    padding:5px 10px;
-    border-radius:20px;
-    font-size:12px;
-    background:#ffcc00;
-    color:black;
-}
-.good{color:#00ff99;}
-.bad{color:#ff4d4d;}
-.warn{color:#ffcc00;}
-
-.log{
-    height:200px;
-    overflow:auto;
-    background:rgba(0,0,0,0.3);
+/* AI BOX */
+.aiBox{
+    background:rgba(0,255,255,0.05);
+    border:1px solid cyan;
     padding:10px;
     border-radius:10px;
-    font-size:12px;
+    min-height:120px;
+    font-size:13px;
+}
+
+/* INPUTS */
+input, textarea{
+    width:90%;
+    padding:8px;
+    margin:5px;
+    border-radius:8px;
+    border:none;
+}
+
+/* JURY */
+.jury{
+    display:flex;
+    gap:5px;
+    flex-wrap:wrap;
+}
+
+.jury button{
+    flex:1;
 }
 </style>
 </head>
@@ -98,63 +101,60 @@ input, select{
 <body>
 
 <header>
-🏛️ HOA COURT SYSTEM v1 — FULL TRIAL SIMULATION
+🏛️⚖️ SPACE COURT RP SYSTEM v2 — AI LEGAL SIMULATOR
 </header>
 
 <div class="container">
 
-<!-- LEFT -->
+<!-- LEFT SIDE -->
 <div>
 
-<h3>📄 Create Case</h3>
+<h3>📄 Case Intake</h3>
 
 <input id="house" placeholder="House # (1-6)">
-<input id="officer" placeholder="Officer Name">
+<input id="type" placeholder="Case Type (Ticket / Fine / Crime)">
+<textarea id="evidence" placeholder="Evidence / Notes"></textarea>
 
-<select id="type">
-    <option>Ticket</option>
-    <option>Fine</option>
-    <option>Crime</option>
-</select>
+<button onclick="createCase()">Submit Case</button>
 
-<input id="fine" placeholder="Fine Amount">
-<input id="evidence" placeholder="Evidence / Notes">
-
-<button onclick="createCase()">Submit Case for Court</button>
-
-<h3>📜 Case List</h3>
+<h3>📜 Cases</h3>
 <div id="cases"></div>
 
 </div>
 
-<!-- RIGHT -->
+<!-- RIGHT SIDE -->
 <div>
 
-<!-- PREVIEW -->
+<!-- COURT STAGES -->
 <div id="preview" class="stage active">
     <h3>📄 Case Preview</h3>
-    <div id="previewBox" class="card">Select a case to review</div>
-    <button onclick="startTrial()">Start Court Trial</button>
+    <div id="previewBox" class="card">Select a case</div>
+    <button onclick="startCourt()">🚀 Start Court</button>
 </div>
 
-<!-- COURT -->
 <div id="court" class="stage">
-    <h3>🏛️ Court Session</h3>
+    <h3>🏛️ Court In Session</h3>
     <div id="courtBox" class="card"></div>
 
-    <button onclick="verdict(true)">⚖️ Guilty</button>
-    <button onclick="verdict(false)">❌ Not Guilty</button>
+    <h3>👥 Jury Vote</h3>
+    <div class="jury">
+        <button onclick="vote('guilty')">Guilty</button>
+        <button onclick="vote('not')">Not Guilty</button>
+    </div>
+
+    <button onclick="askAI()">🧠 Ask AI Legal Assistant</button>
 </div>
 
-<!-- REPORT -->
-<div id="report" class="stage">
-    <h3>📜 Final Court Report</h3>
-    <div id="reportBox" class="card"></div>
+<div id="final" class="stage">
+    <h3>⚖️ Final Verdict</h3>
+    <div id="finalBox" class="card"></div>
     <button onclick="reset()">New Case</button>
 </div>
 
-<h3>📡 Court Log</h3>
-<div class="log" id="log"></div>
+<h3>🧠 AI Legal Assistant</h3>
+<div class="aiBox" id="aiBox">
+Ask me anything about the case...
+</div>
 
 </div>
 
@@ -162,122 +162,120 @@ input, select{
 
 <script>
 
-let data = JSON.parse(localStorage.getItem("hoa_court")) || {
-    cases: [],
-    log:[]
+let data = JSON.parse(localStorage.getItem("court_ai_v2")) || {
+    cases:[]
 };
 
-let selectedCase = null;
-let currentStage = "preview";
+let selected = null;
 
 /* SAVE */
 function save(){
-    localStorage.setItem("hoa_court", JSON.stringify(data));
-}
-
-/* LOG */
-function log(msg){
-    data.log.unshift(`[${new Date().toLocaleTimeString()}] ${msg}`);
-    save();
+    localStorage.setItem("court_ai_v2", JSON.stringify(data));
 }
 
 /* CREATE CASE */
 function createCase(){
-
     let c = {
-        id: Date.now(),
-        house: document.getElementById("house").value,
-        officer: document.getElementById("officer").value,
-        type: document.getElementById("type").value,
-        fine: parseInt(document.getElementById("fine").value),
-        evidence: document.getElementById("evidence").value
+        id:Date.now(),
+        house:document.getElementById("house").value,
+        type:document.getElementById("type").value,
+        evidence:document.getElementById("evidence").value
     };
 
     data.cases.unshift(c);
-    log(`Case created for House ${c.house} (${c.type})`);
     save();
     renderCases();
 }
 
 /* SELECT CASE */
 function selectCase(id){
-    selectedCase = data.cases.find(c=>c.id===id);
+    selected = data.cases.find(c=>c.id===id);
 
     document.getElementById("previewBox").innerHTML = `
-        <b>House:</b> ${selectedCase.house}<br>
-        <b>Officer:</b> ${selectedCase.officer}<br>
-        <b>Type:</b> ${selectedCase.type}<br>
-        <b>Fine:</b> $${selectedCase.fine}<br>
-        <b>Evidence:</b> ${selectedCase.evidence}
+        <b>House:</b> ${selected.house}<br>
+        <b>Type:</b> ${selected.type}<br>
+        <b>Evidence:</b> ${selected.evidence}
     `;
-
-    log(`Case #${selectedCase.id} selected for review`);
 }
 
-/* START TRIAL */
-function startTrial(){
-    if(!selectedCase) return alert("Select a case first!");
+/* START COURT */
+function startCourt(){
+    if(!selected) return alert("Select a case first!");
 
     switchStage("court");
 
     document.getElementById("courtBox").innerHTML = `
-        <b>Now Hearing Case:</b><br><br>
-        House ${selectedCase.house}<br>
-        Type: ${selectedCase.type}<br>
-        Evidence: ${selectedCase.evidence}<br><br>
-        <span class="badge">COURT IN SESSION</span>
+        <b>Case Active:</b><br>
+        House ${selected.house}<br>
+        Type: ${selected.type}<br>
+        Evidence Presented:<br>
+        ${selected.evidence}
     `;
-
-    log(`Court started for Case ${selectedCase.id}`);
 }
 
-/* VERDICT */
-function verdict(guilty){
+/* JURY VOTE */
+let verdictResult = "";
 
-    switchStage("report");
+function vote(v){
+    switchStage("final");
 
-    let result = "";
-
-    if(guilty){
-        if(selectedCase.type === "Crime"){
-            result = "CRIMINAL SENTENCE ISSUED";
+    if(v === "guilty"){
+        if(selected.type.toLowerCase().includes("crime")){
+            verdictResult = "CRIMINAL SENTENCE ISSUED";
         } else {
-            result = "FINE ISSUED";
+            verdictResult = "FINE ISSUED";
         }
     } else {
-        result = "CASE DISMISSED";
+        verdictResult = "CASE DISMISSED";
     }
 
-    document.getElementById("reportBox").innerHTML = `
-        <b>Case ID:</b> ${selectedCase.id}<br>
-        <b>House:</b> ${selectedCase.house}<br>
-        <b>Type:</b> ${selectedCase.type}<br>
-        <b>Fine:</b> $${selectedCase.fine}<br><br>
-
-        <b>VERDICT:</b> ${guilty ? "GUILTY" : "NOT GUILTY"}<br>
-        <b>OUTCOME:</b> ${result}
+    document.getElementById("finalBox").innerHTML = `
+        <b>VERDICT:</b> ${v.toUpperCase()}<br><br>
+        <b>OUTCOME:</b> ${verdictResult}
     `;
+}
 
-    log(`Verdict given: ${result}`);
+/* AI LEGAL SYSTEM (REAL FUNCTIONAL RULE-BASED AI) */
+function askAI(){
+
+    if(!selected){
+        document.getElementById("aiBox").innerText = "Select a case first.";
+        return;
+    }
+
+    let text = selected.evidence.toLowerCase();
+
+    let response = "";
+
+    if(text.includes("noise")){
+        response = "This qualifies as a municipal violation. Recommend fine unless repeated offense.";
+    }
+    else if(text.includes("damage")){
+        response = "Property damage may escalate to criminal classification depending on severity.";
+    }
+    else if(text.includes("parking")){
+        response = "Parking violations typically result in fines under HOA policy.";
+    }
+    else{
+        response = "Insufficient data. Recommend judge review and classify severity manually.";
+    }
+
+    document.getElementById("aiBox").innerText = "AI: " + response;
 }
 
 /* RESET */
 function reset(){
-    selectedCase = null;
+    selected = null;
     switchStage("preview");
-    renderCases();
 }
 
 /* STAGES */
 function switchStage(stage){
-
     document.querySelectorAll(".stage").forEach(s=>s.classList.remove("active"));
-
     document.getElementById(stage).classList.add("active");
-    currentStage = stage;
 }
 
-/* RENDER CASES */
+/* RENDER */
 function renderCases(){
     let div = document.getElementById("cases");
     div.innerHTML = "";
@@ -293,19 +291,7 @@ function renderCases(){
     });
 }
 
-/* LOG */
-function renderLog(){
-    document.getElementById("log").innerHTML =
-        data.log.map(l=>`<div>${l}</div>`).join("");
-}
-
-/* LOOP */
-function render(){
-    renderCases();
-    renderLog();
-}
-
-render();
+renderCases();
 
 </script>
 
