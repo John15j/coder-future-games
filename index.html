@@ -2,55 +2,24 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>6 House HOA RP System v2</title>
+<title>6 House HOA RP System v4</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
 body{
     margin:0;
     font-family:Arial;
-    background: radial-gradient(circle at top, #141e30, #090a0f);
+    background: radial-gradient(circle at top, #0f172a, #05060a);
     color:white;
 }
 
-/* LOGIN */
-#loginBox{
-    position:fixed;
-    top:0; left:0;
-    width:100%; height:100%;
-    background:#000;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    flex-direction:column;
-}
-
-input, select{
-    padding:10px;
-    margin:5px;
-    border-radius:10px;
-    border:none;
-    width:200px;
-}
-
-button{
-    padding:10px;
-    border:none;
-    border-radius:10px;
-    background:linear-gradient(45deg,#00c6ff,#0072ff);
-    color:white;
-    cursor:pointer;
-}
-
-/* HEADER */
 header{
     padding:15px;
     text-align:center;
-    font-size:20px;
     background:rgba(255,255,255,0.05);
+    font-weight:bold;
 }
 
-/* GRID */
 .container{
     display:grid;
     grid-template-columns:1fr 1fr;
@@ -58,13 +27,35 @@ header{
     padding:10px;
 }
 
-/* CARDS */
 .card{
     background:rgba(255,255,255,0.06);
     padding:10px;
     border-radius:12px;
     margin:8px 0;
     border:1px solid rgba(255,255,255,0.1);
+    transition:0.2s;
+}
+
+.card:hover{
+    transform:scale(1.02);
+}
+
+input{
+    padding:8px;
+    margin:5px;
+    width:90%;
+    border:none;
+    border-radius:8px;
+}
+
+button{
+    padding:8px;
+    margin:3px;
+    border:none;
+    border-radius:8px;
+    background:linear-gradient(45deg,#00c6ff,#0072ff);
+    color:white;
+    cursor:pointer;
 }
 
 .small{
@@ -72,149 +63,94 @@ header{
     opacity:0.7;
 }
 
-/* COLORS */
-.good{color:#00ff99;}
-.warn{color:#ffcc00;}
-.bad{color:#ff4d4d;}
-
-.logBox{
-    max-height:200px;
+.log{
+    background:rgba(0,0,0,0.3);
+    padding:10px;
+    border-radius:10px;
+    height:200px;
     overflow:auto;
     font-size:12px;
-    background:rgba(0,0,0,0.3);
-    padding:8px;
-    border-radius:10px;
 }
 </style>
 </head>
 
 <body>
 
-<!-- LOGIN -->
-<div id="loginBox">
-    <h2>🏡 6 HOUSE HOA LOGIN</h2>
-    <select id="role">
-        <option value="President">President</option>
-        <option value="Vice President">Vice President</option>
-        <option value="Officer">HOA Officer</option>
-        <option value="Secretary">Secretary</option>
-        <option value="Resident">Resident</option>
-    </select>
-    <input id="name" placeholder="Your Name">
-    <button onclick="login()">Enter System</button>
-</div>
-
 <header>
-🏡 6 HOUSE HOA RP CONTROL PANEL v2 — ROLE: <span id="roleText"></span>
+🏡 6 HOUSE HOA RP SYSTEM v4 — LOCAL STORAGE EDITION
 </header>
 
 <div class="container">
 
 <!-- LEFT -->
 <div>
-    <h3>🏠 Houses (1–6)</h3>
-    <div id="houses"></div>
+    <h3>🏠 Create Case</h3>
 
-    <h3>⚠️ Create Violation Case</h3>
-    <input id="vHouse" placeholder="House #">
-    <input id="vType" placeholder="Violation Type">
-    <input id="vFine" placeholder="Fine Amount">
-    <button onclick="createCase()">Submit Case</button>
+    <input id="house" placeholder="House # (1-6)">
+    <input id="type" placeholder="Violation Type">
+    <input id="fine" placeholder="Fine Amount">
+
+    <button onclick="createCase()">Create Case</button>
 
     <h3>💰 HOA Treasury: $<span id="money">0</span></h3>
+
+    <h3>🏘️ Houses</h3>
+    <div id="houses"></div>
 </div>
 
 <!-- RIGHT -->
 <div>
-    <h3>📜 Active Cases</h3>
+    <h3>📜 Active + Past Cases</h3>
     <div id="cases"></div>
 
     <h3>📡 Activity Log</h3>
-    <div class="logBox" id="log"></div>
+    <div class="log" id="log"></div>
 </div>
 
 </div>
 
 <script>
-let role = "";
-let username = "";
-
-let data = JSON.parse(localStorage.getItem("hoaRP")) || {
+let data = JSON.parse(localStorage.getItem("hoa_v4")) || {
     money: 1000,
     houses: [
-        {id:1,status:"Good",owner:"None",score:100},
-        {id:2,status:"Good",owner:"None",score:100},
-        {id:3,status:"Good",owner:"None",score:100},
-        {id:4,status:"Good",owner:"None",score:100},
-        {id:5,status:"Good",owner:"None",score:100},
-        {id:6,status:"Good",owner:"None",score:100}
+        {id:1,owner:"None",status:"Good",score:100},
+        {id:2,owner:"None",status:"Good",score:100},
+        {id:3,owner:"None",status:"Good",score:100},
+        {id:4,owner:"None",status:"Good",score:100},
+        {id:5,owner:"None",status:"Good",score:100},
+        {id:6,owner:"None",status:"Good",score:100}
     ],
     cases: [],
     log:[]
 };
 
 function save(){
-    localStorage.setItem("hoaRP", JSON.stringify(data));
+    localStorage.setItem("hoa_v4", JSON.stringify(data));
 }
 
 function log(msg){
     data.log.unshift(`[${new Date().toLocaleTimeString()}] ${msg}`);
     save();
-    render();
 }
 
-/* LOGIN */
-function login(){
-    role = document.getElementById("role").value;
-    username = document.getElementById("name").value;
-
-    if(!username) return alert("Enter name");
-
-    document.getElementById("loginBox").style.display="none";
-    document.getElementById("roleText").innerText = role + " - " + username;
-
-    log(`${username} joined as ${role}`);
-    render();
-}
-
-/* HOUSES */
-function renderHouses(){
-    let div = document.getElementById("houses");
-    div.innerHTML="";
-
-    data.houses.forEach(h=>{
-        let color = h.status==="Good"?"good":h.status==="Warning"?"warn":"bad";
-
-        div.innerHTML += `
-        <div class="card">
-            <b>House ${h.id}</b><br>
-            Owner: ${h.owner}<br>
-            Status: <span class="${color}">${h.status}</span><br>
-            Score: ${h.score}
-        </div>
-        `;
-    });
-}
-
-/* CASES */
+/* CREATE CASE */
 function createCase(){
-    if(role==="Resident") return alert("No permission");
-
     let c = {
-        id:Date.now(),
-        house:document.getElementById("vHouse").value,
-        type:document.getElementById("vType").value,
-        fine:parseInt(document.getElementById("vFine").value),
-        status:"Pending",
-        createdBy:username
+        id: Date.now(),
+        house: document.getElementById("house").value,
+        type: document.getElementById("type").value,
+        fine: parseInt(document.getElementById("fine").value),
+        status: "Pending",
+        time: new Date().toLocaleString()
     };
 
-    data.cases.push(c);
-    log(`${username} created case for House ${c.house}`);
+    data.cases.unshift(c);
+    log(`Case created for House ${c.house} (${c.type})`);
     save();
     render();
 }
 
+/* RESOLVE CASE */
 function resolveCase(id, approve){
     let c = data.cases.find(x=>x.id===id);
     if(!c) return;
@@ -222,41 +158,59 @@ function resolveCase(id, approve){
     if(approve){
         data.money += c.fine;
 
-        let h = data.houses.find(x=>x.id==c.house);
+        let h = data.houses.find(x=>x.id == c.house);
         if(h){
             h.status = "Warning";
             h.score -= 10;
         }
 
-        c.status="Approved";
-        log(`Case ${id} APPROVED`);
+        c.status = "Approved";
+        log(`Case #${id} APPROVED for House ${c.house}`);
     } else {
-        c.status="Denied";
-        log(`Case ${id} DENIED`);
+        c.status = "Denied";
+        log(`Case #${id} DENIED`);
     }
 
     save();
     render();
 }
 
-/* CASE UI */
+/* HOUSE DISPLAY */
+function renderHouses(){
+    let div = document.getElementById("houses");
+    div.innerHTML = "";
+
+    data.houses.forEach(h=>{
+        div.innerHTML += `
+        <div class="card">
+            <b>House ${h.id}</b><br>
+            Owner: ${h.owner}<br>
+            Status: ${h.status}<br>
+            Score: ${h.score}
+        </div>
+        `;
+    });
+}
+
+/* CASE DISPLAY */
 function renderCases(){
     let div = document.getElementById("cases");
-    div.innerHTML="";
+    div.innerHTML = "";
 
     data.cases.forEach(c=>{
         div.innerHTML += `
         <div class="card">
             <b>Case #${c.id}</b><br>
-            House ${c.house}<br>
+            House: ${c.house}<br>
             Type: ${c.type}<br>
             Fine: $${c.fine}<br>
             Status: ${c.status}<br>
+            Time: ${c.time}<br>
 
-            ${role!=="Resident" ? `
-            <button onclick="resolveCase(${c.id},true)">Approve</button>
-            <button onclick="resolveCase(${c.id},false)">Deny</button>
-            ` : ""}
+            ${c.status === "Pending" ? `
+                <button onclick="resolveCase(${c.id},true)">Approve</button>
+                <button onclick="resolveCase(${c.id},false)">Deny</button>
+            ` : `<span class="small">Finalized</span>`}
         </div>
         `;
     });
@@ -268,9 +222,14 @@ function renderLog(){
         data.log.map(l=>`<div>${l}</div>`).join("");
 }
 
-/* MAIN RENDER */
-function render(){
+/* MONEY */
+function updateMoney(){
     document.getElementById("money").innerText = data.money;
+}
+
+/* MAIN */
+function render(){
+    updateMoney();
     renderHouses();
     renderCases();
     renderLog();
