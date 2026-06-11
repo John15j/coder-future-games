@@ -38,7 +38,7 @@ function hideAllScreens(){
 
 /* ================= COURT LAUNCHER ================= */
 
-let selectedCase = null;
+
 
 function openCourtLauncher(){
 
