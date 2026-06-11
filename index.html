@@ -120,11 +120,11 @@
     <p>Create a new case file.</p>
 </button>
 
-                <button class="action-card">
-                    <span>📚</span>
-                    <h3>All Cases</h3>
-                    <p>View existing records.</p>
-                </button>
+               <button class="action-card" onclick="openAllCases()">
+    <span>📚</span>
+    <h3>All Cases</h3>
+    <p>View existing records.</p>
+</button>
 
                 <button class="action-card">
                     <span>⚙</span>
@@ -258,19 +258,19 @@
 
     <div class="launcher-box">
 
-        <h1>Case Ready</h1>
+    <h1>⚖ Court Ready</h1>
 
-        <div id="selectedCaseInfo"></div>
+    <div id="selectedCaseInfo"></div>
 
-        <button onclick="startCourtSession()">
-            Start Court Session
-        </button>
+    <button onclick="startCourtSession()">
+        Start Court Session
+    </button>
 
-        <button onclick="closeLauncher()">
-            Cancel
-        </button>
+    <button onclick="closeLauncher()">
+        Cancel
+    </button>
 
-    </div>
+</div>
 
 </div>
     <!-- NEW CASE POPUP -->
@@ -290,6 +290,26 @@
 
         <button onclick="saveNewCase()">Save Case</button>
         <button onclick="closeNewCase()">Cancel</button>
+
+    </div>
+
+</div>
+<!-- ALL CASES POPUP -->
+<div id="allCasesPopup" class="popup hidden">
+
+    <div class="launcher-box">
+
+        <h1>Case Database</h1>
+
+        <p id="caseCount">
+            Total Cases: 0
+        </p>
+
+        <div id="allCasesList"></div>
+
+        <button onclick="closeAllCases()">
+            Close
+        </button>
 
     </div>
 

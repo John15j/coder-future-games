@@ -50,40 +50,82 @@ function openCourtLauncher(){
 
 function showCaseSelector(){
 
-    hideAllScreens();
-    document.getElementById("caseSelector").classList.remove("hidden");
+    document.getElementById("courtLauncher")
+        .classList.add("hidden");
 
-    const list = document.getElementById("caseList");
+    document.getElementById("caseSelector")
+        .classList.remove("hidden");
+
+    const list =
+    document.getElementById("caseList");
+
     list.innerHTML = "";
+
+    if(cases.length === 0){
+
+        list.innerHTML = `
+            <div class="case-item">
+                No cases found.
+                Create a case first.
+            </div>
+        `;
+
+        return;
+    }
 
     cases.forEach(c => {
 
-        const div = document.createElement("div");
+        const div =
+        document.createElement("div");
+
         div.className = "case-item";
 
         div.innerHTML = `
-            <b>${c.id}</b><br>
-            ${c.title}
+            <b>${c.title}</b><br>
+            ${c.id}<br>
+            Status: ${c.verdict}
         `;
 
-        div.onclick = () => selectCase(c.id);
+        div.onclick = () => {
+            selectCase(c.id);
+        };
 
         list.appendChild(div);
     });
 }
 
+
 function selectCase(id){
 
-    selectedCase = cases.find(c => c.id === id);
+    selectedCase =
+    cases.find(c => c.id === id);
 
-    document.getElementById("selectedCaseInfo").innerHTML = `
-        <b>${selectedCase.title}</b><br>
-        Defendant: ${selectedCase.defendant}<br>
-        Status: Ready
+    if(!selectedCase) return;
+
+    document.getElementById("caseSelector")
+        .classList.add("hidden");
+
+    document.getElementById("courtReady")
+        .classList.remove("hidden");
+
+    document.getElementById("selectedCaseInfo")
+        .innerHTML = `
+        <h3>${selectedCase.title}</h3>
+        <p>
+            Defendant:
+            ${selectedCase.defendant}
+        </p>
+
+        <p>
+            Status:
+            Ready For Hearing
+        </p>
+
+        <p>
+            Case ID:
+            ${selectedCase.id}
+        </p>
     `;
-
-    hideAllScreens();
-    document.getElementById("courtReady").classList.remove("hidden");
 }
 
 function startEmptyCourt(){
@@ -100,7 +142,12 @@ function startEmptyCourt(){
 
 function startCourtSession(){
 
-    alert("Court Session Started");
+    alert(
+        "Court Session Started\n\n" +
+        (selectedCase ?
+        selectedCase.title :
+        "Empty Court")
+    );
 
     closeLauncher();
 }
@@ -216,4 +263,85 @@ function saveNewCase(){
     );
 
     closeNewCase();
+}
+function openAllCases(){
+
+    const popup =
+    document.getElementById("allCasesPopup");
+
+    const list =
+    document.getElementById("allCasesList");
+
+    const count =
+    document.getElementById("caseCount");
+
+    list.innerHTML = "";
+
+    count.innerText =
+    "Total Cases: " + cases.length;
+
+    cases.forEach(c => {
+
+        const div =
+        document.createElement("div");
+
+        div.className = "case-item";
+
+        div.innerHTML = `
+            <b>${c.title}</b><br>
+            ${c.id}<br>
+            Status: ${c.verdict}
+            <br><br>
+
+            <button onclick="viewCase('${c.id}')">
+                Open
+            </button>
+
+            <button onclick="deleteCase('${c.id}')">
+                Delete
+            </button>
+        `;
+
+        list.appendChild(div);
+    });
+
+    popup.classList.remove("hidden");
+}
+
+function closeAllCases(){
+
+    document
+    .getElementById("allCasesPopup")
+    .classList.add("hidden");
+}
+function viewCase(id){
+
+    const c =
+    cases.find(x => x.id === id);
+
+    if(!c) return;
+
+    alert(
+        "Case: " + c.title +
+        "\nDefendant: " + c.defendant +
+        "\nCharges: " + c.charges
+    );
+}
+
+function deleteCase(id){
+
+    const confirmDelete =
+    confirm("Delete this case?");
+
+    if(!confirmDelete) return;
+
+    cases =
+    cases.filter(c => c.id !== id);
+
+    localStorage.setItem(
+        "erlc_cases",
+        JSON.stringify(cases)
+    );
+
+    openAllCases();
 }
