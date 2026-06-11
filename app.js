@@ -1,5 +1,5 @@
 let cases = JSON.parse(localStorage.getItem("erlc_cases")) || [];
-alert("v1:40");
+alert("v1:54");
 /* ================================================= */
 /* ERLC JUDICIAL SYSTEM */
 /* PHASE 1 */
@@ -23,7 +23,7 @@ setInterval(updateClock,1000);
 updateClock();
 
 
-let cases = [];
+
 let selectedCase = null;
 
 
@@ -149,8 +149,17 @@ function setupCourtButton(){
 setupCourtButton();
 
 function openNewCase(){
+
     hideAllScreens();
-    document.getElementById("newCasePopup").classList.remove("hidden");
+
+    const popup = document.getElementById("newCasePopup");
+
+    if(!popup){
+        alert("ERROR: newCasePopup not found in HTML");
+        return;
+    }
+
+    popup.classList.remove("hidden");
 }
 
 function closeNewCase(){
