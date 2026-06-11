@@ -2,57 +2,69 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Greenville RP Judicial Server</title>
+<title>Greenville RP Court System v3</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 <style>
 body{
     margin:0;
     font-family:Arial;
-    background: radial-gradient(circle at top, #06121f, #000);
+    background:#05070d;
     color:white;
 }
 
-/* HEADER */
+/* TOP BAR */
 header{
     display:flex;
+    justify-content:space-between;
     align-items:center;
-    gap:12px;
-    padding:10px 15px;
-    background:rgba(0,255,255,0.06);
-    border-bottom:1px solid rgba(0,255,255,0.2);
+    padding:10px;
+    background:rgba(0,255,255,0.05);
 }
 
-header img{
+.logo{
     width:45px;
     height:45px;
     border-radius:10px;
 }
 
-/* GRID */
+/* LAYOUT */
 .container{
     display:grid;
-    grid-template-columns:1fr 1fr;
+    grid-template-columns:1fr 1fr 1fr;
     gap:10px;
     padding:10px;
 }
 
-/* CARDS */
-.card{
+/* PANELS */
+.panel{
     background:rgba(255,255,255,0.05);
-    padding:10px;
+    border:1px solid rgba(0,255,255,0.1);
     border-radius:12px;
+    padding:10px;
+    height:85vh;
+    overflow:auto;
+}
+
+/* CASE CARD */
+.card{
+    background:rgba(255,255,255,0.06);
+    padding:10px;
     margin:8px 0;
-    border:1px solid rgba(0,255,255,0.15);
+    border-radius:10px;
+    cursor:pointer;
+    border:1px solid rgba(255,255,255,0.1);
 }
 
 /* INPUTS */
-input, select, textarea{
-    width:90%;
+input, textarea, select{
+    width:95%;
     padding:8px;
-    margin:5px;
-    border-radius:8px;
+    margin:5px 0;
     border:none;
+    border-radius:8px;
 }
 
 /* BUTTONS */
@@ -66,24 +78,33 @@ button{
     cursor:pointer;
 }
 
-/* LOG */
-.log{
-    background:rgba(0,0,0,0.3);
-    height:200px;
-    overflow:auto;
-    font-size:12px;
-    padding:10px;
-    border-radius:10px;
+/* COURT MODE */
+.courtMode{
+    display:none;
+    background:black;
+    padding:15px;
+    border-radius:12px;
 }
 
-/* TAGS */
-.tag{
-    display:inline-block;
-    padding:3px 8px;
-    border-radius:20px;
-    font-size:11px;
+.courtMode.active{
+    display:block;
+}
+
+/* AI BOX */
+.aiBox{
+    background:rgba(0,255,255,0.05);
+    padding:10px;
+    border-radius:10px;
+    min-height:120px;
+}
+
+/* STATUS */
+.badge{
+    padding:4px 8px;
     background:#00e5ff;
     color:black;
+    border-radius:20px;
+    font-size:11px;
 }
 </style>
 </head>
@@ -91,60 +112,75 @@ button{
 <body>
 
 <header>
-<img id="logo" src="https://static.wikia.nocookie.net/greenville-wisconsin/images/0/0b/GVRP.png/revision/latest/thumbnail/width/360/height/450?cb=20251104185840">
-<div>
-<b>GREENVILLE RP JUDICIAL SERVER</b><br>
-<small>Official Court Administration System</small>
-</div>
+<img class="logo" src="data:image/jpeg;base64,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">
+<b>GREENVILLE RP COURT SYSTEM v3</b>
+<span class="badge">AI COURT ENGINE ACTIVE</span>
 </header>
 
 <div class="container">
 
-<!-- LEFT PANEL -->
-<div>
+<!-- LEFT: CASE CREATION -->
+<div class="panel">
 
-<h3>📂 File Case (Officer Input)</h3>
+<h3>📄 Create Case</h3>
 
 <input id="citizen" placeholder="Citizen Name">
 <input id="officer" placeholder="Officer Name">
 
 <select id="type">
-    <option>Traffic Violation</option>
-    <option>Property Damage</option>
-    <option>Disturbance</option>
-    <option>Criminal Offense</option>
+<option>Traffic Violation</option>
+<option>Property Damage</option>
+<option>Criminal Offense</option>
+<option>Disturbance</option>
 </select>
 
-<input id="fine" placeholder="Suggested Fine">
-<textarea id="evidence" placeholder="Evidence / Report"></textarea>
+<input id="fine" placeholder="Fine Amount">
 
-<button onclick="createCase()">Submit to Court System</button>
+<textarea id="evidence" placeholder="Evidence Notes"></textarea>
 
-<h3>📜 Active Cases</h3>
+<input type="file" id="file">
+
+<button onclick="createCase()">➕ Create Case</button>
+
+<h3>📂 Cases</h3>
 <div id="cases"></div>
 
 </div>
 
-<!-- RIGHT PANEL -->
-<div>
+<!-- MIDDLE: PREVIEW -->
+<div class="panel">
 
-<h3>🏛️ Courtroom Control Panel</h3>
+<div id="preview">
+<h3>📄 Case Preview</h3>
+<div id="previewBox">Select a case</div>
 
-<div id="viewer" class="card">Select a case to begin trial</div>
-
-<button onclick="openCourt()">🏛️ Open Court Session</button>
-<button onclick="askAI()">🧠 AI Legal Assistant</button>
-<button onclick="guilty()">⚖️ Guilty Verdict</button>
-<button onclick="notGuilty()">❌ Not Guilty</button>
-<button onclick="sentence()">💰 Issue Sentence</button>
-
-<h3>🧠 AI Assistant</h3>
-<div class="card" id="ai">
-AI ready for legal guidance...
+<button onclick="enterCourt()">🏛️ Enter Court</button>
 </div>
 
-<h3>📡 Server Log</h3>
-<div class="log" id="log"></div>
+<div class="courtMode" id="court">
+
+<h3>🏛️ LIVE COURTROOM</h3>
+
+<div id="courtBox"></div>
+
+<button onclick="aiJudgeHelp()">🧠 AI Judge Assistant</button>
+<button onclick="guilty()">⚖️ Guilty</button>
+<button onclick="notGuilty()">❌ Not Guilty</button>
+
+<h3>🎤 AI Closing Statement</h3>
+<div class="aiBox" id="ai"></div>
+
+<button onclick="generatePDF()">📜 Generate Final Report</button>
+
+</div>
+
+</div>
+
+<!-- RIGHT: LOG -->
+<div class="panel">
+
+<h3>📡 Court Log</h3>
+<div id="log"></div>
 
 </div>
 
@@ -152,21 +188,18 @@ AI ready for legal guidance...
 
 <script>
 
-/* =========================
-   DATABASE
-========================= */
-
-let data = JSON.parse(localStorage.getItem("greenville_server_v2")) || {
-    logo:"https://via.placeholder.com/100",
+/* DATABASE */
+let data = JSON.parse(localStorage.getItem("greenville_v3")) || {
     cases:[],
     log:[]
 };
 
 let selected = null;
+let verdict = "";
 
 /* SAVE */
 function save(){
-    localStorage.setItem("greenville_server_v2", JSON.stringify(data));
+    localStorage.setItem("greenville_v3", JSON.stringify(data));
 }
 
 /* LOG */
@@ -175,135 +208,122 @@ function log(msg){
     save();
 }
 
-/* LOGO */
-document.getElementById("logo").src = data.logo;
-
-/* =========================
-   CREATE CASE
-========================= */
-
+/* CREATE CASE */
 function createCase(){
 
-    let c = {
-        id:Date.now(),
-        citizen:document.getElementById("citizen").value,
-        officer:document.getElementById("officer").value,
-        type:document.getElementById("type").value,
-        fine:parseInt(document.getElementById("fine").value),
-        evidence:document.getElementById("evidence").value,
-        status:"Filed"
+    let file = document.getElementById("file").files[0];
+
+    let reader = new FileReader();
+
+    reader.onload = function(){
+
+        let c = {
+            id:Date.now(),
+            citizen:document.getElementById("citizen").value,
+            officer:document.getElementById("officer").value,
+            type:document.getElementById("type").value,
+            fine:document.getElementById("fine").value,
+            evidence:document.getElementById("evidence").value,
+            file:reader.result || null
+        };
+
+        data.cases.unshift(c);
+        log("Case created: " + c.citizen);
+        save();
+        render();
     };
 
-    data.cases.unshift(c);
-    log(`Case filed: ${c.citizen}`);
-    save();
-    render();
+    if(file){
+        reader.readAsDataURL(file);
+    } else {
+        reader.onload();
+    }
 }
 
 /* SELECT CASE */
 function selectCase(id){
     selected = data.cases.find(c=>c.id===id);
 
-    document.getElementById("viewer").innerHTML = `
-        <b>Citizen:</b> ${selected.citizen}<br>
-        <b>Officer:</b> ${selected.officer}<br>
-        <b>Type:</b> ${selected.type}<br>
-        <b>Evidence:</b><br>${selected.evidence}<br>
-        <span class="tag">${selected.status}</span>
+    document.getElementById("previewBox").innerHTML = `
+        <b>${selected.citizen}</b><br>
+        Type: ${selected.type}<br>
+        Evidence: ${selected.evidence}<br>
+        ${selected.file ? `<img src="${selected.file}" width="100">` : ""}
     `;
 
-    log(`Case selected: ${selected.citizen}`);
+    log("Selected case " + selected.citizen);
 }
 
-/* =========================
-   COURT ACTIONS
-========================= */
+/* ENTER COURT */
+function enterCourt(){
+    if(!selected) return alert("Select case first");
 
-function openCourt(){
-    if(!selected) return alert("Select a case first!");
-    selected.status = "In Court";
-    log(`Court opened for ${selected.citizen}`);
-    save();
-    render();
+    document.getElementById("court").classList.add("active");
+
+    document.getElementById("courtBox").innerHTML = `
+        <b>Case:</b> ${selected.citizen}<br>
+        <b>Officer:</b> ${selected.officer}<br>
+        <b>Type:</b> ${selected.type}<br>
+        <b>Evidence:</b> ${selected.evidence}
+    `;
+
+    log("Court session started");
 }
 
-/* AI LEGAL ASSISTANT */
-function askAI(){
-
-    if(!selected){
-        document.getElementById("ai").innerText = "Select a case first.";
-        return;
-    }
+/* AI JUDGE ASSIST */
+function aiJudgeHelp(){
 
     let e = selected.evidence.toLowerCase();
 
-    let r = "";
+    let msg = "";
 
     if(e.includes("speed")){
-        r = "Traffic violation confirmed. Recommend fine or warning.";
+        msg = "Recommend: Guilty - Traffic violation confirmed.";
     }
     else if(e.includes("damage")){
-        r = "Property damage may require criminal escalation depending on severity.";
+        msg = "Recommend: Severe penalty or criminal escalation.";
     }
     else if(e.includes("noise")){
-        r = "Noise disturbance usually falls under civil fine.";
+        msg = "Recommend: Minor fine or warning.";
     }
     else{
-        r = "Insufficient evidence clarity. Recommend judge discretion.";
+        msg = "Recommend judge discretion due to unclear evidence.";
     }
 
-    document.getElementById("ai").innerText = "AI: " + r;
+    document.getElementById("ai").innerText = msg;
+
+    log("AI assistant activated");
 }
 
 /* VERDICTS */
 function guilty(){
-    if(!selected) return;
-
-    selected.status = "Guilty";
-    log(`GUILTY verdict: ${selected.citizen}`);
-    save();
-    render();
+    verdict = "GUILTY";
+    log("Verdict: GUILTY");
 }
 
 function notGuilty(){
-    if(!selected) return;
-
-    selected.status = "Not Guilty";
-    log(`NOT GUILTY verdict: ${selected.citizen}`);
-    save();
-    render();
+    verdict = "NOT GUILTY";
+    log("Verdict: NOT GUILTY");
 }
 
-/* SENTENCING */
-function sentence(){
-    if(!selected) return;
+/* PDF GENERATOR */
+function generatePDF(){
 
-    if(selected.status !== "Guilty"){
-        alert("Cannot sentence without guilty verdict.");
-        return;
-    }
+    const { jsPDF } = window.jspdf;
+    let doc = new jsPDF();
 
-    let result = "";
+    doc.text("GREENVILLE RP COURT REPORT", 10, 10);
+    doc.text("Citizen: " + selected.citizen, 10, 20);
+    doc.text("Type: " + selected.type, 10, 30);
+    doc.text("Verdict: " + verdict, 10, 40);
+    doc.text("Evidence: " + selected.evidence, 10, 50);
 
-    if(selected.type === "Criminal Offense"){
-        result = "Jail RP Sentence Assigned";
-    } else {
-        result = `$${selected.fine} Fine Issued`;
-    }
+    doc.save("court_report.pdf");
 
-    selected.status = "Sentenced";
-
-    log(`Sentence issued: ${result} for ${selected.citizen}`);
-    alert(result);
-
-    save();
-    render();
+    log("PDF report generated");
 }
 
-/* =========================
-   RENDER SYSTEM
-========================= */
-
+/* RENDER CASES */
 function render(){
 
     let div = document.getElementById("cases");
@@ -312,9 +332,8 @@ function render(){
     data.cases.forEach(c=>{
         div.innerHTML += `
         <div class="card" onclick="selectCase(${c.id})">
-            <b>${c.citizen}</b><br>
-            ${c.type}<br>
-            Status: ${c.status}
+            ${c.citizen}<br>
+            ${c.type}
         </div>
         `;
     });
