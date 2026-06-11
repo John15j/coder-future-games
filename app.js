@@ -109,17 +109,24 @@ function backToLauncher(){
     document.getElementById("caseSelector")
         .classList.add("hidden");
 
+    document.getElementById("courtReady")
+        .classList.add("hidden");
+
     document.getElementById("courtLauncher")
         .classList.remove("hidden");
 }
 
 function closeLauncher(){
 
-    document
-    .getElementById("courtLauncher")
-    .classList.add("hidden");
-}
+    document.getElementById("courtLauncher")
+        .classList.add("hidden");
 
+    document.getElementById("caseSelector")
+        .classList.add("hidden");
+
+    document.getElementById("courtReady")
+        .classList.add("hidden");
+}
 
 
 
