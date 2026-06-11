@@ -19,7 +19,16 @@ function updateClock(){
 setInterval(updateClock,1000);
 
 updateClock();
+/* hide all screens helper */
+function hideAllScreens(){
 
+    const screens = document.querySelectorAll(".screen");
+
+    screens.forEach(screen => {
+        screen.classList.add("hidden");
+    });
+}
+}
 /* ================= COURT LAUNCHER ================= */
 
 let selectedCase = null;
@@ -97,13 +106,8 @@ function closeLauncher(){
     document.getElementById("dashboard").classList.remove("hidden");
 }
 
-/* hide all screens helper */
-function hideAllScreens(){
 
-    document.querySelectorAll(".screen").forEach(s => {
-        s.classList.add("hidden");
-    });
-}
+
 
 /* connect button from dashboard */
 function setupCourtButton(){
