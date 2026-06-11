@@ -2,154 +2,226 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Greenville RP Court Game</title>
+<title>Greenville RP Court UI Redesign</title>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 <style>
+
+/* =========================
+   GLOBAL GAME THEME
+========================= */
+
 body{
     margin:0;
     font-family:Arial;
-    background:black;
+    background:radial-gradient(circle at top,#0b1a2a,#000);
     color:white;
     overflow:hidden;
 }
 
-/* SCREENS */
-.screen{
-    position:absolute;
-    width:100%;
-    height:100%;
-    display:none;
-    justify-content:center;
-    align-items:center;
-    flex-direction:column;
-    transition:all 0.5s ease;
-}
-
-.screen.active{
+/* HEADER */
+header{
+    position:fixed;
+    top:0;
+    left:0;
+    right:0;
+    height:50px;
+    background:rgba(0,255,255,0.06);
     display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 15px;
+    z-index:10;
 }
 
-/* INTRO */
-#intro{
-    background:radial-gradient(circle,#0a1a2a,#000);
-    font-size:28px;
-    animation:fadeIn 2s ease;
+/* LAYOUT GRID */
+.layout{
+    display:grid;
+    grid-template-columns:260px 1fr 280px;
+    height:100vh;
+    padding-top:50px;
 }
 
-/* DASHBOARD */
-#dashboard{
-    background:#05070d;
+/* LEFT SIDEBAR */
+.sidebar{
+    background:rgba(255,255,255,0.03);
+    border-right:1px solid rgba(255,255,255,0.08);
+    overflow:auto;
 }
 
-/* COURTROOM */
-#court{
-    background:linear-gradient(180deg,#111,#000);
-}
-
-/* CARDS */
-.card{
-    background:rgba(255,255,255,0.06);
+/* CASE CARD */
+.case{
+    background:rgba(255,255,255,0.05);
+    margin:8px;
     padding:10px;
     border-radius:10px;
-    margin:5px;
-    width:300px;
+    cursor:pointer;
+    transition:0.2s;
 }
 
-/* BUTTONS */
-button{
+.case:hover{
+    transform:scale(1.02);
+    background:rgba(0,255,255,0.1);
+}
+
+/* CENTER COURTROOM */
+.stage{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    position:relative;
+}
+
+/* COURT VISUAL */
+.courtBox{
+    width:80%;
+    height:60%;
+    background:rgba(255,255,255,0.04);
+    border:1px solid rgba(0,255,255,0.2);
+    border-radius:15px;
+    padding:15px;
+    box-shadow:0 0 25px rgba(0,255,255,0.15);
+}
+
+/* RIGHT AI PANEL */
+.aiPanel{
+    background:rgba(0,255,255,0.05);
+    border-left:1px solid rgba(255,255,255,0.08);
     padding:10px;
-    margin:5px;
+}
+
+/* ACTION BAR */
+.actionBar{
+    position:fixed;
+    bottom:0;
+    left:0;
+    right:0;
+    height:70px;
+    background:rgba(0,0,0,0.7);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:10px;
+    border-top:1px solid rgba(0,255,255,0.2);
+}
+
+button{
+    padding:10px 15px;
     border:none;
     border-radius:8px;
-    background:#00bfff;
-    color:white;
     cursor:pointer;
+    background:linear-gradient(45deg,#00e5ff,#0077ff);
+    color:white;
 }
 
-/* ANIMATION */
-@keyframes fadeIn{
-    from{opacity:0;}
-    to{opacity:1;}
+button:hover{
+    transform:scale(1.05);
 }
 
-/* COURT STAGE EFFECT */
-.glow{
+/* STATUS BADGE */
+.badge{
+    background:lime;
+    color:black;
+    padding:3px 8px;
+    border-radius:20px;
+    font-size:11px;
+}
+
+textarea,input{
+    width:90%;
+    margin:5px;
+    padding:8px;
+    border-radius:8px;
+    border:none;
+}
+
+/* COURT TITLE */
+.title{
+    font-size:20px;
+    margin-bottom:10px;
     text-shadow:0 0 10px cyan;
 }
 
-/* AI BOX */
-#aiBox{
-    background:rgba(0,255,255,0.1);
-    padding:10px;
-    border-radius:10px;
-    width:300px;
-}
 </style>
 </head>
 
 <body>
 
-<!-- INTRO SCREEN -->
-<div id="intro" class="screen active">
-    🏛️ GREENVILLE RP COURT GAME<br><br>
-    <button onclick="startGame()">ENTER COURT SYSTEM</button>
-</div>
+<header>
+<b>🏛️ Greenville RP Court System</b>
+<span class="badge">UI REDESIGN ACTIVE</span>
+</header>
 
-<!-- DASHBOARD -->
-<div id="dashboard" class="screen">
+<div class="layout">
 
-<h2 class="glow">CASE DASHBOARD</h2>
+<!-- LEFT SIDEBAR -->
+<div class="sidebar">
 
-<div>
-<input id="citizen" placeholder="Citizen Name">
-<input id="officer" placeholder="Officer Name">
-<textarea id="evidence" placeholder="Evidence"></textarea>
-</div>
-
-<button onclick="createCase()">Create Case</button>
-<button onclick="enterCourt()">Enter Courtroom</button>
+<h3 style="padding-left:10px;">📂 Cases</h3>
 
 <div id="cases"></div>
 
+<hr>
+
+<h3 style="padding-left:10px;">➕ Create Case</h3>
+
+<input id="citizen" placeholder="Citizen">
+<input id="officer" placeholder="Officer">
+<textarea id="evidence" placeholder="Evidence"></textarea>
+
+<button onclick="createCase()" style="margin-left:10px;">Create Case</button>
+
 </div>
 
-<!-- COURTROOM -->
-<div id="court" class="screen">
+<!-- CENTER COURTROOM -->
+<div class="stage">
 
-<h2 class="glow">🏛️ COURT IN SESSION</h2>
+<div class="title">🏛️ COURTROOM ACTIVE</div>
 
-<div id="courtView" class="card">No Case Selected</div>
+<div class="courtBox" id="courtBox">
+Select a case to begin trial
+</div>
 
-<button onclick="aiAssist()">🧠 AI Judge Assist</button>
-<button onclick="guilty()">⚖️ Guilty</button>
-<button onclick="notGuilty()">❌ Not Guilty</button>
-<button onclick="generateSpeech()">🎤 AI Closing Speech</button>
-<button onclick="generatePDF()">📜 Final Report</button>
+</div>
 
-<div id="aiBox">AI Waiting...</div>
+<!-- RIGHT AI PANEL -->
+<div class="aiPanel">
+
+<h3>🧠 AI JUDGE ASSIST</h3>
+
+<div id="aiBox">
+Waiting for case...
+</div>
+
+</div>
+
+</div>
+
+<!-- ACTION BAR -->
+<div class="actionBar">
+
+<button onclick="startCourt()">Start Court</button>
+<button onclick="aiAssist()">AI Assist</button>
+<button onclick="guilty()">Guilty</button>
+<button onclick="notGuilty()">Not Guilty</button>
+<button onclick="generatePDF()">Generate Report</button>
 
 </div>
 
 <script>
 
-let data = JSON.parse(localStorage.getItem("greenville_game")) || {
+let data = JSON.parse(localStorage.getItem("greenville_ui")) || {
     cases:[]
 };
 
 let selected = null;
 let verdict = "";
 
-/* SCREEN SWITCH */
-function show(id){
-    document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
-    document.getElementById(id).classList.add("active");
-}
-
-/* START */
-function startGame(){
-    show("dashboard");
+/* SAVE */
+function save(){
+    localStorage.setItem("greenville_ui", JSON.stringify(data));
 }
 
 /* CREATE CASE */
@@ -160,7 +232,7 @@ function createCase(){
         citizen:citizen.value,
         officer:officer.value,
         evidence:evidence.value,
-        status:"Filed"
+        status:"Pending"
     };
 
     data.cases.unshift(c);
@@ -168,62 +240,55 @@ function createCase(){
     render();
 }
 
-/* SAVE */
-function save(){
-    localStorage.setItem("greenville_game", JSON.stringify(data));
-}
-
 /* SELECT CASE */
 function selectCase(id){
     selected = data.cases.find(c=>c.id===id);
 
-    document.getElementById("courtView").innerHTML = `
-        <b>${selected.citizen}</b><br>
-        ${selected.evidence}
+    document.getElementById("courtBox").innerHTML = `
+        <b>Citizen:</b> ${selected.citizen}<br><br>
+        <b>Evidence:</b><br>${selected.evidence}
     `;
+
+    aiAssist();
 }
 
-/* ENTER COURT (ANIMATION) */
-function enterCourt(){
+/* COURT */
+function startCourt(){
     if(!selected) return alert("Select case first");
-    show("court");
 }
 
-/* AI ASSIST */
+/* AI */
 function aiAssist(){
+
+    if(!selected) return;
 
     let e = selected.evidence.toLowerCase();
 
     let msg =
-    e.includes("speed") ? "Recommend Guilty: Traffic violation" :
-    e.includes("damage") ? "Recommend Guilty: Property damage" :
-    "Judge discretion required";
+    e.includes("speed") ? "Recommend Guilty (Traffic)" :
+    e.includes("damage") ? "Recommend Guilty (Property Damage)" :
+    "Manual review required";
 
-    document.getElementById("aiBox").innerText = "AI: " + msg;
+    document.getElementById("aiBox").innerText = msg;
 }
 
-/* VERDICTS */
+/* VERDICT */
 function guilty(){
+    if(!selected) return;
+
     selected.status = "Guilty";
     verdict = "GUILTY";
     save();
+    render();
 }
 
 function notGuilty(){
+    if(!selected) return;
+
     selected.status = "Not Guilty";
     verdict = "NOT GUILTY";
     save();
-}
-
-/* AI SPEECH GENERATOR */
-function generateSpeech(){
-
-    let speech =
-    verdict === "GUILTY"
-    ? "Court finds the defendant guilty based on presented evidence."
-    : "Court finds insufficient evidence. Case dismissed.";
-
-    document.getElementById("aiBox").innerText = "🧑‍⚖️ Judge Speech:\n" + speech;
+    render();
 }
 
 /* PDF */
@@ -234,10 +299,9 @@ function generatePDF(){
 
     doc.text("GREENVILLE RP COURT REPORT", 10, 10);
     doc.text("Citizen: " + selected.citizen, 10, 20);
-    doc.text("Evidence: " + selected.evidence, 10, 30);
-    doc.text("Verdict: " + selected.status, 10, 40);
+    doc.text("Verdict: " + selected.status, 10, 30);
 
-    doc.save("court_report.pdf");
+    doc.save("report.pdf");
 }
 
 /* RENDER */
@@ -246,9 +310,9 @@ function render(){
     let div = document.getElementById("cases");
 
     div.innerHTML = data.cases.map(c=>`
-        <div class="card" onclick="selectCase(${c.id})">
+        <div class="case" onclick="selectCase(${c.id})">
             <b>${c.citizen}</b><br>
-            ${c.status}
+            <small>${c.status}</small>
         </div>
     `).join("");
 }
