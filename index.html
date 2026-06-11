@@ -2,311 +2,276 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>JusticeOS v3 - Greenville Court Simulator</title>
+<title>JusticeOS v5 - DOJ Courtroom Engine</title>
 
 <style>
-body {
-  margin: 0;
-  font-family: Arial;
-  background: #070b14;
-  color: #e5e7eb;
-  display: flex;
-  height: 100vh;
-}
+body { margin:0; overflow:hidden; font-family:Arial; background:#050816; }
 
-/* SIDEBAR */
-.sidebar {
-  width: 260px;
-  background: #0f172a;
-  padding: 15px;
+#ui {
+  position:absolute;
+  top:10px; left:10px;
+  width:340px;
+  background:#0f172a;
+  padding:12px;
+  border-radius:10px;
+  color:white;
+  z-index:10;
 }
 
 button {
-  width: 100%;
-  padding: 10px;
-  margin: 5px 0;
-  background: #1f2937;
-  border: none;
-  color: white;
-  border-radius: 6px;
-  cursor: pointer;
+  width:100%;
+  margin:5px 0;
+  padding:10px;
+  background:#1f2937;
+  border:none;
+  color:white;
+  border-radius:6px;
+  cursor:pointer;
 }
 
 button:hover { background:#334155; }
 
-.main {
-  flex: 1;
-  padding: 15px;
-  overflow-y: auto;
+input, textarea {
+  width:100%;
+  margin:5px 0;
+  padding:8px;
+  background:#111827;
+  border:none;
+  color:white;
+  border-radius:6px;
 }
 
-.card {
-  background: #0f172a;
-  padding: 12px;
-  border-radius: 10px;
-  margin: 10px 0;
-}
-
-input, textarea, select {
-  width: 100%;
-  padding: 8px;
-  margin-top: 5px;
-  border-radius: 6px;
-  background: #1f2937;
-  color: white;
-  border: none;
-}
-
-/* STREAM WINDOW */
-.stream {
-  height: 220px;
-  background: black;
-  border-radius: 10px;
-  position: relative;
-  overflow: hidden;
-}
-
-.live {
-  position: absolute;
-  top: 10px;
-  left: 10px;
-  background: red;
-  padding: 3px 8px;
-  font-size: 12px;
-  border-radius: 4px;
-}
-
-.exhibit {
-  font-size: 12px;
-  color: #93c5fd;
-}
+.small { font-size:12px; color:#93c5fd; }
 </style>
 </head>
 
 <body>
 
-<div class="sidebar">
-  <h2>⚖ JusticeOS v3</h2>
+<div id="ui">
+  <h3>⚖ JusticeOS v5</h3>
 
-  <button onclick="view('dashboard')">Dashboard</button>
-  <button onclick="view('court')">Courtroom</button>
-  <button onclick="view('evidence')">Evidence</button>
-  <button onclick="view('archive')">Archive</button>
+  <input id="caseName" placeholder="Case Title">
+  <textarea id="caseStory" placeholder="Case Narrative"></textarea>
+
+  <button onclick="createCase()">Create Case Script</button>
+
+  <button onclick="nextScene()">▶ Next Court Scene</button>
+  <button onclick="npcSpeak('judge')">🎙 Judge Speak</button>
+  <button onclick="npcSpeak('lawyer')">🎙 Lawyer Speak</button>
+  <button onclick="npcSpeak('witness')">🎙 Witness Speak</button>
+  <button onclick="gavel()">🔨 Gavel</button>
+
+  <div class="small" id="sceneText">Scene: Idle</div>
 </div>
 
-<div class="main">
-
-<!-- DASHBOARD -->
-<div id="dashboard">
-  <div class="card">
-    <h3>Case Intake</h3>
-    <input id="title" placeholder="Case Title">
-    <textarea id="desc" placeholder="Case Description"></textarea>
-    <button onclick="createCase()">Create Case File</button>
-  </div>
-
-  <div class="card">
-    <h3>AI Case Narrative Generator</h3>
-    <button onclick="generateAI()">Generate AI Narrative</button>
-    <div id="aiOut"></div>
-  </div>
-</div>
-
-<!-- COURTROOM -->
-<div id="court" style="display:none;">
-
-  <div class="card">
-    <h3>📡 Live Courtroom Stream</h3>
-    <div class="stream">
-      <div class="live">🔴 LIVE</div>
-      <div id="cameraText" style="padding:20px;"></div>
-    </div>
-  </div>
-
-  <div class="card">
-    <h3>Judge Panel</h3>
-
-    <select id="phase">
-      <option>Opening Statements</option>
-      <option>Evidence Review</option>
-      <option>Witness Testimony</option>
-      <option>Deliberation</option>
-      <option>Verdict</option>
-    </select>
-
-    <textarea id="verdict" placeholder="Judge ruling / notes"></textarea>
-
-    <button onclick="advanceCourt()">Advance Court Phase</button>
-  </div>
-
-  <div class="card">
-    <h3>📜 Court Transcript</h3>
-    <div id="transcript"></div>
-  </div>
-
-  <div class="card">
-    <h3>⚖ Sentencing Recommendation Engine</h3>
-    <button onclick="sentence()">Generate Sentence</button>
-    <div id="sentenceOut"></div>
-  </div>
-
-</div>
-
-<!-- EVIDENCE -->
-<div id="evidence" style="display:none;">
-  <div class="card">
-    <h3>Evidence Upload System</h3>
-    <input type="file" id="file" multiple onchange="uploadEvidence()">
-    <div id="evidenceList"></div>
-  </div>
-</div>
-
-<!-- ARCHIVE -->
-<div id="archive" style="display:none;">
-  <div class="card">
-    <h3>Case Archive</h3>
-    <div id="archiveList"></div>
-  </div>
-</div>
-
-</div>
+<script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
 
 <script>
 
-let cases = JSON.parse(localStorage.getItem("g_cases")) || [];
-let current = null;
-let evidence = [];
-let transcript = [];
+/* =========================
+   CORE 3D COURTROOM ENGINE
+========================= */
 
-/* NAV */
-function view(p){
-  document.querySelectorAll(".main > div").forEach(d => d.style.display="none");
-  document.getElementById(p).style.display="block";
+const scene = new THREE.Scene();
+scene.background = new THREE.Color("#050816");
+
+const camera = new THREE.PerspectiveCamera(70, window.innerWidth/window.innerHeight, 0.1, 1000);
+camera.position.set(0,6,14);
+
+const renderer = new THREE.WebGLRenderer({ antialias:true });
+renderer.setSize(window.innerWidth, window.innerHeight);
+document.body.appendChild(renderer.domElement);
+
+/* LIGHTS */
+const light = new THREE.DirectionalLight(0xffffff, 1);
+light.position.set(5,10,5);
+scene.add(light);
+scene.add(new THREE.AmbientLight(0x404040));
+
+/* FLOOR */
+const floor = new THREE.Mesh(
+  new THREE.PlaneGeometry(25,25),
+  new THREE.MeshStandardMaterial({ color:0x111827 })
+);
+floor.rotation.x = -Math.PI/2;
+scene.add(floor);
+
+/* COURT STRUCTURE */
+function box(x,y,z,w,h,d,color){
+  const m = new THREE.Mesh(
+    new THREE.BoxGeometry(w,h,d),
+    new THREE.MeshStandardMaterial({ color })
+  );
+  m.position.set(x,y,z);
+  scene.add(m);
+  return m;
 }
 
-/* CREATE CASE */
-function createCase(){
-  current = {
-    id: Date.now(),
-    title: title.value,
-    desc: desc.value,
-    phase: "Intake",
-    severity: Math.floor(Math.random()*100),
-    exhibits: []
+/* JUDGE BENCH */
+const judgeDesk = box(0,1,6,5,2,2,0x1f2937);
+
+/* LAWYER TABLES */
+box(-5,1,2,3,1.5,2,0x334155);
+box(5,1,2,3,1.5,2,0x334155);
+
+/* WITNESS STAND */
+const witness = box(-7,1,-2,2,3,2,0x475569);
+
+/* JURY BOX */
+for(let i=-4;i<=4;i+=2){
+  box(i,1,-6,1,1,1,0x111827);
+}
+
+/* NPC CHARACTERS (simple avatars) */
+function npc(color,x,z){
+  return box(x,2,z,1,2,1,color);
+}
+
+const judgeNPC = npc(0xfacc15,0,6);
+const lawyerNPC = npc(0x60a5fa,-5,2);
+const witnessNPC = npc(0x34d399,-7,-2);
+const juryNPC = npc(0xa78bfa,2,-6);
+
+/* GAVEL */
+const gavel = box(1.5,3,6,1,0.2,0.4,0xd1a054);
+
+/* =========================
+   COURTROOM DIRECTOR SYSTEM
+========================= */
+
+let scenes = [
+  "Court is now in session",
+  "Opening statements",
+  "Witness testimony",
+  "Cross examination",
+  "Evidence presentation",
+  "Deliberation",
+  "Verdict"
+];
+
+let sceneIndex = 0;
+
+function nextScene(){
+  sceneIndex = (sceneIndex + 1) % scenes.length;
+
+  document.getElementById("sceneText").innerText =
+    "Scene: " + scenes[sceneIndex];
+
+  /* camera cinematic shift */
+  camera.position.x = Math.sin(sceneIndex)*10;
+  camera.position.z = Math.cos(sceneIndex)*10;
+
+  speak("Scene changed to " + scenes[sceneIndex]);
+}
+
+/* =========================
+   AI VOICE SYSTEM (browser TTS)
+========================= */
+
+function speak(text){
+  let msg = new SpeechSynthesisUtterance(text);
+  msg.rate = 1;
+  msg.pitch = 1;
+  speechSynthesis.speak(msg);
+}
+
+/* NPC DIALOGUE ENGINE */
+function npcSpeak(type){
+
+  let lines = {
+    judge: [
+      "Court is now in session.",
+      "Order in the court.",
+      "Proceed with testimony."
+    ],
+    lawyer: [
+      "Your honor, I object.",
+      "The evidence supports our claim.",
+      "We request dismissal."
+    ],
+    witness: [
+      "I saw everything clearly.",
+      "I was at the scene that night.",
+      "That is not what happened."
+    ]
   };
 
-  cases.push(current);
-  save();
+  let line = lines[type][Math.floor(Math.random()*lines[type].length)];
+
+  speak(line);
+
+  /* NPC animation reaction */
+  if(type === "judge") judgeNPC.position.y += 0.2;
+  if(type === "lawyer") lawyerNPC.position.y += 0.2;
+  if(type === "witness") witnessNPC.position.y += 0.2;
 }
 
-/* SAVE */
-function save(){
-  localStorage.setItem("g_cases", JSON.stringify(cases));
-  renderArchive();
+/* =========================
+   GAVEL ANIMATION
+========================= */
+
+let striking = false;
+
+function gavel(){
+  if(striking) return;
+  striking = true;
+
+  let down = setInterval(()=>{
+    gavel.position.y -= 0.3;
+    if(gavel.position.y <= 1.5){
+      clearInterval(down);
+
+      let up = setInterval(()=>{
+        gavel.position.y += 0.3;
+        if(gavel.position.y >= 3){
+          clearInterval(up);
+          striking = false;
+        }
+      },20);
+    }
+  },20);
+
+  speak("Order!");
 }
 
-/* AI CASE NARRATIVE (SIMULATED) */
-function generateAI(){
-  if(!current) return alert("Create a case first");
+/* =========================
+   CASE SCRIPT SYSTEM
+========================= */
 
-  let n = `
-CASE ANALYSIS REPORT
+function createCase(){
+  let script = caseName.value + ": " + caseStory.value;
+  speak("New case loaded: " + caseName.value);
 
-The defendant is under investigation for "${current.title}".
-Evidence suggests moderate-to-high probability of involvement.
+  document.getElementById("sceneText").innerText =
+    "Case Loaded: Script Active";
 
-Severity Index: ${current.severity}/100
-
-AI Assessment:
-- Risk Level: ${current.severity > 60 ? "HIGH" : "MODERATE"}
-- Recommended Action: ${current.severity > 70 ? "Immediate Trial" : "Further Review"}
-`;
-
-  document.getElementById("aiOut").innerText = n;
+  lawyerNPC.material.color.set("#ef4444");
+  witnessNPC.material.color.set("#22c55e");
 }
 
-/* COURTROOM STREAM SIM */
-let camIndex = 0;
-setInterval(()=>{
-  let scenes = [
-    "Judge reviewing evidence files...",
-    "Prosecutor presenting arguments...",
-    "Defense cross-examining witness...",
-    "Jury observing proceedings...",
-    "Courtroom in session..."
-  ];
-  document.getElementById("cameraText").innerText = scenes[camIndex % scenes.length];
-  camIndex++;
-}, 2500);
+/* CAMERA LOOP (cinematic orbit) */
+let t = 0;
 
-/* COURT PHASES */
-function advanceCourt(){
-  let text = `PHASE: ${phase.value}\n${verdict.value}`;
-  transcript.push(text);
+function animate(){
+  requestAnimationFrame(animate);
 
-  document.getElementById("transcript").innerHTML =
-    transcript.map(t=>`<div>📄 ${t}</div>`).join("");
+  t += 0.003;
+
+  camera.position.x = Math.sin(t)*14;
+  camera.position.z = Math.cos(t)*14;
+  camera.lookAt(0,2,0);
+
+  renderer.render(scene,camera);
 }
 
-/* SENTENCING ENGINE */
-function sentence(){
-  if(!current) return;
+animate();
 
-  let base = current.severity;
-  let years = Math.round(base / 10);
-
-  document.getElementById("sentenceOut").innerHTML =
-    `<b>Recommended Sentence:</b> ${years} years imprisonment (simulated guideline)`;
-}
-
-/* EVIDENCE UPLOAD */
-function uploadEvidence(){
-  let files = document.getElementById("file").files;
-
-  for(let f of files){
-    let reader = new FileReader();
-
-    reader.onload = function(e){
-      let item = {
-        name: f.name,
-        type: f.type,
-        data: e.target.result,
-        exhibit: "Exhibit " + String.fromCharCode(65 + evidence.length)
-      };
-
-      evidence.push(item);
-      renderEvidence();
-    };
-
-    reader.readAsDataURL(f);
-  }
-}
-
-/* DISPLAY EVIDENCE */
-function renderEvidence(){
-  document.getElementById("evidenceList").innerHTML =
-    evidence.map(e=>`
-      <div class="card">
-        <b>${e.exhibit}: ${e.name}</b><br>
-        ${e.type.includes("image") ? `<img src="${e.data}" width="100%">` : ""}
-        ${e.type.includes("video") ? `<video src="${e.data}" controls width="100%"></video>` : ""}
-      </div>
-    `).join("");
-}
-
-/* ARCHIVE */
-function renderArchive(){
-  document.getElementById("archiveList").innerHTML =
-    cases.map(c=>`
-      <div class="card">
-        <b>${c.title}</b><br>
-        Severity: ${c.severity}
-      </div>
-    `).join("");
-}
-
-/* INIT STREAM TEXT */
-setInterval(()=>{},1000);
+/* RESIZE */
+window.addEventListener("resize",()=>{
+  camera.aspect = window.innerWidth/window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth,window.innerHeight);
+});
 
 </script>
 
