@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Greenville RP Judicial Server</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body{
+    margin:0;
+    font-family:Arial;
+    background: radial-gradient(circle at top, #06121f, #000);
+    color:white;
+}
+
+/* HEADER */
+header{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:10px 15px;
+    background:rgba(0,255,255,0.06);
+    border-bottom:1px solid rgba(0,255,255,0.2);
+}
+
+header img{
+    width:45px;
+    height:45px;
+    border-radius:10px;
+}
+
+/* GRID */
+.container{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+    padding:10px;
+}
+
+/* CARDS */
+.card{
+    background:rgba(255,255,255,0.05);
+    padding:10px;
+    border-radius:12px;
+    margin:8px 0;
+    border:1px solid rgba(0,255,255,0.15);
+}
+
+/* INPUTS */
+input, select, textarea{
+    width:90%;
+    padding:8px;
+    margin:5px;
+    border-radius:8px;
+    border:none;
+}
+
+/* BUTTONS */
+button{
+    padding:8px;
+    margin:4px;
+    border:none;
+    border-radius:8px;
+    background:linear-gradient(45deg,#00e5ff,#0077ff);
+    color:white;
+    cursor:pointer;
+}
+
+/* LOG */
+.log{
+    background:rgba(0,0,0,0.3);
+    height:200px;
+    overflow:auto;
+    font-size:12px;
+    padding:10px;
+    border-radius:10px;
+}
+
+/* TAGS */
+.tag{
+    display:inline-block;
+    padding:3px 8px;
+    border-radius:20px;
+    font-size:11px;
+    background:#00e5ff;
+    color:black;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+<img id="logo" src="https://static.wikia.nocookie.net/greenville-wisconsin/images/0/0b/GVRP.png/revision/latest/thumbnail/width/360/height/450?cb=20251104185840">
+<div>
+<b>GREENVILLE RP JUDICIAL SERVER</b><br>
+<small>Official Court Administration System</small>
+</div>
+</header>
+
+<div class="container">
+
+<!-- LEFT PANEL -->
+<div>
+
+<h3>📂 File Case (Officer Input)</h3>
+
+<input id="citizen" placeholder="Citizen Name">
+<input id="officer" placeholder="Officer Name">
+
+<select id="type">
+    <option>Traffic Violation</option>
+    <option>Property Damage</option>
+    <option>Disturbance</option>
+    <option>Criminal Offense</option>
+</select>
+
+<input id="fine" placeholder="Suggested Fine">
+<textarea id="evidence" placeholder="Evidence / Report"></textarea>
+
+<button onclick="createCase()">Submit to Court System</button>
+
+<h3>📜 Active Cases</h3>
+<div id="cases"></div>
+
+</div>
+
+<!-- RIGHT PANEL -->
+<div>
+
+<h3>🏛️ Courtroom Control Panel</h3>
+
+<div id="viewer" class="card">Select a case to begin trial</div>
+
+<button onclick="openCourt()">🏛️ Open Court Session</button>
+<button onclick="askAI()">🧠 AI Legal Assistant</button>
+<button onclick="guilty()">⚖️ Guilty Verdict</button>
+<button onclick="notGuilty()">❌ Not Guilty</button>
+<button onclick="sentence()">💰 Issue Sentence</button>
+
+<h3>🧠 AI Assistant</h3>
+<div class="card" id="ai">
+AI ready for legal guidance...
+</div>
+
+<h3>📡 Server Log</h3>
+<div class="log" id="log"></div>
+
+</div>
+
+</div>
+
+<script>
+
+/* =========================
+   DATABASE
+========================= */
+
+let data = JSON.parse(localStorage.getItem("greenville_server_v2")) || {
+    logo:"https://via.placeholder.com/100",
+    cases:[],
+    log:[]
+};
+
+let selected = null;
+
+/* SAVE */
+function save(){
+    localStorage.setItem("greenville_server_v2", JSON.stringify(data));
+}
+
+/* LOG */
+function log(msg){
+    data.log.unshift(`[${new Date().toLocaleTimeString()}] ${msg}`);
+    save();
+}
+
+/* LOGO */
+document.getElementById("logo").src = data.logo;
+
+/* =========================
+   CREATE CASE
+========================= */
+
+function createCase(){
+
+    let c = {
+        id:Date.now(),
+        citizen:document.getElementById("citizen").value,
+        officer:document.getElementById("officer").value,
+        type:document.getElementById("type").value,
+        fine:parseInt(document.getElementById("fine").value),
+        evidence:document.getElementById("evidence").value,
+        status:"Filed"
+    };
+
+    data.cases.unshift(c);
+    log(`Case filed: ${c.citizen}`);
+    save();
+    render();
+}
+
+/* SELECT CASE */
+function selectCase(id){
+    selected = data.cases.find(c=>c.id===id);
+
+    document.getElementById("viewer").innerHTML = `
+        <b>Citizen:</b> ${selected.citizen}<br>
+        <b>Officer:</b> ${selected.officer}<br>
+        <b>Type:</b> ${selected.type}<br>
+        <b>Evidence:</b><br>${selected.evidence}<br>
+        <span class="tag">${selected.status}</span>
+    `;
+
+    log(`Case selected: ${selected.citizen}`);
+}
+
+/* =========================
+   COURT ACTIONS
+========================= */
+
+function openCourt(){
+    if(!selected) return alert("Select a case first!");
+    selected.status = "In Court";
+    log(`Court opened for ${selected.citizen}`);
+    save();
+    render();
+}
+
+/* AI LEGAL ASSISTANT */
+function askAI(){
+
+    if(!selected){
+        document.getElementById("ai").innerText = "Select a case first.";
+        return;
+    }
+
+    let e = selected.evidence.toLowerCase();
+
+    let r = "";
+
+    if(e.includes("speed")){
+        r = "Traffic violation confirmed. Recommend fine or warning.";
+    }
+    else if(e.includes("damage")){
+        r = "Property damage may require criminal escalation depending on severity.";
+    }
+    else if(e.includes("noise")){
+        r = "Noise disturbance usually falls under civil fine.";
+    }
+    else{
+        r = "Insufficient evidence clarity. Recommend judge discretion.";
+    }
+
+    document.getElementById("ai").innerText = "AI: " + r;
+}
+
+/* VERDICTS */
+function guilty(){
+    if(!selected) return;
+
+    selected.status = "Guilty";
+    log(`GUILTY verdict: ${selected.citizen}`);
+    save();
+    render();
+}
+
+function notGuilty(){
+    if(!selected) return;
+
+    selected.status = "Not Guilty";
+    log(`NOT GUILTY verdict: ${selected.citizen}`);
+    save();
+    render();
+}
+
+/* SENTENCING */
+function sentence(){
+    if(!selected) return;
+
+    if(selected.status !== "Guilty"){
+        alert("Cannot sentence without guilty verdict.");
+        return;
+    }
+
+    let result = "";
+
+    if(selected.type === "Criminal Offense"){
+        result = "Jail RP Sentence Assigned";
+    } else {
+        result = `$${selected.fine} Fine Issued`;
+    }
+
+    selected.status = "Sentenced";
+
+    log(`Sentence issued: ${result} for ${selected.citizen}`);
+    alert(result);
+
+    save();
+    render();
+}
+
+/* =========================
+   RENDER SYSTEM
+========================= */
+
+function render(){
+
+    let div = document.getElementById("cases");
+    div.innerHTML = "";
+
+    data.cases.forEach(c=>{
+        div.innerHTML += `
+        <div class="card" onclick="selectCase(${c.id})">
+            <b>${c.citizen}</b><br>
+            ${c.type}<br>
+            Status: ${c.status}
+        </div>
+        `;
+    });
+
+    document.getElementById("log").innerHTML =
+        data.log.map(l=>`<div>${l}</div>`).join("");
+}
+
+render();
+
+</script>
+
+</body>
+</html>
