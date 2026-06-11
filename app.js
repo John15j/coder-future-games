@@ -19,6 +19,12 @@ function updateClock(){
 setInterval(updateClock,1000);
 
 updateClock();
+
+
+let cases = [];
+let selectedCase = null;
+
+
 /* hide all screens helper */
 function hideAllScreens(){
 
@@ -28,7 +34,7 @@ function hideAllScreens(){
         screen.classList.add("hidden");
     });
 }
-}
+
 /* ================= COURT LAUNCHER ================= */
 
 let selectedCase = null;
@@ -94,12 +100,16 @@ function startCourtSession(){
 
     alert("Court Session Started");
 
-    hideAllScreens();
-    document.getElementById("courtroom").classList.remove("hidden");
+    closeLauncher();
 }
 
 function backToLauncher(){
-    openCourtLauncher();
+
+    document.getElementById("caseSelector")
+        .classList.add("hidden");
+
+    document.getElementById("courtLauncher")
+        .classList.remove("hidden");
 }
 
 function closeLauncher(){
