@@ -142,16 +142,47 @@ function startEmptyCourt(){
 
 function startCourtSession(){
 
-    alert(
-        "Court Session Started\n\n" +
-        (selectedCase ?
-        selectedCase.title :
-        "Empty Court")
-    );
-
     closeLauncher();
-}
 
+    document.getElementById("dashboard")
+        .classList.add("hidden");
+
+    document.getElementById("courtroomPage")
+        .classList.remove("hidden");
+
+    if(selectedCase){
+document.getElementById("caseInformation").innerHTML = `
+    <b>Case ID:</b> ${selectedCase.id}<br><br>
+
+    <b>Title:</b><br>
+    ${selectedCase.title}<br><br>
+
+    <b>Defendant:</b><br>
+    ${selectedCase.defendant}<br><br>
+
+    <b>Username:</b><br>
+    ${selectedCase.username}<br><br>
+
+    <b>Charges:</b><br>
+    ${selectedCase.charges}<br><br>
+
+    <b>Witnesses:</b><br>
+    ${selectedCase.witnesses}
+`;
+        document.getElementById(
+            "courtroomCaseTitle"
+        ).innerText =
+        selectedCase.title;
+
+        document.getElementById(
+            "caseInformation"
+        ).innerHTML = `
+            <b>Case ID:</b> ${selectedCase.id}<br>
+            <b>Defendant:</b> ${selectedCase.defendant}<br>
+            <b>Status:</b> Active Hearing
+        `;
+    }
+}
 function backToLauncher(){
 
     document.getElementById("caseSelector")
@@ -344,4 +375,22 @@ function deleteCase(id){
     );
 
     openAllCases();
+}
+
+function addCourtLog(text){
+
+    const log =
+    document.getElementById("courtLog");
+
+    const entry =
+    document.createElement("div");
+
+    entry.className = "feed-item";
+
+    entry.innerHTML =
+    new Date().toLocaleTimeString() +
+    " • " +
+    text;
+
+    log.prepend(entry);
 }

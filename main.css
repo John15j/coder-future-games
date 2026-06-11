@@ -590,3 +590,139 @@ body{
         translate(-50%,-50%);
     }
 }
+/* ========================================= */
+/* NEW CASE POPUP */
+/* ========================================= */
+
+.form-group{
+    margin-bottom:15px;
+}
+
+.form-group label{
+    display:block;
+    margin-bottom:6px;
+    font-size:13px;
+    color:#94a3b8;
+    font-weight:600;
+}
+
+.form-group input,
+.form-group textarea{
+
+    width:100%;
+
+    background:#0f172a;
+
+    border:1px solid #334155;
+
+    color:white;
+
+    padding:12px;
+
+    border-radius:10px;
+
+    font-size:14px;
+
+    outline:none;
+
+    transition:.2s;
+}
+
+.form-group input:focus,
+.form-group textarea:focus{
+
+    border-color:#3b82f6;
+
+    box-shadow:
+    0 0 15px rgba(59,130,246,.25);
+}
+
+.form-group textarea{
+
+    resize:vertical;
+
+    min-height:100px;
+}
+
+.popup-actions{
+
+    display:flex;
+
+    gap:10px;
+
+    margin-top:20px;
+}
+
+.popup-actions button{
+
+    flex:1;
+
+    border:none;
+
+    border-radius:10px;
+
+    padding:12px;
+
+    cursor:pointer;
+
+    color:white;
+
+    font-weight:600;
+}
+
+.save-btn{
+    background:#2563eb;
+}
+
+.cancel-btn{
+    background:#374151;
+}
+/* ========================================= */
+/* COURTROOM */
+/* ========================================= */
+
+.courtroom-header{
+
+    padding:30px;
+    text-align:center;
+}
+
+.courtroom-header h1{
+
+    font-size:34px;
+    margin-bottom:10px;
+}
+
+.courtroom-header p{
+
+    color:#94a3b8;
+}
+
+.courtroom-grid{
+
+    display:grid;
+
+    grid-template-columns:1fr 1fr;
+
+    gap:20px;
+
+    padding:30px;
+}
+
+.court-panel{
+
+    background:#111827;
+
+    border:1px solid #1f2937;
+
+    border-radius:16px;
+
+    padding:20px;
+
+    min-height:250px;
+}
+
+.court-panel h3{
+
+    margin-bottom:15px;
+}
