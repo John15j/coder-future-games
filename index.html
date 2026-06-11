@@ -108,7 +108,7 @@
 
             <div class="action-grid">
 
-                <button class="action-card" onclick="openNewCase()">
+                <button class="action-card" onclick="openCourtLauncher()">
     <span>⚖</span>
     <h3>Start Court</h3>
     <p>Launch a courtroom session.</p>
@@ -278,14 +278,15 @@
 
     <div class="launcher-box">
 
-        <h1>Create New Case</h1>
-        <p>Enter case information below</p>
+      <input id="caseTitle" type="text" placeholder="Case Title">
 
-        <input id="caseTitle" placeholder="Case Title">
-        <input id="defendant" placeholder="Defendant Name">
-        <input id="prosecutor" placeholder="Prosecutor Name">
+<input id="defendant" type="text" placeholder="Defendant Name">
 
-        <textarea id="charges" placeholder="Charges"></textarea>
+<input id="username" type="text" placeholder="Username">
+
+<textarea id="charges" placeholder="Charges"></textarea>
+
+<textarea id="witnesses" placeholder="Witnesses"></textarea>
 
         <button onclick="saveNewCase()">Save Case</button>
         <button onclick="closeNewCase()">Cancel</button>

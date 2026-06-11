@@ -168,20 +168,52 @@ function closeNewCase(){
 }
 function saveNewCase(){
 
+    const title =
+        document.getElementById("caseTitle").value;
+
+    const defendant =
+        document.getElementById("defendant").value;
+
+    if(title.trim() === "" || defendant.trim() === ""){
+        alert("Please enter a Case Title and Defendant Name.");
+        return;
+    }
+
     const newCase = {
-        id: "CASE-" + Date.now(),
-        title: document.getElementById("caseTitle").value,
-        defendant: document.getElementById("defendant").value,
-        prosecutor: document.getElementById("prosecutor").value,
-        charges: document.getElementById("charges").value,
+
+        id: "ERLC-" + Date.now(),
+
+        title: title,
+
+        defendant: defendant,
+
+        username:
+            document.getElementById("username").value,
+
+        charges:
+            document.getElementById("charges").value,
+
+        witnesses:
+            document.getElementById("witnesses").value,
+
         verdict: "Pending",
-        logs: []
+
+        logs: [],
+
+        evidence: []
     };
 
     cases.push(newCase);
-    localStorage.setItem("erlc_cases", JSON.stringify(cases));
 
-    alert("Case Created: " + newCase.id);
+    localStorage.setItem(
+        "erlc_cases",
+        JSON.stringify(cases)
+    );
+
+    alert(
+        "Case Created Successfully\n\nCase ID: " +
+        newCase.id
+    );
 
     closeNewCase();
 }
