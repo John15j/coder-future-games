@@ -68,7 +68,7 @@
 <!-- MAIN DASHBOARD -->
 <!-- ================================================= -->
 
-<main class="dashboard-container">
+<main id="dashboard" class="dashboard-container">
 
     <section class="dashboard-hero">
 
@@ -108,11 +108,11 @@
 
             <div class="action-grid">
 
-                <button class="action-card">
-                    <span>⚖</span>
-                    <h3>Start Court</h3>
-                    <p>Launch a courtroom session.</p>
-                </button>
+                <button class="action-card" onclick="openCourtLauncher()">
+    <span>⚖</span>
+    <h3>Start Court</h3>
+    <p>Launch a courtroom session.</p>
+</button>
 
                <button class="action-card">
                     <span>📁</span>
@@ -264,6 +264,7 @@
     </div>
 
 </section>
+    
 <!-- ================================================= -->
 <!-- FOOTER -->
 <!-- ================================================= -->
