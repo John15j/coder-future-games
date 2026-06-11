@@ -1,3 +1,4 @@
+alert("APP JS IS RUNNING");
 /* ================================================= */
 /* ERLC JUDICIAL SYSTEM */
 /* PHASE 1 */
