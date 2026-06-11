@@ -4,391 +4,138 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ERLC Judicial System</title>
-
 <link rel="stylesheet" href="main.css">
 </head>
+
 <body>
 
-<!-- ================================================= -->
 <!-- HEADER -->
-<!-- ================================================= -->
-
 <header class="top-bar">
 
     <div class="header-left">
-
-        <div class="logo-badge">
-            <img src="logo.png" alt="ERLC Logo">
-        </div>
-
-        <div class="system-branding">
-            <h1>ERLC Judicial System</h1>
-            <span>Court Operations Center</span>
-        </div>
-
+        <div class="logo">⚖ ERLC</div>
     </div>
 
     <div class="header-center">
-
-        <div id="clock">
-            00:00:00
-        </div>
-
-        <div class="dashboard-label">
-            Court Operations Dashboard
-        </div>
-
+        <div id="clock">00:00:00</div>
+        <div class="sub">Court Operations Center</div>
     </div>
 
     <div class="header-right">
-
         <div class="judge-card">
-
-            <div class="judge-title">
-                Chief Justice
-            </div>
-
-            <div id="judgeNameDisplay" class="judge-name">
-                Judge Andrade
-            </div>
-
-            <div id="judgeStatus" class="judge-status">
-                Presiding
-            </div>
-
+            <div class="title">Chief Justice</div>
+            <div class="name">Judge Andrade</div>
+            <div class="status">Presiding</div>
         </div>
-
-      
-
     </div>
 
 </header>
 
-<!-- ================================================= -->
-<!-- MAIN DASHBOARD -->
-<!-- ================================================= -->
+<!-- DASHBOARD -->
+<main id="dashboard">
 
-<main id="dashboard" class="dashboard-container">
+    <h1 class="title">Court Operations Dashboard</h1>
 
-    <section class="dashboard-hero">
+    <div class="grid">
 
-        <h2>Court Operations Dashboard</h2>
+        <button class="card" onclick="openCourtLauncher()">
+            ⚖ Start Court
+        </button>
 
-        <p>
-            Manage hearings, review evidence, and oversee courtroom proceedings.
-        </p>
+        <button class="card" onclick="openNewCase()">
+            📁 New Case
+        </button>
 
-        <div class="status-row">
+        <button class="card" onclick="openAllCases()">
+            📚 All Cases
+        </button>
 
-            <div class="status-badge">
-                🟢 Version 2.0
-            </div>
+        <button class="card" onclick="openSettings()">
+            ⚙ Settings
+        </button>
 
-            <div class="status-badge">
-                ⚖ ERLC Judicial System
-            </div>
-
-            <div class="status-badge">
-                🕒 Live Operations
-            </div>
-
-        </div>
-
-    </section>
-
-    <section class="dashboard-grid">
-
-        <!-- ACTION CENTER -->
-
-        <div class="dashboard-panel">
-
-            <div class="panel-header">
-                Action Center
-            </div>
-
-            <div class="action-grid">
-
-                <button class="action-card" onclick="openCourtLauncher()">
-    <span>⚖</span>
-    <h3>Start Court</h3>
-    <p>Launch a courtroom session.</p>
-</button>
-
-               <button class="action-card" onclick="openNewCase()">
-    <span>📁</span>
-    <h3>New Case</h3>
-    <p>Create a new case file.</p>
-</button>
-
-               <button class="action-card" onclick="openAllCases()">
-    <span>📚</span>
-    <h3>All Cases</h3>
-    <p>View existing records.</p>
-</button>
-
-                <button class="action-card">
-                    <span>⚙</span>
-                    <h3>Settings</h3>
-                    <p>Configure the system.</p>
-                </button>
-
-            </div>
-
-        </div>
-
-        <!-- SYSTEM OVERVIEW -->
-
-        <div class="dashboard-panel">
-
-            <div class="panel-header">
-                System Overview
-            </div>
-
-            <div class="overview-list">
-
-                <div class="overview-item">
-                    Cases Today: 0
-                </div>
-
-                <div class="overview-item">
-                    Courtrooms: 3
-                </div>
-
-                <div class="overview-item">
-                    Reports Generated: 0
-                </div>
-
-                <div class="overview-item">
-                    Status: Operational
-                </div>
-
-            </div>
-
-        </div>
-
-        <!-- OPERATIONS FEED -->
-
-        <div class="dashboard-panel">
-
-            <div class="panel-header">
-                Court Operations Feed
-            </div>
-
-            <div class="feed-item">
-                ● System Ready
-            </div>
-
-            <div class="feed-item">
-                ● Awaiting Case Creation
-            </div>
-
-            <div class="feed-item">
-                ● No Active Hearings
-            </div>
-
-        </div>
-
-        <!-- QUICK ACCESS -->
-
-        <div class="dashboard-panel">
-
-            <div class="panel-header">
-                Quick Access
-            </div>
-
-            <div class="feed-item">
-                Recent Cases
-            </div>
-
-            <div class="feed-item">
-                Charge Templates
-            </div>
-
-            <div class="feed-item">
-                Court Tools
-            </div>
-
-            <div class="feed-item">
-                Evidence Library
-            </div>
-
-        </div>
-
-    </section>
+    </div>
 
 </main>
 
 <!-- COURT LAUNCHER -->
 <div id="courtLauncher" class="popup hidden">
-
-    <div class="launcher-box">
-
-        <h1>Court Session Launcher</h1>
-        <p>Choose how to start the session.</p>
-
-        <button onclick="showCaseSelector()">Select Existing Case</button>
-        <button onclick="startEmptyCourt()">Start Empty Court</button>
-        <button onclick="closeLauncher()">
-    Close
-</button>
-
-    </div>
-
+    <h2>Start Court</h2>
+    <button onclick="showCaseSelector()">Select Case</button>
+    <button onclick="startEmptyCourt()">Empty Court</button>
+    <button onclick="closeAll()">Close</button>
 </div>
 
-<!-- CASE SELECTOR POPUP -->
+<!-- CASE SELECTOR -->
 <div id="caseSelector" class="popup hidden">
-
-    <div class="launcher-box">
-
-        <h1>Select Case</h1>
-
-        <div id="caseList"></div>
-
-        <button onclick="backToLauncher()">
-            Back
-        </button>
-
-    </div>
-
+    <h2>Select Case</h2>
+    <div id="caseList"></div>
+    <button onclick="backToLauncher()">Back</button>
 </div>
 
-<!-- COURT READY POPUP -->
+<!-- COURT READY -->
 <div id="courtReady" class="popup hidden">
-
-    <div class="launcher-box">
-
-    <h1>⚖ Court Ready</h1>
-
+    <h2>Court Ready</h2>
     <div id="selectedCaseInfo"></div>
-
-    <button onclick="startCourtSession()">
-        Start Court Session
-    </button>
-
-    <button onclick="closeLauncher()">
-        Cancel
-    </button>
-
+    <button onclick="startCourtSession()">Start Session</button>
+    <button onclick="closeAll()">Cancel</button>
 </div>
 
-</div>
-    <!-- NEW CASE POPUP -->
+<!-- NEW CASE -->
 <div id="newCasePopup" class="popup hidden">
 
-    <div class="launcher-box">
+    <h2>New Case</h2>
 
-      <input id="caseTitle" type="text" placeholder="Case Title">
+    <input id="caseTitle" placeholder="Case Title">
+    <input id="defendant" placeholder="Defendant">
 
-<input id="defendant" type="text" placeholder="Defendant Name">
-
-<input id="username" type="text" placeholder="Username">
-
-<textarea id="charges" placeholder="Charges"></textarea>
-
-<textarea id="witnesses" placeholder="Witnesses"></textarea>
-
-        <button onclick="saveNewCase()">Save Case</button>
-        <button onclick="closeNewCase()">Cancel</button>
-
-    </div>
+    <button onclick="saveCase()">Save</button>
+    <button onclick="closeAll()">Cancel</button>
 
 </div>
-<!-- ALL CASES POPUP -->
+
+<!-- ALL CASES -->
 <div id="allCasesPopup" class="popup hidden">
-
-    <div class="launcher-box">
-
-        <h1>Case Database</h1>
-
-        <p id="caseCount">
-            Total Cases: 0
-        </p>
-
-        <div id="allCasesList"></div>
-
-        <button onclick="closeAllCases()">
-            Close
-        </button>
-
-    </div>
-
+    <h2>All Cases</h2>
+    <div id="allCasesList"></div>
+    <button onclick="closeAll()">Close</button>
 </div>
-<section id="courtroomPage" class="hidden">
 
-    <div class="courtroom-header">
-        <h1>⚖ Courtroom Session</h1>
-        <p id="courtroomCaseTitle">
-            No Active Case
-        </p>
-    </div>
+<!-- COURTROOM -->
+<section id="courtroom" class="hidden">
 
-    <div class="courtroom-grid">
+    <h1>Courtroom</h1>
 
-        <div class="court-panel">
-            <h3>Case Information</h3>
-            <div id="caseInformation">
-                No case loaded.
-            </div>
+    <div class="court-grid">
+
+        <div>
+            <h3>Case Info</h3>
+            <div id="caseInfo"></div>
         </div>
 
-        <div class="court-panel">
+        <div>
             <h3>Court Log</h3>
-            <div id="courtLog">
-                
-            </div>
+            <div id="courtLog"></div>
         </div>
 
-        <div class="court-panel">
+        <div>
             <h3>Evidence</h3>
-            <div id="evidenceArea">
-                No evidence uploaded.
-            </div>
+            <div>No evidence yet</div>
         </div>
 
-        <div class="court-panel">
+        <div>
             <h3>Judge Controls</h3>
 
-           <div class="judge-controls">
-
-    <button class="judge-btn" onclick="callWitness()">
-        Call Witness
-    </button>
-
-    <button class="judge-btn" onclick="presentEvidence()">
-        Present Evidence
-    </button>
-
-    <button class="judge-btn" onclick="openArguments()">
-        Open Arguments
-    </button>
-
-    <button class="judge-btn" onclick="openVerdict()">
-        Verdict
-    </button>
-
-</div>
+            <button onclick="logEvent('Witness called')">Call Witness</button>
+            <button onclick="logEvent('Evidence shown')">Evidence</button>
+            <button onclick="logEvent('Arguments opened')">Arguments</button>
+            <button onclick="logEvent('Verdict issued')">Verdict</button>
 
         </div>
 
     </div>
 
 </section>
-<!-- ================================================= -->
-<!-- FOOTER -->
-<!-- ================================================= -->
-
-<footer class="footer">
-
-    <div>
-        ERLC Judicial Operations Center
-    </div>
-
-    <div>
-        Custom Roleplay Court Management Platform
-    </div>
-
-</footer>
 
 <script src="app.js"></script>
 
