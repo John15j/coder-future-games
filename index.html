@@ -2,331 +2,344 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Greenville RP Court CMS</title>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<title>JusticeOS v2 - Government Court Simulator</title>
 
 <style>
-
-/* =========================
-   GOVERNMENT UI THEME
-========================= */
-
-body{
-    margin:0;
-    font-family:Arial;
-    background:#0b0f14;
-    color:#e6e6e6;
-}
-
-/* TOP BAR */
-.topbar{
-    background:#111823;
-    padding:10px;
-    display:flex;
-    justify-content:space-between;
-    border-bottom:1px solid #1f2a38;
-}
-
-/* LAYOUT */
-.layout{
-    display:grid;
-    grid-template-columns:280px 1fr 320px;
-    height:calc(100vh - 50px);
+body {
+  margin: 0;
+  font-family: Arial;
+  background: #0a0f1a;
+  color: #e5e7eb;
+  display: flex;
+  height: 100vh;
 }
 
 /* SIDEBAR */
-.sidebar{
-    background:#0f1620;
-    border-right:1px solid #1f2a38;
-    padding:10px;
-    overflow:auto;
+.sidebar {
+  width: 260px;
+  background: #111827;
+  padding: 15px;
 }
 
-/* MAIN */
-.main{
-    padding:10px;
-    overflow:auto;
+.sidebar h2 {
+  color: #60a5fa;
 }
 
-/* RIGHT PANEL */
-.right{
-    background:#0f1620;
-    border-left:1px solid #1f2a38;
-    padding:10px;
-    overflow:auto;
+button {
+  width: 100%;
+  margin: 5px 0;
+  padding: 10px;
+  border: none;
+  border-radius: 6px;
+  background: #1f2937;
+  color: white;
+  cursor: pointer;
 }
 
-/* CASE CARD */
-.case{
-    background:#151f2b;
-    padding:10px;
-    margin:8px 0;
-    border-radius:8px;
-    cursor:pointer;
-    border:1px solid #1f2a38;
+button:hover { background:#374151; }
+
+.main {
+  flex: 1;
+  padding: 15px;
+  overflow-y: auto;
 }
 
-.case:hover{
-    border-color:#00bfff;
+.card {
+  background: #111827;
+  padding: 12px;
+  margin: 10px 0;
+  border-radius: 8px;
 }
 
-/* INPUTS */
-input, textarea, select{
-    width:95%;
-    padding:8px;
-    margin:5px 0;
-    background:#0b0f14;
-    border:1px solid #2a3a4f;
-    color:white;
-    border-radius:6px;
+input, textarea, select {
+  width: 100%;
+  padding: 8px;
+  margin-top: 5px;
+  background: #1f2937;
+  border: none;
+  color: white;
+  border-radius: 6px;
 }
 
-/* BUTTONS */
-button{
-    padding:8px 10px;
-    margin:4px 0;
-    width:100%;
-    background:#00bfff;
-    border:none;
-    color:white;
-    border-radius:6px;
-    cursor:pointer;
+.case {
+  padding: 8px;
+  background: #1f2937;
+  margin: 5px 0;
+  cursor: pointer;
+  border-radius: 6px;
 }
 
-button:hover{
-    background:#0093cc;
+.tag {
+  font-size: 11px;
+  background: #2563eb;
+  padding: 2px 6px;
+  border-radius: 5px;
 }
 
-/* STATUS TAG */
-.tag{
-    font-size:11px;
-    padding:3px 6px;
-    border-radius:6px;
-    background:#2a3a4f;
-    display:inline-block;
+.log {
+  font-size: 12px;
+  color: #9ca3af;
+  max-height: 150px;
+  overflow-y: auto;
 }
-
-/* PANEL TITLE */
-h3{
-    border-bottom:1px solid #1f2a38;
-    padding-bottom:5px;
-}
-
-/* AUDIT LOG */
-.log{
-    font-size:12px;
-    opacity:0.85;
-    margin:4px 0;
-}
-
 </style>
 </head>
 
 <body>
 
-<div class="topbar">
-    <b>🏛️ GREENVILLE RP COURT MANAGEMENT SYSTEM</b>
-    <span class="tag" id="roleTag">ROLE: CLERK</span>
-</div>
-
-<div class="layout">
-
-<!-- SIDEBAR -->
 <div class="sidebar">
+  <h2>⚖ JusticeOS v2</h2>
 
-<h3>👤 Role</h3>
-<select id="role">
-<option>Officer</option>
-<option>Clerk</option>
-<option>Judge</option>
-<option>Admin</option>
-</select>
-<button onclick="setRole()">Set Role</button>
+  <select id="role" onchange="setRole()">
+    <option>Judge</option>
+    <option>Clerk</option>
+    <option>Prosecutor</option>
+    <option>Police</option>
+  </select>
 
-<h3>📂 File New Case</h3>
-<input id="citizen" placeholder="Citizen Name">
-<input id="officer" placeholder="Officer Name">
-<select id="type">
-<option>Traffic Violation</option>
-<option>Property Damage</option>
-<option>Criminal Offense</option>
-<option>Disturbance</option>
-</select>
-<textarea id="evidence" placeholder="Evidence Report"></textarea>
-
-<button onclick="createCase()">Submit Case</button>
-
+  <button onclick="view('dashboard')">Dashboard</button>
+  <button onclick="view('cases')">Cases</button>
+  <button onclick="view('intake')">Police Intake</button>
+  <button onclick="view('warrant')">Warrants</button>
+  <button onclick="view('archive')">Archive</button>
 </div>
 
-<!-- MAIN DATABASE -->
 <div class="main">
 
-<h3>🗃️ CASE DATABASE</h3>
+<!-- DASHBOARD -->
+<div id="dashboard" class="page">
+  <div class="card">
+    <h3>System Status</h3>
+    <p>Federal Judicial Network: ONLINE</p>
+  </div>
 
-<input id="search" oninput="render()" placeholder="Search cases...">
-
-<div id="caseList"></div>
-
+  <div class="card">
+    <h3>Create Case</h3>
+    <input id="title" placeholder="Case Title">
+    <textarea id="desc" placeholder="Case Description"></textarea>
+    <button onclick="createCase()">Submit Case</button>
+  </div>
 </div>
 
-<!-- RIGHT PANEL -->
-<div class="right">
+<!-- CASES -->
+<div id="cases" class="page" style="display:none;">
+  <div class="card">
+    <h3>Active Docket</h3>
+    <input id="search" oninput="renderCases()" placeholder="Search cases...">
+    <div id="caseList"></div>
+  </div>
 
-<h3>⚖️ CASE DETAILS</h3>
+  <div class="card">
+    <h3>Case Panel</h3>
+    <div id="caseView">No case selected</div>
 
-<div id="details">Select a case</div>
+    <select id="status">
+      <option>Intake</option>
+      <option>Review</option>
+      <option>Trial</option>
+      <option>Verdict</option>
+      <option>Closed</option>
+    </select>
 
-<hr>
+    <textarea id="verdict" placeholder="Judge notes"></textarea>
 
-<h3>🧠 JUDGE PANEL</h3>
+    <button onclick="saveCase()">Save</button>
+    <button onclick="runJury()">Run Jury Vote</button>
+  </div>
+</div>
 
-<select id="verdict">
-<option>Pending</option>
-<option>Guilty</option>
-<option>Not Guilty</option>
-<option>Dismissed</option>
-</select>
+<!-- POLICE INTAKE -->
+<div id="intake" class="page" style="display:none;">
+  <div class="card">
+    <h3>Police Case Intake</h3>
 
-<textarea id="sentence" placeholder="Judge notes / sentencing..."></textarea>
+    <input id="crimeType" placeholder="Crime Type">
+    <input id="location" placeholder="Location">
+    <textarea id="report" placeholder="Incident Report"></textarea>
 
-<button onclick="updateCase()">Apply Judgment</button>
+    <button onclick="createPoliceCase()">Submit Report</button>
+  </div>
+</div>
 
-<hr>
+<!-- WARRANTS -->
+<div id="warrant" class="page" style="display:none;">
+  <div class="card">
+    <h3>Warrant Generator</h3>
 
-<h3>📜 COURT REPORT</h3>
-<button onclick="generateReport()">Generate PDF</button>
+    <input id="suspect" placeholder="Suspect Name">
+    <input id="reason" placeholder="Reason">
+    <button onclick="generateWarrant()">Generate Warrant</button>
 
-<hr>
+    <div id="warrantOut"></div>
+  </div>
+</div>
 
-<h3>📡 AUDIT LOG</h3>
-<div id="logBox"></div>
+<!-- ARCHIVE -->
+<div id="archive" class="page" style="display:none;">
+  <div class="card">
+    <h3>Closed Cases Archive</h3>
+    <div id="archiveList"></div>
+  </div>
+</div>
 
+<!-- LOGS -->
+<div class="card">
+  <h3>Audit Log</h3>
+  <div id="logs" class="log"></div>
 </div>
 
 </div>
 
 <script>
+/* =========================
+   GOVERNMENT SIM ENGINE
+========================= */
 
-let db = JSON.parse(localStorage.getItem("greenville_cms")) || {
-    cases:[],
-    log:[]
+let cases = JSON.parse(localStorage.getItem("gov_cases")) || [];
+let selected = null;
+let role = "Judge";
+
+/* NETWORK SYNC */
+const net = new BroadcastChannel("justice_network");
+net.onmessage = () => {
+  cases = JSON.parse(localStorage.getItem("gov_cases")) || [];
+  renderCases();
+  renderArchive();
 };
 
-let selected = null;
-let role = "Clerk";
-
-/* SAVE */
-function save(){
-    localStorage.setItem("greenville_cms", JSON.stringify(db));
+/* LOGGING */
+function log(msg) {
+  const logs = document.getElementById("logs");
+  const time = new Date().toLocaleTimeString();
+  logs.innerHTML += `[${time}] ${msg}<br>`;
 }
 
-/* LOG SYSTEM */
-function log(msg){
-    db.log.unshift(`[${new Date().toLocaleTimeString()}] ${msg}`);
-    save();
+/* ROLE SYSTEM */
+function setRole() {
+  role = document.getElementById("role").value;
+  log("Role changed to " + role);
 }
 
-/* ROLE */
-function setRole(){
-    role = document.getElementById("role").value;
-    roleTag.innerText = "ROLE: " + role;
+/* NAV */
+function view(p) {
+  document.querySelectorAll(".page").forEach(x => x.style.display = "none");
+  document.getElementById(p).style.display = "block";
 }
 
 /* CREATE CASE */
-function createCase(){
-
-    if(role !== "Officer" && role !== "Clerk" && role !== "Admin"){
-        alert("No permission");
-        return;
-    }
-
-    let c = {
-        id:Date.now(),
-        citizen:citizen.value,
-        officer:officer.value,
-        type:type.value,
-        evidence:evidence.value,
-        status:"Filed",
-        sentence:"",
-        verdict:"Pending"
-    };
-
-    db.cases.unshift(c);
-    log("Case filed: " + c.citizen);
-    save();
-    render();
+function createCase() {
+  const c = {
+    id: Date.now(),
+    title: title.value,
+    desc: desc.value,
+    status: "Intake",
+    evidence: [],
+    verdict: ""
+  };
+  cases.push(c);
+  save();
+  log("Case created: " + c.title);
 }
 
-/* SELECT CASE */
-function selectCase(id){
-    selected = db.cases.find(c=>c.id===id);
+/* SAVE */
+function save() {
+  localStorage.setItem("gov_cases", JSON.stringify(cases));
+  net.postMessage("sync");
+  renderCases();
+  renderArchive();
+}
 
-    details.innerHTML = `
-        <b>Citizen:</b> ${selected.citizen}<br>
-        <b>Officer:</b> ${selected.officer}<br>
-        <b>Type:</b> ${selected.type}<br>
-        <b>Evidence:</b><br>${selected.evidence}<br>
-        <b>Status:</b> ${selected.verdict}
+/* RENDER CASES */
+function renderCases() {
+  const q = document.getElementById("search")?.value?.toLowerCase() || "";
+  const list = document.getElementById("caseList");
+  if (!list) return;
+
+  list.innerHTML = "";
+
+  cases.filter(c => c.title.toLowerCase().includes(q)).forEach(c => {
+    list.innerHTML += `
+      <div class="case" onclick="openCase(${c.id})">
+        ${c.title} <span class="tag">${c.status}</span>
+      </div>
     `;
+  });
 }
 
-/* UPDATE CASE */
-function updateCase(){
-
-    if(role !== "Judge" && role !== "Admin"){
-        alert("Judge only action");
-        return;
-    }
-
-    selected.verdict = verdict.value;
-    selected.sentence = sentence.value;
-
-    log("Case updated: " + selected.citizen + " → " + selected.verdict);
-
-    save();
-    render();
+/* OPEN */
+function openCase(id) {
+  selected = cases.find(c => c.id === id);
+  document.getElementById("caseView").innerHTML = `
+    <b>${selected.title}</b><br>
+    ${selected.desc}<br>
+    Evidence: ${selected.evidence.length}
+  `;
 }
 
-/* PDF REPORT */
-function generateReport(){
+/* SAVE CASE UPDATE */
+function saveCase() {
+  if (!selected) return;
 
-    if(!selected) return;
+  selected.status = status.value;
+  selected.verdict = verdict.value;
 
-    const { jsPDF } = window.jspdf;
-    let doc = new jsPDF();
-
-    doc.text("GREENVILLE RP COURT REPORT", 10, 10);
-    doc.text("Citizen: " + selected.citizen, 10, 20);
-    doc.text("Officer: " + selected.officer, 10, 30);
-    doc.text("Type: " + selected.type, 10, 40);
-    doc.text("Verdict: " + selected.verdict, 10, 50);
-    doc.text("Sentence: " + selected.sentence, 10, 60);
-
-    doc.save("court_report.pdf");
-
-    log("Report generated");
+  save();
+  log("Case updated: " + selected.title);
 }
 
-/* RENDER DATABASE */
-function render(){
-
-    let q = search.value?.toLowerCase() || "";
-
-    caseList.innerHTML = db.cases
-    .filter(c => c.citizen.toLowerCase().includes(q))
-    .map(c=>`
-        <div class="case" onclick="selectCase(${c.id})">
-            <b>${c.citizen}</b><br>
-            <span class="tag">${c.verdict}</span>
-        </div>
-    `).join("");
-
-    logBox.innerHTML = db.log.slice(0,10).map(l=>`<div class="log">${l}</div>`).join("");
+/* POLICE INTAKE */
+function createPoliceCase() {
+  cases.push({
+    id: Date.now(),
+    title: crimeType.value,
+    desc: report.value,
+    status: "Intake",
+    evidence: []
+  });
+  save();
+  log("Police report filed");
 }
 
-render();
+/* WARRANT */
+function generateWarrant() {
+  document.getElementById("warrantOut").innerHTML =
+    `<div class="card">
+      WARRANT ISSUED<br>
+      Suspect: ${suspect.value}<br>
+      Reason: ${reason.value}<br>
+      Authority: Federal Court System
+    </div>`;
+  log("Warrant generated for " + suspect.value);
+}
 
+/* JURY SYSTEM */
+function runJury() {
+  if (!selected) return;
+
+  let guilty = Math.random() > 0.5;
+
+  selected.verdict = guilty ? "GUILTY (JURY)" : "NOT GUILTY (JURY)";
+  selected.status = "Verdict";
+
+  save();
+  log("Jury vote completed: " + selected.verdict);
+}
+
+/* ARCHIVE */
+function renderArchive() {
+  const a = document.getElementById("archiveList");
+  if (!a) return;
+
+  a.innerHTML = cases
+    .filter(c => c.status === "Closed")
+    .map(c => `<div class="case">${c.title}<br>${c.verdict}</div>`)
+    .join("");
+}
+
+/* INIT */
+renderCases();
+renderArchive();
+log("JusticeOS v2 initialized");
 </script>
 
 </body>
