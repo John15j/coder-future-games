@@ -1,143 +1,246 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ERLC Judicial System</title>
-<link rel="stylesheet" href="main.css">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>6 House HOA Database</title>
+
+<style>
+/* ====== GLOBAL ====== */
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+body{
+    background: radial-gradient(circle at top, #1b2735, #090a0f);
+    color:white;
+    min-height:100vh;
+    overflow-x:hidden;
+}
+
+/* ====== HEADER ====== */
+header{
+    padding:20px;
+    text-align:center;
+    font-size:24px;
+    font-weight:bold;
+    letter-spacing:2px;
+    background: rgba(255,255,255,0.05);
+    backdrop-filter: blur(10px);
+    border-bottom:1px solid rgba(255,255,255,0.1);
+    animation: slideDown 1s ease;
+}
+
+@keyframes slideDown{
+    from{transform:translateY(-100%); opacity:0;}
+    to{transform:translateY(0); opacity:1;}
+}
+
+/* ====== LAYOUT ====== */
+.container{
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    gap:20px;
+    padding:20px;
+}
+
+/* ====== PANELS ====== */
+.panel{
+    background: rgba(255,255,255,0.05);
+    border:1px solid rgba(255,255,255,0.1);
+    border-radius:15px;
+    padding:15px;
+    backdrop-filter: blur(12px);
+    box-shadow:0 0 20px rgba(0,0,0,0.3);
+    animation: fadeIn 1s ease;
+}
+
+@keyframes fadeIn{
+    from{opacity:0; transform:scale(0.95);}
+    to{opacity:1; transform:scale(1);}
+}
+
+/* ====== INPUT ====== */
+input, select{
+    width:100%;
+    padding:10px;
+    margin:5px 0;
+    border-radius:10px;
+    border:none;
+    outline:none;
+}
+
+/* ====== BUTTON ====== */
+button{
+    padding:10px;
+    width:100%;
+    margin-top:10px;
+    border:none;
+    border-radius:10px;
+    background: linear-gradient(45deg, #00c6ff, #0072ff);
+    color:white;
+    font-weight:bold;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+button:hover{
+    transform:scale(1.05);
+}
+
+/* ====== BUBBLE CARDS ====== */
+.card{
+    background: rgba(255,255,255,0.08);
+    border:1px solid rgba(255,255,255,0.1);
+    padding:10px;
+    border-radius:15px;
+    margin:10px 0;
+    position:relative;
+    animation: pop 0.4s ease;
+    transition:0.3s;
+}
+
+.card:hover{
+    transform:translateY(-3px);
+    box-shadow:0 0 15px rgba(0,198,255,0.4);
+}
+
+@keyframes pop{
+    from{transform:scale(0.8); opacity:0;}
+    to{transform:scale(1); opacity:1;}
+}
+
+/* bubble effect */
+.card::before{
+    content:"";
+    position:absolute;
+    top:-5px;
+    left:-5px;
+    width:10px;
+    height:10px;
+    background:#00c6ff;
+    border-radius:50%;
+    animation: float 3s infinite ease-in-out;
+}
+
+@keyframes float{
+    0%{transform:translateY(0);}
+    50%{transform:translateY(10px);}
+    100%{transform:translateY(0);}
+}
+
+/* ====== LIST ====== */
+.list{
+    max-height:300px;
+    overflow:auto;
+}
+
+/* ====== SEARCH ====== */
+.search{
+    margin-bottom:10px;
+}
+
+footer{
+    text-align:center;
+    padding:10px;
+    opacity:0.6;
+}
+</style>
 </head>
 
 <body>
 
-<!-- HEADER -->
-<header class="top-bar">
-
-    <div class="header-left">
-        <div class="logo">⚖ ERLC</div>
-    </div>
-
-    <div class="header-center">
-        <div id="clock">00:00:00</div>
-        <div class="sub">Court Operations Center</div>
-    </div>
-
-    <div class="header-right">
-        <div class="judge-card">
-            <div class="title">Chief Justice</div>
-            <div class="name">Judge Andrade</div>
-            <div class="status">Presiding</div>
-        </div>
-    </div>
-
+<header>
+🏡 6 HOUSE HOA DATABASE SYSTEM
 </header>
 
-<!-- DASHBOARD -->
-<main id="dashboard">
+<div class="container">
 
-    <h1 class="title">Court Operations Dashboard</h1>
+<!-- LEFT PANEL -->
+<div class="panel">
+    <h3>Add Resident</h3>
 
-    <div class="grid">
+    <input id="name" placeholder="Resident Name">
+    <input id="house" placeholder="House Number (1-6)">
+    <select id="status">
+        <option>Good Standing</option>
+        <option>Warning</option>
+        <option>Violation</option>
+    </select>
 
-        <button class="card" onclick="openCourtLauncher()">
-            ⚖ Start Court
-        </button>
+    <button onclick="addResident()">Add Resident</button>
 
-        <button class="card" onclick="openNewCase()">
-            📁 New Case
-        </button>
+    <hr style="margin:15px 0; opacity:0.2;">
 
-        <button class="card" onclick="openAllCases()">
-            📚 All Cases
-        </button>
-
-        <button class="card" onclick="openSettings()">
-            ⚙ Settings
-        </button>
-
-    </div>
-
-</main>
-
-<!-- COURT LAUNCHER -->
-<div id="courtLauncher" class="popup hidden">
-    <h2>Start Court</h2>
-    <button onclick="showCaseSelector()">Select Case</button>
-    <button onclick="startEmptyCourt()">Empty Court</button>
-    <button onclick="closeAll()">Close</button>
+    <h3>Search</h3>
+    <input class="search" id="search" oninput="render()" placeholder="Search resident...">
 </div>
 
-<!-- CASE SELECTOR -->
-<div id="caseSelector" class="popup hidden">
-    <h2>Select Case</h2>
-    <div id="caseList"></div>
-    <button onclick="backToLauncher()">Back</button>
+<!-- RIGHT PANEL -->
+<div class="panel">
+    <h3>HOA Records</h3>
+    <div class="list" id="list"></div>
 </div>
-
-<!-- COURT READY -->
-<div id="courtReady" class="popup hidden">
-    <h2>Court Ready</h2>
-    <div id="selectedCaseInfo"></div>
-    <button onclick="startCourtSession()">Start Session</button>
-    <button onclick="closeAll()">Cancel</button>
-</div>
-
-<!-- NEW CASE -->
-<div id="newCasePopup" class="popup hidden">
-
-    <h2>New Case</h2>
-
-    <input id="caseTitle" placeholder="Case Title">
-    <input id="defendant" placeholder="Defendant">
-
-    <button onclick="saveCase()">Save</button>
-    <button onclick="closeAll()">Cancel</button>
 
 </div>
 
-<!-- ALL CASES -->
-<div id="allCasesPopup" class="popup hidden">
-    <h2>All Cases</h2>
-    <div id="allCasesList"></div>
-    <button onclick="closeAll()">Close</button>
-</div>
+<footer>
+6 House HOA Roleplay System • Animated Database UI
+</footer>
 
-<!-- COURTROOM -->
-<section id="courtroom" class="hidden">
+<script>
+let residents = JSON.parse(localStorage.getItem("hoa")) || [];
 
-    <h1>Courtroom</h1>
+function save(){
+    localStorage.setItem("hoa", JSON.stringify(residents));
+}
 
-    <div class="court-grid">
+function addResident(){
+    let name = document.getElementById("name").value;
+    let house = document.getElementById("house").value;
+    let status = document.getElementById("status").value;
 
-        <div>
-            <h3>Case Info</h3>
-            <div id="caseInfo"></div>
+    if(!name || !house) return alert("Fill all fields");
+
+    residents.push({name, house, status});
+    save();
+    render();
+
+    document.getElementById("name").value = "";
+    document.getElementById("house").value = "";
+}
+
+function removeResident(i){
+    residents.splice(i,1);
+    save();
+    render();
+}
+
+function render(){
+    let list = document.getElementById("list");
+    let search = document.getElementById("search")?.value?.toLowerCase() || "";
+
+    list.innerHTML = "";
+
+    residents
+    .filter(r => r.name.toLowerCase().includes(search))
+    .forEach((r,i)=>{
+        list.innerHTML += `
+        <div class="card">
+            <b>${r.name}</b><br>
+            House: ${r.house}<br>
+            Status: ${r.status}<br>
+            <button onclick="removeResident(${i})">Remove</button>
         </div>
+        `;
+    });
+}
 
-        <div>
-            <h3>Court Log</h3>
-            <div id="courtLog"></div>
-        </div>
-
-        <div>
-            <h3>Evidence</h3>
-            <div>No evidence yet</div>
-        </div>
-
-        <div>
-            <h3>Judge Controls</h3>
-
-            <button onclick="logEvent('Witness called')">Call Witness</button>
-            <button onclick="logEvent('Evidence shown')">Evidence</button>
-            <button onclick="logEvent('Arguments opened')">Arguments</button>
-            <button onclick="logEvent('Verdict issued')">Verdict</button>
-
-        </div>
-
-    </div>
-
-</section>
-
-<script src="app.js"></script>
+render();
+</script>
 
 </body>
 </html>
