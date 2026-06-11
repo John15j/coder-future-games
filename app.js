@@ -35,8 +35,9 @@ let selectedCase = null;
 
 function openCourtLauncher(){
 
-    hideAllScreens();
-    document.getElementById("courtLauncher").classList.remove("hidden");
+    document
+    .getElementById("courtLauncher")
+    .classList.remove("hidden");
 }
 
 function showCaseSelector(){
@@ -102,8 +103,10 @@ function backToLauncher(){
 }
 
 function closeLauncher(){
-    hideAllScreens();
-    document.getElementById("dashboard").classList.remove("hidden");
+
+    document
+    .getElementById("courtLauncher")
+    .classList.add("hidden");
 }
 
 
