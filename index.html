@@ -114,11 +114,11 @@
     <p>Launch a courtroom session.</p>
 </button>
 
-               <button class="action-card">
-                    <span>📁</span>
-                    <h3>New Case</h3>
-                    <p>Create a new case file.</p>
-                </button>
+               <button class="action-card" onclick="openNewCase()">
+    <span>📁</span>
+    <h3>New Case</h3>
+    <p>Create a new case file.</p>
+</button>
 
                 <button class="action-card">
                     <span>📚</span>
@@ -273,7 +273,26 @@
     </div>
 
 </div>
-    
+    <!-- NEW CASE POPUP -->
+<div id="newCasePopup" class="popup hidden">
+
+    <div class="launcher-box">
+
+        <h1>Create New Case</h1>
+        <p>Enter case information below</p>
+
+        <input id="caseTitle" placeholder="Case Title">
+        <input id="defendant" placeholder="Defendant Name">
+        <input id="prosecutor" placeholder="Prosecutor Name">
+
+        <textarea id="charges" placeholder="Charges"></textarea>
+
+        <button onclick="saveNewCase()">Save Case</button>
+        <button onclick="closeNewCase()">Cancel</button>
+
+    </div>
+
+</div>
 <!-- ================================================= -->
 <!-- FOOTER -->
 <!-- ================================================= -->
