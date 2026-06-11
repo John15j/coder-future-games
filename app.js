@@ -1,4 +1,4 @@
-alert("APP JS IS RUNNING");
+alert("v1:40");
 /* ================================================= */
 /* ERLC JUDICIAL SYSTEM */
 /* PHASE 1 */
@@ -133,7 +133,6 @@ function closeLauncher(){
     if(selector) selector.classList.add("hidden");
     if(ready) ready.classList.add("hidden");
 }
-
 
 
 /* connect button from dashboard */
