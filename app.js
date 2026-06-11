@@ -1,3 +1,4 @@
+let cases = JSON.parse(localStorage.getItem("erlc_cases")) || [];
 alert("v1:40");
 /* ================================================= */
 /* ERLC JUDICIAL SYSTEM */
@@ -146,3 +147,32 @@ function setupCourtButton(){
 }
 
 setupCourtButton();
+
+function openNewCase(){
+    hideAllScreens();
+    document.getElementById("newCasePopup").classList.remove("hidden");
+}
+
+function closeNewCase(){
+    document.getElementById("newCasePopup").classList.add("hidden");
+    document.getElementById("dashboard").classList.remove("hidden");
+}
+function saveNewCase(){
+
+    const newCase = {
+        id: "CASE-" + Date.now(),
+        title: document.getElementById("caseTitle").value,
+        defendant: document.getElementById("defendant").value,
+        prosecutor: document.getElementById("prosecutor").value,
+        charges: document.getElementById("charges").value,
+        verdict: "Pending",
+        logs: []
+    };
+
+    cases.push(newCase);
+    localStorage.setItem("erlc_cases", JSON.stringify(cases));
+
+    alert("Case Created: " + newCase.id);
+
+    closeNewCase();
+}
