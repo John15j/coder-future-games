@@ -2,278 +2,395 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>JusticeOS v5 - DOJ Courtroom Engine</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ERLC Judicial System</title>
 
-<style>
-body { margin:0; overflow:hidden; font-family:Arial; background:#050816; }
-
-#ui {
-  position:absolute;
-  top:10px; left:10px;
-  width:340px;
-  background:#0f172a;
-  padding:12px;
-  border-radius:10px;
-  color:white;
-  z-index:10;
-}
-
-button {
-  width:100%;
-  margin:5px 0;
-  padding:10px;
-  background:#1f2937;
-  border:none;
-  color:white;
-  border-radius:6px;
-  cursor:pointer;
-}
-
-button:hover { background:#334155; }
-
-input, textarea {
-  width:100%;
-  margin:5px 0;
-  padding:8px;
-  background:#111827;
-  border:none;
-  color:white;
-  border-radius:6px;
-}
-
-.small { font-size:12px; color:#93c5fd; }
-</style>
+<link rel="stylesheet" href="main.css">
 </head>
-
 <body>
 
-<div id="ui">
-  <h3>⚖ JusticeOS v5</h3>
+<!-- ================================================= -->
+<!-- HEADER -->
+<!-- ================================================= -->
 
-  <input id="caseName" placeholder="Case Title">
-  <textarea id="caseStory" placeholder="Case Narrative"></textarea>
+<header class="top-bar">
 
-  <button onclick="createCase()">Create Case Script</button>
+    <div class="header-left">
 
-  <button onclick="nextScene()">▶ Next Court Scene</button>
-  <button onclick="npcSpeak('judge')">🎙 Judge Speak</button>
-  <button onclick="npcSpeak('lawyer')">🎙 Lawyer Speak</button>
-  <button onclick="npcSpeak('witness')">🎙 Witness Speak</button>
-  <button onclick="gavel()">🔨 Gavel</button>
+        <div class="logo-badge">
+            <img src="logo.png" alt="ERLC Logo">
+        </div>
 
-  <div class="small" id="sceneText">Scene: Idle</div>
+        <div class="system-branding">
+            <h1>ERLC Judicial System</h1>
+            <span>Court Operations Center</span>
+        </div>
+
+    </div>
+
+    <div class="header-center">
+
+        <div id="clock">
+            00:00:00
+        </div>
+
+        <div class="dashboard-label">
+            Court Operations Dashboard
+        </div>
+
+    </div>
+
+    <div class="header-right">
+
+        <div class="judge-card">
+
+            <div class="judge-title">
+                Chief Justice
+            </div>
+
+            <div id="judgeNameDisplay" class="judge-name">
+                Judge Andrade
+            </div>
+
+            <div id="judgeStatus" class="judge-status">
+                Presiding
+            </div>
+
+        </div>
+
+      
+
+    </div>
+
+</header>
+
+<!-- ================================================= -->
+<!-- MAIN DASHBOARD -->
+<!-- ================================================= -->
+
+<main id="dashboard" class="dashboard-container">
+
+    <section class="dashboard-hero">
+
+        <h2>Court Operations Dashboard</h2>
+
+        <p>
+            Manage hearings, review evidence, and oversee courtroom proceedings.
+        </p>
+
+        <div class="status-row">
+
+            <div class="status-badge">
+                🟢 Version 2.0
+            </div>
+
+            <div class="status-badge">
+                ⚖ ERLC Judicial System
+            </div>
+
+            <div class="status-badge">
+                🕒 Live Operations
+            </div>
+
+        </div>
+
+    </section>
+
+    <section class="dashboard-grid">
+
+        <!-- ACTION CENTER -->
+
+        <div class="dashboard-panel">
+
+            <div class="panel-header">
+                Action Center
+            </div>
+
+            <div class="action-grid">
+
+                <button class="action-card" onclick="openCourtLauncher()">
+    <span>⚖</span>
+    <h3>Start Court</h3>
+    <p>Launch a courtroom session.</p>
+</button>
+
+               <button class="action-card" onclick="openNewCase()">
+    <span>📁</span>
+    <h3>New Case</h3>
+    <p>Create a new case file.</p>
+</button>
+
+               <button class="action-card" onclick="openAllCases()">
+    <span>📚</span>
+    <h3>All Cases</h3>
+    <p>View existing records.</p>
+</button>
+
+                <button class="action-card">
+                    <span>⚙</span>
+                    <h3>Settings</h3>
+                    <p>Configure the system.</p>
+                </button>
+
+            </div>
+
+        </div>
+
+        <!-- SYSTEM OVERVIEW -->
+
+        <div class="dashboard-panel">
+
+            <div class="panel-header">
+                System Overview
+            </div>
+
+            <div class="overview-list">
+
+                <div class="overview-item">
+                    Cases Today: 0
+                </div>
+
+                <div class="overview-item">
+                    Courtrooms: 3
+                </div>
+
+                <div class="overview-item">
+                    Reports Generated: 0
+                </div>
+
+                <div class="overview-item">
+                    Status: Operational
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- OPERATIONS FEED -->
+
+        <div class="dashboard-panel">
+
+            <div class="panel-header">
+                Court Operations Feed
+            </div>
+
+            <div class="feed-item">
+                ● System Ready
+            </div>
+
+            <div class="feed-item">
+                ● Awaiting Case Creation
+            </div>
+
+            <div class="feed-item">
+                ● No Active Hearings
+            </div>
+
+        </div>
+
+        <!-- QUICK ACCESS -->
+
+        <div class="dashboard-panel">
+
+            <div class="panel-header">
+                Quick Access
+            </div>
+
+            <div class="feed-item">
+                Recent Cases
+            </div>
+
+            <div class="feed-item">
+                Charge Templates
+            </div>
+
+            <div class="feed-item">
+                Court Tools
+            </div>
+
+            <div class="feed-item">
+                Evidence Library
+            </div>
+
+        </div>
+
+    </section>
+
+</main>
+
+<!-- COURT LAUNCHER -->
+<div id="courtLauncher" class="popup hidden">
+
+    <div class="launcher-box">
+
+        <h1>Court Session Launcher</h1>
+        <p>Choose how to start the session.</p>
+
+        <button onclick="showCaseSelector()">Select Existing Case</button>
+        <button onclick="startEmptyCourt()">Start Empty Court</button>
+        <button onclick="closeLauncher()">
+    Close
+</button>
+
+    </div>
+
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+<!-- CASE SELECTOR POPUP -->
+<div id="caseSelector" class="popup hidden">
 
-<script>
+    <div class="launcher-box">
 
-/* =========================
-   CORE 3D COURTROOM ENGINE
-========================= */
+        <h1>Select Case</h1>
 
-const scene = new THREE.Scene();
-scene.background = new THREE.Color("#050816");
+        <div id="caseList"></div>
 
-const camera = new THREE.PerspectiveCamera(70, window.innerWidth/window.innerHeight, 0.1, 1000);
-camera.position.set(0,6,14);
+        <button onclick="backToLauncher()">
+            Back
+        </button>
 
-const renderer = new THREE.WebGLRenderer({ antialias:true });
-renderer.setSize(window.innerWidth, window.innerHeight);
-document.body.appendChild(renderer.domElement);
+    </div>
 
-/* LIGHTS */
-const light = new THREE.DirectionalLight(0xffffff, 1);
-light.position.set(5,10,5);
-scene.add(light);
-scene.add(new THREE.AmbientLight(0x404040));
+</div>
 
-/* FLOOR */
-const floor = new THREE.Mesh(
-  new THREE.PlaneGeometry(25,25),
-  new THREE.MeshStandardMaterial({ color:0x111827 })
-);
-floor.rotation.x = -Math.PI/2;
-scene.add(floor);
+<!-- COURT READY POPUP -->
+<div id="courtReady" class="popup hidden">
 
-/* COURT STRUCTURE */
-function box(x,y,z,w,h,d,color){
-  const m = new THREE.Mesh(
-    new THREE.BoxGeometry(w,h,d),
-    new THREE.MeshStandardMaterial({ color })
-  );
-  m.position.set(x,y,z);
-  scene.add(m);
-  return m;
-}
+    <div class="launcher-box">
 
-/* JUDGE BENCH */
-const judgeDesk = box(0,1,6,5,2,2,0x1f2937);
+    <h1>⚖ Court Ready</h1>
 
-/* LAWYER TABLES */
-box(-5,1,2,3,1.5,2,0x334155);
-box(5,1,2,3,1.5,2,0x334155);
+    <div id="selectedCaseInfo"></div>
 
-/* WITNESS STAND */
-const witness = box(-7,1,-2,2,3,2,0x475569);
+    <button onclick="startCourtSession()">
+        Start Court Session
+    </button>
 
-/* JURY BOX */
-for(let i=-4;i<=4;i+=2){
-  box(i,1,-6,1,1,1,0x111827);
-}
+    <button onclick="closeLauncher()">
+        Cancel
+    </button>
 
-/* NPC CHARACTERS (simple avatars) */
-function npc(color,x,z){
-  return box(x,2,z,1,2,1,color);
-}
+</div>
 
-const judgeNPC = npc(0xfacc15,0,6);
-const lawyerNPC = npc(0x60a5fa,-5,2);
-const witnessNPC = npc(0x34d399,-7,-2);
-const juryNPC = npc(0xa78bfa,2,-6);
+</div>
+    <!-- NEW CASE POPUP -->
+<div id="newCasePopup" class="popup hidden">
 
-/* GAVEL */
-const gavel = box(1.5,3,6,1,0.2,0.4,0xd1a054);
+    <div class="launcher-box">
 
-/* =========================
-   COURTROOM DIRECTOR SYSTEM
-========================= */
+      <input id="caseTitle" type="text" placeholder="Case Title">
 
-let scenes = [
-  "Court is now in session",
-  "Opening statements",
-  "Witness testimony",
-  "Cross examination",
-  "Evidence presentation",
-  "Deliberation",
-  "Verdict"
-];
+<input id="defendant" type="text" placeholder="Defendant Name">
 
-let sceneIndex = 0;
+<input id="username" type="text" placeholder="Username">
 
-function nextScene(){
-  sceneIndex = (sceneIndex + 1) % scenes.length;
+<textarea id="charges" placeholder="Charges"></textarea>
 
-  document.getElementById("sceneText").innerText =
-    "Scene: " + scenes[sceneIndex];
+<textarea id="witnesses" placeholder="Witnesses"></textarea>
 
-  /* camera cinematic shift */
-  camera.position.x = Math.sin(sceneIndex)*10;
-  camera.position.z = Math.cos(sceneIndex)*10;
+        <button onclick="saveNewCase()">Save Case</button>
+        <button onclick="closeNewCase()">Cancel</button>
 
-  speak("Scene changed to " + scenes[sceneIndex]);
-}
+    </div>
 
-/* =========================
-   AI VOICE SYSTEM (browser TTS)
-========================= */
+</div>
+<!-- ALL CASES POPUP -->
+<div id="allCasesPopup" class="popup hidden">
 
-function speak(text){
-  let msg = new SpeechSynthesisUtterance(text);
-  msg.rate = 1;
-  msg.pitch = 1;
-  speechSynthesis.speak(msg);
-}
+    <div class="launcher-box">
 
-/* NPC DIALOGUE ENGINE */
-function npcSpeak(type){
+        <h1>Case Database</h1>
 
-  let lines = {
-    judge: [
-      "Court is now in session.",
-      "Order in the court.",
-      "Proceed with testimony."
-    ],
-    lawyer: [
-      "Your honor, I object.",
-      "The evidence supports our claim.",
-      "We request dismissal."
-    ],
-    witness: [
-      "I saw everything clearly.",
-      "I was at the scene that night.",
-      "That is not what happened."
-    ]
-  };
+        <p id="caseCount">
+            Total Cases: 0
+        </p>
 
-  let line = lines[type][Math.floor(Math.random()*lines[type].length)];
+        <div id="allCasesList"></div>
 
-  speak(line);
+        <button onclick="closeAllCases()">
+            Close
+        </button>
 
-  /* NPC animation reaction */
-  if(type === "judge") judgeNPC.position.y += 0.2;
-  if(type === "lawyer") lawyerNPC.position.y += 0.2;
-  if(type === "witness") witnessNPC.position.y += 0.2;
-}
+    </div>
 
-/* =========================
-   GAVEL ANIMATION
-========================= */
+</div>
+<section id="courtroomPage" class="hidden">
 
-let striking = false;
+    <div class="courtroom-header">
+        <h1>⚖ Courtroom Session</h1>
+        <p id="courtroomCaseTitle">
+            No Active Case
+        </p>
+    </div>
 
-function gavel(){
-  if(striking) return;
-  striking = true;
+    <div class="courtroom-grid">
 
-  let down = setInterval(()=>{
-    gavel.position.y -= 0.3;
-    if(gavel.position.y <= 1.5){
-      clearInterval(down);
+        <div class="court-panel">
+            <h3>Case Information</h3>
+            <div id="caseInformation">
+                No case loaded.
+            </div>
+        </div>
 
-      let up = setInterval(()=>{
-        gavel.position.y += 0.3;
-        if(gavel.position.y >= 3){
-          clearInterval(up);
-          striking = false;
-        }
-      },20);
-    }
-  },20);
+        <div class="court-panel">
+            <h3>Court Log</h3>
+            <div id="courtLog">
+                
+            </div>
+        </div>
 
-  speak("Order!");
-}
+        <div class="court-panel">
+            <h3>Evidence</h3>
+            <div id="evidenceArea">
+                No evidence uploaded.
+            </div>
+        </div>
 
-/* =========================
-   CASE SCRIPT SYSTEM
-========================= */
+        <div class="court-panel">
+            <h3>Judge Controls</h3>
 
-function createCase(){
-  let script = caseName.value + ": " + caseStory.value;
-  speak("New case loaded: " + caseName.value);
+           <div class="judge-controls">
 
-  document.getElementById("sceneText").innerText =
-    "Case Loaded: Script Active";
+    <button class="judge-btn" onclick="callWitness()">
+        Call Witness
+    </button>
 
-  lawyerNPC.material.color.set("#ef4444");
-  witnessNPC.material.color.set("#22c55e");
-}
+    <button class="judge-btn" onclick="presentEvidence()">
+        Present Evidence
+    </button>
 
-/* CAMERA LOOP (cinematic orbit) */
-let t = 0;
+    <button class="judge-btn" onclick="openArguments()">
+        Open Arguments
+    </button>
 
-function animate(){
-  requestAnimationFrame(animate);
+    <button class="judge-btn" onclick="openVerdict()">
+        Verdict
+    </button>
 
-  t += 0.003;
+</div>
 
-  camera.position.x = Math.sin(t)*14;
-  camera.position.z = Math.cos(t)*14;
-  camera.lookAt(0,2,0);
+        </div>
 
-  renderer.render(scene,camera);
-}
+    </div>
 
-animate();
+</section>
+<!-- ================================================= -->
+<!-- FOOTER -->
+<!-- ================================================= -->
 
-/* RESIZE */
-window.addEventListener("resize",()=>{
-  camera.aspect = window.innerWidth/window.innerHeight;
-  camera.updateProjectionMatrix();
-  renderer.setSize(window.innerWidth,window.innerHeight);
-});
+<footer class="footer">
 
-</script>
+    <div>
+        ERLC Judicial Operations Center
+    </div>
+
+    <div>
+        Custom Roleplay Court Management Platform
+    </div>
+
+</footer>
+
+<script src="app.js"></script>
 
 </body>
 </html>
