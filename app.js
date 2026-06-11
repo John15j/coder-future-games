@@ -118,14 +118,20 @@ function backToLauncher(){
 
 function closeLauncher(){
 
-    document.getElementById("courtLauncher")
-        .classList.add("hidden");
+    alert("Close clicked");
 
-    document.getElementById("caseSelector")
-        .classList.add("hidden");
+    const launcher =
+    document.getElementById("courtLauncher");
 
-    document.getElementById("courtReady")
-        .classList.add("hidden");
+    const selector =
+    document.getElementById("caseSelector");
+
+    const ready =
+    document.getElementById("courtReady");
+
+    if(launcher) launcher.classList.add("hidden");
+    if(selector) selector.classList.add("hidden");
+    if(ready) ready.classList.add("hidden");
 }
 
 
