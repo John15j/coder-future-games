@@ -304,9 +304,16 @@
         <p id="caseCount">
             Total Cases: 0
         </p>
-
+<input
+    id="caseSearch"
+    type="text"
+    placeholder="Search Cases..."
+    onkeyup="filterCases()"
+>
         <div id="allCasesList"></div>
-
+<button onclick="editCase('${c.id}')">
+    Edit
+</button>
         <button onclick="closeAllCases()">
             Close
         </button>

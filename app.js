@@ -311,6 +311,18 @@ function openAllCases(){
     count.innerText =
     "Total Cases: " + cases.length;
 
+    if(cases.length === 0){
+
+        list.innerHTML = `
+            <div class="case-item">
+                No cases found.
+            </div>
+        `;
+
+        popup.classList.remove("hidden");
+        return;
+    }
+
     cases.forEach(c => {
 
         const div =
@@ -319,18 +331,31 @@ function openAllCases(){
         div.className = "case-item";
 
         div.innerHTML = `
-            <b>${c.title}</b><br>
-            ${c.id}<br>
-            Status: ${c.verdict}
-            <br><br>
+            <h3>${c.title}</h3>
 
-            <button onclick="viewCase('${c.id}')">
-                Open
-            </button>
+            <p><b>Case ID:</b> ${c.id}</p>
 
-            <button onclick="deleteCase('${c.id}')">
-                Delete
-            </button>
+            <p><b>Defendant:</b> ${c.defendant}</p>
+
+            <p><b>Status:</b> ${c.verdict}</p>
+
+            <div class="case-actions">
+<button onclick="viewCase('${c.id}')">
+    Open
+</button>
+
+<button onclick="editCase('${c.id}')">
+    Edit
+</button>
+
+<button onclick="loadCaseToCourt('${c.id}')">
+    Start Court
+</button>
+
+<button onclick="deleteCase('${c.id}')">
+    Delete
+</button>
+            </div>
         `;
 
         list.appendChild(div);
@@ -408,4 +433,97 @@ function openArguments(){
 
 function openVerdict(){
     addCourtLog("Verdict review started");
+}
+function viewCase(id){
+
+    const c =
+    cases.find(x => x.id === id);
+
+    if(!c) return;
+
+    alert(
+        "Case Title: " + c.title +
+        "\n\nDefendant: " + c.defendant +
+        "\n\nCharges: " + c.charges +
+        "\n\nWitnesses: " + c.witnesses +
+        "\n\nStatus: " + c.verdict
+    );
+}
+
+function loadCaseToCourt(id){
+
+    selectedCase =
+    cases.find(x => x.id === id);
+
+    if(!selectedCase) return;
+
+    closeAllCases();
+
+    document.getElementById(
+        "selectedCaseInfo"
+    ).innerHTML = `
+        <h3>${selectedCase.title}</h3>
+
+        <p>
+            Defendant:
+            ${selectedCase.defendant}
+        </p>
+
+        <p>
+            Ready For Court Session
+        </p>
+    `;
+
+    document
+    .getElementById("courtReady")
+    .classList.remove("hidden");
+}
+function filterCases(){
+
+    const search =
+    document.getElementById("caseSearch")
+    .value
+    .toLowerCase();
+
+    const items =
+    document.querySelectorAll(".case-item");
+
+    items.forEach(item => {
+
+        if(
+            item.innerText
+            .toLowerCase()
+            .includes(search)
+        ){
+            item.style.display = "block";
+        }
+        else{
+            item.style.display = "none";
+        }
+
+    });
+}
+function editCase(id){
+
+    const c =
+    cases.find(x => x.id === id);
+
+    if(!c) return;
+
+    const newTitle =
+    prompt(
+        "Edit Case Title",
+        c.title
+    );
+
+    if(!newTitle) return;
+
+    c.title = newTitle;
+
+    localStorage.setItem(
+        "erlc_cases",
+        JSON.stringify(cases)
+    );
+
+    openAllCases();
 }
