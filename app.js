@@ -144,6 +144,7 @@ function startCourtSession(){
 
     closeLauncher();
 renderEvidence();
+renderWitnesses();
     document.getElementById("dashboard")
         .classList.add("hidden");
 
@@ -364,4 +365,160 @@ function renderEvidence(){
 
         area.appendChild(div);
     });
+}
+function updateCourtStatus(){
+
+    const status =
+    document.getElementById("courtStatus");
+
+    if(!selectedCase){
+
+        status.innerHTML =
+        "No Active Case";
+
+        return;
+    }
+
+    status.innerHTML = `
+        Case: Active<br>
+        Judge: Present<br>
+        Evidence:
+        ${selectedCase.evidence?.length || 0}
+        Items<br>
+        Verdict:
+        ${selectedCase.verdict}
+    `;
+}
+function addWitness(){
+
+    if(!selectedCase){
+        alert("No active case.");
+        return;
+    }
+
+    const witness =
+    prompt("Witness Name");
+
+    if(!witness) return;
+
+    if(!selectedCase.witnessRecords){
+
+        selectedCase.witnessRecords = [];
+    }
+
+    selectedCase.witnessRecords.push({
+
+        name: witness,
+
+        status: "Waiting"
+
+    });
+
+    localStorage.setItem(
+        "erlc_cases",
+        JSON.stringify(cases)
+    );
+
+    renderWitnesses();
+
+    addCourtLog(
+        witness +
+        " added to witness queue."
+    );
+}
+function renderWitnesses(){
+
+    const list =
+    document.getElementById("witnessList");
+
+    if(!list) return;
+
+    if(
+        !selectedCase ||
+        !selectedCase.witnessRecords ||
+        selectedCase.witnessRecords.length === 0
+    ){
+
+        list.innerHTML =
+        "No witnesses added.";
+
+        return;
+    }
+
+    list.innerHTML = "";
+
+    selectedCase.witnessRecords.forEach(
+        (w,index) => {
+
+        const div =
+        document.createElement("div");
+
+        div.className =
+        "case-item";
+
+        div.innerHTML = `
+
+            <b>${w.name}</b><br>
+
+            Status:
+            ${w.status}
+
+            <br><br>
+
+            <button onclick="
+            callWitnessByIndex(${index})
+            ">
+                Call
+            </button>
+
+            <button onclick="
+            dismissWitness(${index})
+            ">
+                Dismiss
+            </button>
+
+        `;
+
+        list.appendChild(div);
+    });
+}
+function callWitnessByIndex(index){
+
+    const witness =
+    selectedCase.witnessRecords[index];
+
+    witness.status =
+    "Testifying";
+
+    localStorage.setItem(
+        "erlc_cases",
+        JSON.stringify(cases)
+    );
+
+    renderWitnesses();
+
+    addCourtLog(
+        witness.name +
+        " called to stand."
+    );
+}
+function dismissWitness(index){
+
+    const witness =
+    selectedCase.witnessRecords[index];
+
+    witness.status =
+    "Dismissed";
+
+    localStorage.setItem(
+        "erlc_cases",
+        JSON.stringify(cases)
+    );
+
+    renderWitnesses();
+
+    addCourtLog(
+        witness.name +
+        " dismissed."
+    );
 }
