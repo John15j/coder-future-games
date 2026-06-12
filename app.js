@@ -143,7 +143,7 @@ function startEmptyCourt(){
 function startCourtSession(){
 
     closeLauncher();
-
+renderEvidence();
     document.getElementById("dashboard")
         .classList.add("hidden");
 
@@ -153,6 +153,7 @@ function startCourtSession(){
     if(selectedCase){
 document.getElementById("caseInformation").innerHTML = `
     <b>Case ID:</b> ${selectedCase.id}<br><br>
+    
 
     <b>Title:</b><br>
     ${selectedCase.title}<br><br>
@@ -295,235 +296,72 @@ function saveNewCase(){
 
     closeNewCase();
 }
-function openAllCases(){
 
-    const popup =
-    document.getElementById("allCasesPopup");
+function addEvidence(){
 
-    const list =
-    document.getElementById("allCasesList");
-
-    const count =
-    document.getElementById("caseCount");
-
-    list.innerHTML = "";
-
-    count.innerText =
-    "Total Cases: " + cases.length;
-
-    if(cases.length === 0){
-
-        list.innerHTML = `
-            <div class="case-item">
-                No cases found.
-            </div>
-        `;
-
-        popup.classList.remove("hidden");
+    if(!selectedCase){
+        alert("No active case.");
         return;
     }
 
-    cases.forEach(c => {
+    const evidence =
+    prompt("Enter Evidence Name");
+
+    if(!evidence) return;
+
+    if(!selectedCase.evidence){
+        selectedCase.evidence = [];
+    }
+
+    selectedCase.evidence.push(evidence);
+
+    localStorage.setItem(
+        "erlc_cases",
+        JSON.stringify(cases)
+    );
+
+    renderEvidence();
+
+    addCourtLog(
+        "Evidence Added: " + evidence
+    );
+}
+function renderEvidence(){
+
+    const area =
+    document.getElementById("evidenceList");
+
+    if(!selectedCase){
+
+        area.innerHTML =
+        "No active case.";
+
+        return;
+    }
+
+    if(
+        !selectedCase.evidence ||
+        selectedCase.evidence.length === 0
+    ){
+
+        area.innerHTML =
+        "No evidence uploaded.";
+
+        return;
+    }
+
+    area.innerHTML = "";
+
+    selectedCase.evidence.forEach(item => {
 
         const div =
         document.createElement("div");
 
-        div.className = "case-item";
+        div.className =
+        "case-item";
 
-        div.innerHTML = `
-            <h3>${c.title}</h3>
+        div.innerText = item;
 
-            <p><b>Case ID:</b> ${c.id}</p>
-
-            <p><b>Defendant:</b> ${c.defendant}</p>
-
-            <p><b>Status:</b> ${c.verdict}</p>
-
-            <div class="case-actions">
-<button onclick="viewCase('${c.id}')">
-    Open
-</button>
-
-<button onclick="editCase('${c.id}')">
-    Edit
-</button>
-
-<button onclick="loadCaseToCourt('${c.id}')">
-    Start Court
-</button>
-
-<button onclick="deleteCase('${c.id}')">
-    Delete
-</button>
-            </div>
-        `;
-
-        list.appendChild(div);
+        area.appendChild(div);
     });
-
-    popup.classList.remove("hidden");
-}
-
-function closeAllCases(){
-
-    document
-    .getElementById("allCasesPopup")
-    .classList.add("hidden");
-}
-function viewCase(id){
-
-    const c =
-    cases.find(x => x.id === id);
-
-    if(!c) return;
-
-    alert(
-        "Case: " + c.title +
-        "\nDefendant: " + c.defendant +
-        "\nCharges: " + c.charges
-    );
-}
-
-function deleteCase(id){
-
-    const confirmDelete =
-    confirm("Delete this case?");
-
-    if(!confirmDelete) return;
-
-    cases =
-    cases.filter(c => c.id !== id);
-
-    localStorage.setItem(
-        "erlc_cases",
-        JSON.stringify(cases)
-    );
-
-    openAllCases();
-}
-
-function addCourtLog(text){
-
-    const log =
-    document.getElementById("courtLog");
-
-    const entry =
-    document.createElement("div");
-
-    entry.className = "feed-item";
-
-    entry.innerHTML =
-    new Date().toLocaleTimeString() +
-    " • " +
-    text;
-
-    log.prepend(entry);
-}
-function callWitness(){
-    addCourtLog("Witness called to stand");
-}
-
-function presentEvidence(){
-    addCourtLog("Evidence presented");
-}
-
-function openArguments(){
-    addCourtLog("Arguments opened");
-}
-
-function openVerdict(){
-    addCourtLog("Verdict review started");
-}
-function viewCase(id){
-
-    const c =
-    cases.find(x => x.id === id);
-
-    if(!c) return;
-
-    alert(
-        "Case Title: " + c.title +
-        "\n\nDefendant: " + c.defendant +
-        "\n\nCharges: " + c.charges +
-        "\n\nWitnesses: " + c.witnesses +
-        "\n\nStatus: " + c.verdict
-    );
-}
-
-function loadCaseToCourt(id){
-
-    selectedCase =
-    cases.find(x => x.id === id);
-
-    if(!selectedCase) return;
-
-    closeAllCases();
-
-    document.getElementById(
-        "selectedCaseInfo"
-    ).innerHTML = `
-        <h3>${selectedCase.title}</h3>
-
-        <p>
-            Defendant:
-            ${selectedCase.defendant}
-        </p>
-
-        <p>
-            Ready For Court Session
-        </p>
-    `;
-
-    document
-    .getElementById("courtReady")
-    .classList.remove("hidden");
-}
-function filterCases(){
-
-    const search =
-    document.getElementById("caseSearch")
-    .value
-    .toLowerCase();
-
-    const items =
-    document.querySelectorAll(".case-item");
-
-    items.forEach(item => {
-
-        if(
-            item.innerText
-            .toLowerCase()
-            .includes(search)
-        ){
-            item.style.display = "block";
-        }
-        else{
-            item.style.display = "none";
-        }
-
-    });
-}
-function editCase(id){
-
-    const c =
-    cases.find(x => x.id === id);
-
-    if(!c) return;
-
-    const newTitle =
-    prompt(
-        "Edit Case Title",
-        c.title
-    );
-
-    if(!newTitle) return;
-
-    c.title = newTitle;
-
-    localStorage.setItem(
-        "erlc_cases",
-        JSON.stringify(cases)
-    );
-
-    openAllCases();
 }
