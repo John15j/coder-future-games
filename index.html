@@ -311,9 +311,7 @@
     onkeyup="filterCases()"
 >
         <div id="allCasesList"></div>
-<button onclick="editCase('${c.id}')">
-    Edit
-</button>
+
         <button onclick="closeAllCases()">
             Close
         </button>
@@ -323,58 +321,186 @@
 </div>
 <section id="courtroomPage" class="hidden">
 
-    <div class="courtroom-header">
-        <h1>⚖ Courtroom Session</h1>
-        <p id="courtroomCaseTitle">
-            No Active Case
-        </p>
+    <div class="courtroom-topbar">
+
+        <div class="hearing-status-card">
+
+            <h2>⚖ Active Court Session</h2>
+
+            <div id="courtroomCaseTitle">
+                No Active Case
+            </div>
+
+            <div class="hearing-stats">
+
+                <div>
+                    Status
+                    <span>LIVE</span>
+                </div>
+
+                <div>
+                    Evidence
+                    <span id="evidenceCount">0</span>
+                </div>
+
+                <div>
+                    Witnesses
+                    <span id="witnessCount">0</span>
+                </div>
+
+            </div>
+
+        </div>
+
     </div>
 
-    <div class="courtroom-grid">
+    <div class="courtroom-layout">
 
-        <div class="court-panel">
-            <h3>Case Information</h3>
-            <div id="caseInformation">
-                No case loaded.
+        <!-- LEFT -->
+
+        <div class="court-column">
+
+            <div class="court-panel">
+
+                <h3>📁 Case File</h3>
+
+                <div id="caseInformation">
+                    No case loaded.
+                </div>
+
             </div>
+
+            <div class="court-panel">
+
+                <h3>📝 Court Records</h3>
+
+                <div id="courtLog"></div>
+
+                <hr>
+
+                <div id="evidenceArea">
+                    No evidence uploaded.
+                </div>
+
+            </div>
+
         </div>
 
-        <div class="court-panel">
-            <h3>Court Log</h3>
-            <div id="courtLog">
-                
+        <!-- CENTER -->
+
+        <div class="court-column center-column">
+
+            <div class="court-display">
+
+                <h2>ACTIVE HEARING</h2>
+
+                <div class="pulse-circle"></div>
+
+                <p>
+                    Court proceedings currently active
+                </p>
+
             </div>
+
+            <div class="court-panel">
+
+                <h3>⚖ Judge Command Console</h3>
+
+                <div class="judge-console">
+
+                    <button class="judge-btn">
+                        Call Witness
+                    </button>
+
+                    <button class="judge-btn">
+                        Upload Evidence
+                    </button>
+
+                    <button class="judge-btn">
+                        Open Arguments
+                    </button>
+
+                    <button class="judge-btn">
+                        AI Summary
+                    </button>
+
+                    <button class="judge-btn">
+                        Generate Transcript
+                    </button>
+
+                    <button class="judge-btn">
+                        Recess Court
+                    </button>
+
+                    <button class="judge-btn danger">
+                        End Court
+                    </button>
+
+                </div>
+
+            </div>
+
         </div>
 
-        <div class="court-panel">
-            <h3>Evidence</h3>
-            <div id="evidenceArea">
-                No evidence uploaded.
+        <!-- RIGHT -->
+
+        <div class="court-column">
+
+            <div class="court-panel">
+
+                <h3>⚖ Verdict</h3>
+
+                <div class="verdict-buttons">
+
+                    <button class="guilty-btn">
+                        GUILTY
+                    </button>
+
+                    <button class="not-guilty-btn">
+                        NOT GUILTY
+                    </button>
+
+                </div>
+
+                <input
+                    type="text"
+                    placeholder="Jail Time"
+                >
+
+                <input
+                    type="text"
+                    placeholder="Fine Amount"
+                >
+
+                <textarea
+                    placeholder="Judge Notes"
+                ></textarea>
+
             </div>
-        </div>
 
-        <div class="court-panel">
-            <h3>Judge Controls</h3>
+            <div class="court-panel">
 
-           <div class="judge-controls">
+                <h3>🤖 AI Sentencing Assistant</h3>
 
-    <button class="judge-btn" onclick="callWitness()">
-        Call Witness
-    </button>
+                <div id="aiAssistantOutput">
 
-    <button class="judge-btn" onclick="presentEvidence()">
-        Present Evidence
-    </button>
+                    No AI analysis generated.
 
-    <button class="judge-btn" onclick="openArguments()">
-        Open Arguments
-    </button>
+                </div>
 
-    <button class="judge-btn" onclick="openVerdict()">
-        Verdict
-    </button>
+                <button class="judge-btn">
 
-</div>
+                    Analyze Case
+
+                </button>
+
+                <button class="judge-btn">
+
+                    Apply Recommendation
+
+                </button>
+
+            </div>
 
         </div>
 
