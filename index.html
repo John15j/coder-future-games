@@ -311,7 +311,9 @@
     onkeyup="filterCases()"
 >
         <div id="allCasesList"></div>
-
+<button onclick="editCase('${c.id}')">
+    Edit
+</button>
         <button onclick="closeAllCases()">
             Close
         </button>
@@ -346,18 +348,9 @@
 
         <div class="court-panel">
             <h3>Evidence</h3>
-           <div id="evidenceArea">
-
-    <div id="evidenceList">
-        No evidence uploaded.
-    </div>
-
-    <button class="judge-btn"
-            onclick="addEvidence()">
-        Upload Evidence
-    </button>
-
-</div>
+            <div id="evidenceArea">
+                No evidence uploaded.
+            </div>
         </div>
 
         <div class="court-panel">
@@ -384,39 +377,6 @@
 </div>
 
         </div>
-<div class="court-panel">
-
-    <h3>Court Status</h3>
-
-    <div id="courtStatus">
-
-        Case Active<br>
-        Judge Present<br>
-        Verdict Pending
-
-    </div>
-
-</div>
-<div class="court-panel">
-
-    <h3>Witness Management</h3>
-
-    <div id="witnessList">
-
-        No witnesses added.
-
-    </div>
-
-    <div class="judge-controls">
-
-        <button class="judge-btn"
-                onclick="addWitness()">
-            Add Witness
-        </button>
-
-    </div>
-
-</div>
 
     </div>
 
