@@ -211,6 +211,26 @@ function closeLauncher(){
     if(launcher) launcher.classList.add("hidden");
     if(selector) selector.classList.add("hidden");
     if(ready) ready.classList.add("hidden");
+
+    document.getElementById(
+    "courtCaseTitle"
+).value = selectedCase.title || "";
+
+document.getElementById(
+    "courtDefendant"
+).value = selectedCase.defendant || "";
+
+document.getElementById(
+    "courtUsername"
+).value = selectedCase.username || "";
+
+document.getElementById(
+    "courtCharges"
+).value = selectedCase.charges || "";
+
+document.getElementById(
+    "courtWitnesses"
+).value = selectedCase.witnesses || "";
 }
 
 
@@ -526,4 +546,48 @@ function editCase(id){
     );
 
     openAllCases();
+}
+function saveCourtCase(){
+
+    if(!selectedCase){
+
+        alert("No active case selected.");
+        return;
+    }
+
+    selectedCase.title =
+        document.getElementById(
+            "courtCaseTitle"
+        ).value;
+
+    selectedCase.defendant =
+        document.getElementById(
+            "courtDefendant"
+        ).value;
+
+    selectedCase.username =
+        document.getElementById(
+            "courtUsername"
+        ).value;
+
+    selectedCase.charges =
+        document.getElementById(
+            "courtCharges"
+        ).value;
+
+    selectedCase.witnesses =
+        document.getElementById(
+            "courtWitnesses"
+        ).value;
+
+    localStorage.setItem(
+        "erlc_cases",
+        JSON.stringify(cases)
+    );
+
+    addCourtLog(
+        "Case information updated."
+    );
+
+    alert("Case saved.");
 }

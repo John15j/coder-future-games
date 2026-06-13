@@ -334,7 +334,21 @@
                 <h3>📁 Case File</h3>
 
                 <div id="caseInformation">
-                    No case loaded.
+<h3>Case File</h3>
+
+<input id="courtCaseTitle" placeholder="Case Title">
+
+<input id="courtDefendant" placeholder="Defendant">
+
+<input id="courtUsername" placeholder="Username">
+
+<textarea id="courtCharges" placeholder="Charges"></textarea>
+
+<textarea id="courtWitnesses" placeholder="Witnesses"></textarea>
+
+<button class="judge-btn" onclick="saveCourtCase()">
+    Save Case Changes
+</button>
                 </div>
 
             </div>
@@ -348,12 +362,15 @@
                 <hr>
 
                 <div id="evidenceArea">
-                    No evidence uploaded.
-                </div>
+
+    <div class="empty-state">
+        No evidence uploaded.
+    </div>
+
+</div>
 
             </div>
-
-        </div>
+        
 
         <!-- CENTER -->
 
