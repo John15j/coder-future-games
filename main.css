@@ -591,8 +591,170 @@ body{
     }
 }
 
-.judge-controls{
+/* ========================================= */
+/* COURTROOM V3 */
+/* ========================================= */
+
+#courtroomPage{
+
+    max-width:1800px;
+
+    margin:20px auto;
+
+    padding:20px;
+}
+
+.courtroom-topbar{
+
+    margin-bottom:20px;
+}
+
+.hearing-status-card{
+
+    background:#111827;
+
+    border:1px solid #1f2937;
+
+    border-radius:18px;
+
+    padding:25px;
+}
+
+.hearing-status-card h2{
+
+    margin-bottom:10px;
+}
+
+.hearing-stats{
+
+    display:flex;
+
+    gap:20px;
+
+    margin-top:15px;
+
+    flex-wrap:wrap;
+}
+
+.hearing-stats div{
+
+    background:#0f172a;
+
+    padding:10px 15px;
+
+    border-radius:10px;
+}
+
+.hearing-stats span{
+
+    display:block;
+
+    font-weight:700;
+
+    color:#3b82f6;
+}
+
+/* MAIN LAYOUT */
+
+.courtroom-layout{
+
     display:grid;
+
+    grid-template-columns:1fr 1.2fr 1fr;
+
+    gap:20px;
+
+    align-items:start;
+}
+
+.court-column{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:20px;
+}
+
+/* PANELS */
+
+.court-panel{
+
+    background:#111827;
+
+    border:1px solid #1f2937;
+
+    border-radius:18px;
+
+    padding:20px;
+}
+
+.court-panel h3{
+
+    margin-bottom:15px;
+}
+
+/* CENTER DISPLAY */
+
+.court-display{
+
+    background:#111827;
+
+    border:1px solid #2563eb;
+
+    border-radius:18px;
+
+    min-height:300px;
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:center;
+
+    align-items:center;
+
+    text-align:center;
+}
+
+.pulse-circle{
+
+    width:80px;
+
+    height:80px;
+
+    border-radius:50%;
+
+    background:#2563eb;
+
+    margin:20px 0;
+
+    animation:pulseCourt 2s infinite;
+}
+
+@keyframes pulseCourt{
+
+    0%{
+        transform:scale(1);
+    }
+
+    50%{
+        transform:scale(1.15);
+    }
+
+    100%{
+        transform:scale(1);
+    }
+}
+
+/* JUDGE CONTROLS */
+
+.judge-console{
+
+    display:grid;
+
+    grid-template-columns:1fr 1fr;
+
     gap:12px;
 }
 
@@ -600,13 +762,13 @@ body{
 
     background:#1f2937;
 
-    color:white;
-
     border:1px solid #334155;
 
-    border-radius:12px;
+    color:white;
 
     padding:14px;
+
+    border-radius:12px;
 
     cursor:pointer;
 
@@ -620,142 +782,115 @@ body{
     background:#2563eb;
 
     border-color:#2563eb;
-
-    transform:translateY(-2px);
 }
-#courtLog{
+
+.danger{
+
+    background:#991b1b;
+}
+
+/* VERDICT */
+
+.verdict-buttons{
+
     display:flex;
-    flex-direction:column;
+
     gap:10px;
-}
-
-.log-entry{
-
-    background:#1f2937;
-
-    border-left:4px solid #2563eb;
-
-    padding:12px;
-
-    border-radius:8px;
-
-    font-size:14px;
-}
-/* ========================================= */
-/* COURTROOM FIX */
-/* ========================================= */
-
-#courtroomPage{
-
-    max-width:1400px;
-
-    margin:30px auto;
-
-    padding:20px;
-}
-
-.courtroom-header{
-
-    text-align:center;
-
-    margin-bottom:25px;
-}
-
-.courtroom-header h1{
-
-    font-size:36px;
-
-    margin-bottom:8px;
-}
-
-.courtroom-header p{
-
-    color:#94a3b8;
-}
-
-.courtroom-grid{
-
-    display:grid;
-
-    grid-template-columns:1fr 1fr;
-
-    gap:20px;
-}
-
-.court-panel{
-
-    background:#111827;
-
-    border:1px solid #1f2937;
-
-    border-radius:16px;
-
-    padding:20px;
-
-    min-height:260px;
-}
-
-.court-panel h3{
 
     margin-bottom:15px;
 }
 
-/* Judge Controls */
+.guilty-btn{
 
-.judge-controls{
+    flex:1;
 
-    display:grid;
-
-    grid-template-columns:1fr 1fr;
-
-    gap:12px;
-}
-
-.judge-btn{
-
-    background:#2563eb;
+    background:#dc2626;
 
     color:white;
 
     border:none;
 
+    padding:12px;
+
     border-radius:10px;
+
+    cursor:pointer;
+}
+
+.not-guilty-btn{
+
+    flex:1;
+
+    background:#16a34a;
+
+    color:white;
+
+    border:none;
 
     padding:12px;
 
+    border-radius:10px;
+
     cursor:pointer;
-
-    font-weight:600;
-
-    transition:.2s;
 }
 
-.judge-btn:hover{
+/* INPUTS */
 
-    background:#1d4ed8;
+.court-panel input,
+.court-panel textarea{
 
-    transform:translateY(-2px);
+    width:100%;
+
+    margin-top:10px;
+
+    background:#0f172a;
+
+    color:white;
+
+    border:1px solid #334155;
+
+    border-radius:10px;
+
+    padding:12px;
 }
 
-/* Court Log */
+.court-panel textarea{
+
+    min-height:120px;
+}
+
+/* LOGS */
 
 #courtLog{
 
-    max-height:250px;
+    max-height:300px;
 
     overflow-y:auto;
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:10px;
 }
 
-/* Mobile */
+/* EVIDENCE */
 
-@media(max-width:900px){
+#evidenceArea{
 
-    .courtroom-grid{
+    margin-top:15px;
+}
+
+/* MOBILE */
+
+@media(max-width:1200px){
+
+    .courtroom-layout{
 
         grid-template-columns:1fr;
     }
 
-    .judge-controls{
+    .judge-console{
 
         grid-template-columns:1fr;
     }
