@@ -1,5 +1,5 @@
 let cases = JSON.parse(localStorage.getItem("erlc_cases")) || [];
-alert("new update");
+
 /* ================================================= */
 /* ERLC JUDICIAL SYSTEM */
 /* PHASE 1 */
@@ -142,47 +142,51 @@ function startEmptyCourt(){
 
 function startCourtSession(){
 
-    closeLauncher();
+```
+closeLauncher();
 
-    document.getElementById("dashboard")
-        .classList.add("hidden");
+document.getElementById("dashboard")
+    .classList.add("hidden");
 
-    document.getElementById("courtroomPage")
-        .classList.remove("hidden");
+document.getElementById("courtroomPage")
+    .classList.remove("hidden");
 
-    if(selectedCase){
-document.getElementById("caseInformation").innerHTML = `
-    <b>Case ID:</b> ${selectedCase.id}<br><br>
+if(!selectedCase){
 
-    <b>Title:</b><br>
-    ${selectedCase.title}<br><br>
+    document.getElementById("courtCaseTitle").value = "";
+    document.getElementById("courtDefendant").value = "";
+    document.getElementById("courtUsername").value = "";
+    document.getElementById("courtCharges").value = "";
+    document.getElementById("courtWitnesses").value = "";
 
-    <b>Defendant:</b><br>
-    ${selectedCase.defendant}<br><br>
+    addCourtLog("Empty court session started.");
 
-    <b>Username:</b><br>
-    ${selectedCase.username}<br><br>
-
-    <b>Charges:</b><br>
-    ${selectedCase.charges}<br><br>
-
-    <b>Witnesses:</b><br>
-    ${selectedCase.witnesses}
-`;
-        document.getElementById(
-            "courtroomCaseTitle"
-        ).innerText =
-        selectedCase.title;
-
-        document.getElementById(
-            "caseInformation"
-        ).innerHTML = `
-            <b>Case ID:</b> ${selectedCase.id}<br>
-            <b>Defendant:</b> ${selectedCase.defendant}<br>
-            <b>Status:</b> Active Hearing
-        `;
-    }
+    return;
 }
+
+document.getElementById("courtCaseTitle").value =
+    selectedCase.title || "";
+
+document.getElementById("courtDefendant").value =
+    selectedCase.defendant || "";
+
+document.getElementById("courtUsername").value =
+    selectedCase.username || "";
+
+document.getElementById("courtCharges").value =
+    selectedCase.charges || "";
+
+document.getElementById("courtWitnesses").value =
+    selectedCase.witnesses || "";
+
+addCourtLog(
+    "Court session started for " +
+    selectedCase.title
+);
+```
+
+}
+
 function backToLauncher(){
 
     document.getElementById("caseSelector")
