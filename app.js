@@ -1,5 +1,5 @@
 let cases = JSON.parse(localStorage.getItem("erlc_cases")) || [];
-alert("new update");
+alert("new logo and name ");
 /* ================================================= */
 /* ERLC JUDICIAL SYSTEM */
 /* PHASE 1 */
