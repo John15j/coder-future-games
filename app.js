@@ -1,5 +1,8 @@
 let cases = JSON.parse(localStorage.getItem("erlc_cases")) || [];
 alert("new logo and name ");
+let selectedCase = null;
+
+let temporaryCaseId = null;
 /* ================================================= */
 /* ERLC JUDICIAL SYSTEM */
 /* PHASE 1 */
@@ -24,7 +27,7 @@ updateClock();
 
 
 
-let selectedCase = null;
+
 
 
 /* hide all screens helper */
@@ -132,57 +135,26 @@ function startEmptyCourt(){
 
     selectedCase = null;
 
+    const year = new Date().getFullYear();
+
+    temporaryCaseId =
+        "GRCS-" +
+        year +
+        "-" +
+        String(cases.length + 1).padStart(3, "0");
+
     document.getElementById("selectedCaseInfo").innerHTML = `
-        No case selected — Empty Court Session
+        <h3>Empty Court Session</h3>
+        <p>Case Number: ${temporaryCaseId}</p>
     `;
 
     hideAllScreens();
-    document.getElementById("courtReady").classList.remove("hidden");
-}
 
-function startCourtSession(){
-
-    closeLauncher();
-
-    document.getElementById("dashboard")
-        .classList.add("hidden");
-
-    document.getElementById("courtroomPage")
+    document.getElementById("courtReady")
         .classList.remove("hidden");
-
-    if(selectedCase){
-document.getElementById("caseInformation").innerHTML = `
-    <b>Case ID:</b> ${selectedCase.id}<br><br>
-
-    <b>Title:</b><br>
-    ${selectedCase.title}<br><br>
-
-    <b>Defendant:</b><br>
-    ${selectedCase.defendant}<br><br>
-
-    <b>Username:</b><br>
-    ${selectedCase.username}<br><br>
-
-    <b>Charges:</b><br>
-    ${selectedCase.charges}<br><br>
-
-    <b>Witnesses:</b><br>
-    ${selectedCase.witnesses}
-`;
-        document.getElementById(
-            "courtroomCaseTitle"
-        ).innerText =
-        selectedCase.title;
-
-        document.getElementById(
-            "caseInformation"
-        ).innerHTML = `
-            <b>Case ID:</b> ${selectedCase.id}<br>
-            <b>Defendant:</b> ${selectedCase.defendant}<br>
-            <b>Status:</b> Active Hearing
-        `;
-    }
 }
+
+
 function backToLauncher(){
 
     document.getElementById("caseSelector")
@@ -212,25 +184,23 @@ function closeLauncher(){
     if(selector) selector.classList.add("hidden");
     if(ready) ready.classList.add("hidden");
 
-    document.getElementById(
-    "courtCaseTitle"
-).value = selectedCase.title || "";
+    if(selectedCase){
 
-document.getElementById(
-    "courtDefendant"
-).value = selectedCase.defendant || "";
+    document.getElementById("courtCaseTitle").value =
+        selectedCase.title || "";
 
-document.getElementById(
-    "courtUsername"
-).value = selectedCase.username || "";
+    document.getElementById("courtDefendant").value =
+        selectedCase.defendant || "";
 
-document.getElementById(
-    "courtCharges"
-).value = selectedCase.charges || "";
+    document.getElementById("courtUsername").value =
+        selectedCase.username || "";
 
-document.getElementById(
-    "courtWitnesses"
-).value = selectedCase.witnesses || "";
+    document.getElementById("courtCharges").value =
+        selectedCase.charges || "";
+
+    document.getElementById("courtWitnesses").value =
+        selectedCase.witnesses || "";
+    }
 }
 
 
@@ -422,37 +392,168 @@ function deleteCase(id){
     openAllCases();
 }
 
+/* ================================================= */
+/* STATUS SYSTEM */
+/* ================================================= */
+
+const STATUSES = {
+    ACTIVE:    { label: "ACTIVE HEARING",  css: "hearing"  },
+    RECESSED:  { label: "COURT RECESSED",  css: "recessed" },
+    ADJOURNED: { label: "COURT ADJOURNED", css: "adjourned"},
+    CLOSED:    { label: "CASE CLOSED",     css: "closed"   }
+};
+
+let currentStatus = "ACTIVE";
+
+function setCourtStatus(statusKey){
+
+    currentStatus = statusKey;
+
+    const s = STATUSES[statusKey];
+
+    const badge =
+        document.getElementById("courtStatusBadge");
+
+    if(!badge) return;
+
+    badge.textContent = s.label;
+
+    badge.className = "status-badge " + s.css;
+
+    addCourtLog("Status changed: " + s.label);
+}
+
+/* ================================================= */
+/* COURT LOG */
+/* ================================================= */
+
 function addCourtLog(text){
 
     const log =
-    document.getElementById("courtLog");
+        document.getElementById("courtLog");
+
+    if(!log) return;
 
     const entry =
-    document.createElement("div");
+        document.createElement("div");
 
     entry.className = "feed-item";
 
     entry.innerHTML =
-    new Date().toLocaleTimeString() +
-    " • " +
-    text;
+        "<span class='log-time'>" +
+        new Date().toLocaleTimeString() +
+        "</span> • " + text;
 
     log.prepend(entry);
 }
+
+/* ================================================= */
+/* JUDGE CONSOLE BUTTONS */
+/* ================================================= */
+
 function callWitness(){
-    addCourtLog("Witness called to stand");
+    addCourtLog("Witness called to the stand");
 }
 
-function presentEvidence(){
-    addCourtLog("Evidence presented");
+function uploadEvidence(){
+    addCourtLog("Evidence submitted to the record");
 }
 
 function openArguments(){
     addCourtLog("Arguments opened");
 }
 
-function openVerdict(){
-    addCourtLog("Verdict review started");
+function aiSummary(){
+    addCourtLog("AI Summary requested");
+}
+
+function generateTranscript(){
+    addCourtLog("Transcript generation requested");
+}
+
+function recessCourt(){
+
+    if(currentStatus !== "ACTIVE"){
+        alert("Court is not currently in session.");
+        return;
+    }
+
+    setCourtStatus("RECESSED");
+}
+
+function endCourt(){
+
+    const confirmEnd =
+        confirm("Are you sure you want to end court? This will close the session.");
+
+    if(!confirmEnd) return;
+
+    setCourtStatus("ADJOURNED");
+
+    setTimeout(() => {
+
+        document.getElementById("courtroomPage")
+            .classList.add("hidden");
+
+        document.getElementById("dashboard")
+            .classList.remove("hidden");
+
+        currentStatus = "ACTIVE";
+
+    }, 2000);
+}
+function saveCourtCase(){
+
+    if(!selectedCase){
+
+        const newCase = {
+            id: temporaryCaseId,
+            title: document.getElementById("courtCaseTitle").value,
+            defendant: document.getElementById("courtDefendant").value,
+            username: document.getElementById("courtUsername").value,
+            charges: document.getElementById("courtCharges").value,
+            witnesses: document.getElementById("courtWitnesses").value,
+            verdict: "Pending",
+            logs: [],
+            evidence: []
+        };
+
+        cases.push(newCase);
+        selectedCase = newCase;
+
+        localStorage.setItem("erlc_cases", JSON.stringify(cases));
+
+        alert("Case Created\n\nCase ID: " + newCase.id);
+
+    } else {
+
+        selectedCase.title =
+            document.getElementById("courtCaseTitle").value;
+
+        selectedCase.defendant =
+            document.getElementById("courtDefendant").value;
+
+        selectedCase.username =
+            document.getElementById("courtUsername").value;
+
+        selectedCase.charges =
+            document.getElementById("courtCharges").value;
+
+        selectedCase.witnesses =
+            document.getElementById("courtWitnesses").value;
+
+        localStorage.setItem("erlc_cases", JSON.stringify(cases));
+    }
+
+    updateViewMode();
+
+    document.getElementById("caseEditMode")
+        .classList.add("hidden");
+
+    document.getElementById("caseViewMode")
+        .classList.remove("hidden");
+
+    addCourtLog("Case file saved");
 }
 function viewCase(id){
 
@@ -547,47 +648,270 @@ function editCase(id){
 
     openAllCases();
 }
-function saveCourtCase(){
+/* ================================================= */
+/* CASE FILE VIEW / EDIT MODE */
+/* ================================================= */
+
+function enterEditMode(){
+
+    document.getElementById("caseViewMode")
+        .classList.add("hidden");
+
+    document.getElementById("caseEditMode")
+        .classList.remove("hidden");
+
+    addCourtLog("Case file opened for editing");
+}
+
+function cancelEdit(){
+
+    document.getElementById("caseEditMode")
+        .classList.add("hidden");
+
+    document.getElementById("caseViewMode")
+        .classList.remove("hidden");
+}
+
+function updateViewMode(){
+
+    document.getElementById("viewCaseTitle").textContent =
+        document.getElementById("courtCaseTitle").value || "—";
+
+    document.getElementById("viewDefendant").textContent =
+        document.getElementById("courtDefendant").value || "—";
+
+    document.getElementById("viewUsername").textContent =
+        document.getElementById("courtUsername").value || "—";
+
+    document.getElementById("viewCharges").textContent =
+        document.getElementById("courtCharges").value || "—";
+
+    document.getElementById("viewWitnesses").textContent =
+        document.getElementById("courtWitnesses").value || "—";
+}
+
+function startCourtSession(){
+
+    currentStatus = "ACTIVE";
+
+    closeLauncher();
+
+    document.getElementById("dashboard")
+        .classList.add("hidden");
+
+    document.getElementById("courtroomPage")
+        .classList.remove("hidden");
+
+    const caseIdDisplay = document.getElementById("recordCaseId");
+
+    if(selectedCase){
+
+        caseIdDisplay.innerText = selectedCase.id;
+
+        document.getElementById("courtCaseTitle").value =
+            selectedCase.title || "";
+
+        document.getElementById("courtDefendant").value =
+            selectedCase.defendant || "";
+
+        document.getElementById("courtUsername").value =
+            selectedCase.username || "";
+
+        document.getElementById("courtCharges").value =
+            selectedCase.charges || "";
+
+        document.getElementById("courtWitnesses").value =
+            selectedCase.witnesses || "";
+
+        updateViewMode();
+
+        document.getElementById("caseEditMode")
+            .classList.add("hidden");
+
+        document.getElementById("caseViewMode")
+            .classList.remove("hidden");
+
+    } else {
+
+        caseIdDisplay.innerText = temporaryCaseId || "NO CASE";
+
+        document.getElementById("caseEditMode")
+            .classList.remove("hidden");
+
+        document.getElementById("caseViewMode")
+            .classList.add("hidden");
+    }
+}
+/* ================================================= */
+/* VERDICT SYSTEM */
+/* ================================================= */
+
+function setVerdict(verdict){
 
     if(!selectedCase){
-
-        alert("No active case selected.");
+        alert("No case loaded. Save the case first.");
         return;
     }
 
-    selectedCase.title =
-        document.getElementById(
-            "courtCaseTitle"
-        ).value;
-
-    selectedCase.defendant =
-        document.getElementById(
-            "courtDefendant"
-        ).value;
-
-    selectedCase.username =
-        document.getElementById(
-            "courtUsername"
-        ).value;
-
-    selectedCase.charges =
-        document.getElementById(
-            "courtCharges"
-        ).value;
-
-    selectedCase.witnesses =
-        document.getElementById(
-            "courtWitnesses"
-        ).value;
-
-    localStorage.setItem(
-        "erlc_cases",
-        JSON.stringify(cases)
+    const confirmVerdict = confirm(
+        "Set verdict to " + verdict + "?\n\nThis will be saved to the case record."
     );
 
-    addCourtLog(
-        "Case information updated."
-    );
+    if(!confirmVerdict) return;
 
-    alert("Case saved.");
+    selectedCase.verdict = verdict;
+
+    const jailTime =
+        document.getElementById("verdictJailTime").value;
+
+    const fineAmount =
+        document.getElementById("verdictFine").value;
+
+    const judgeNotes =
+        document.getElementById("verdictNotes").value;
+
+    selectedCase.jailTime = jailTime;
+    selectedCase.fineAmount = fineAmount;
+    selectedCase.judgeNotes = judgeNotes;
+
+    localStorage.setItem("erlc_cases", JSON.stringify(cases));
+
+    addCourtLog("Verdict entered: " + verdict);
+
+    if(jailTime) addCourtLog("Jail Time: " + jailTime);
+    if(fineAmount) addCourtLog("Fine: $" + fineAmount);
+    if(judgeNotes) addCourtLog("Judge Notes recorded");
+
+    setCourtStatus("CLOSED");
+
+    const display =
+        document.getElementById("verdictDisplay");
+
+    display.textContent = verdict;
+
+    display.className =
+        verdict === "GUILTY"
+        ? "verdict-result guilty-result"
+        : "verdict-result not-guilty-result";
+
+    display.classList.remove("hidden");
+}
+
+/* ================================================= */
+/* AI SENTENCING ASSISTANT */
+/* ================================================= */
+
+async function analyzeCase(){
+
+    if(!selectedCase){
+        alert("No case loaded. Save the case first.");
+        return;
+    }
+
+    const output =
+        document.getElementById("aiAssistantOutput");
+
+    output.innerHTML =
+        "<span style='color:#94a3b8'>Analyzing case...</span>";
+
+    addCourtLog("AI analysis requested");
+
+    const prompt = `
+You are a strict Roblox roleplay court judge assistant for the Greenville Roleplay Court System.
+
+Analyze this case and provide a sentencing recommendation.
+
+CASE TITLE: ${selectedCase.title}
+DEFENDANT: ${selectedCase.defendant}
+USERNAME: ${selectedCase.username}
+CHARGES: ${selectedCase.charges}
+WITNESSES: ${selectedCase.witnesses}
+
+Respond in this exact format and nothing else:
+VERDICT: [GUILTY or NOT GUILTY]
+JAIL TIME: [amount in minutes, or NONE]
+FINE: [dollar amount, or NONE]
+REASONING: [1-2 sentences explaining the recommendation]
+    `.trim();
+
+    try {
+
+        const response = await fetch("https://api.anthropic.com/v1/messages", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                model: "claude-sonnet-4-6",
+                max_tokens: 1000,
+                messages: [
+                    { role: "user", content: prompt }
+                ]
+            })
+        });
+
+        const data = await response.json();
+
+        const text = data.content[0].text;
+
+        const lines = {};
+
+        text.split("\n").forEach(line => {
+            const parts = line.split(": ");
+            if(parts.length >= 2){
+                lines[parts[0].trim()] = parts.slice(1).join(": ").trim();
+            }
+        });
+
+        document.getElementById("aiSuggestedVerdict").textContent =
+            lines["VERDICT"] || "—";
+
+        document.getElementById("aiSuggestedJail").textContent =
+            lines["JAIL TIME"] || "—";
+
+        document.getElementById("aiSuggestedFine").textContent =
+            lines["FINE"] || "—";
+
+        output.innerHTML =
+            "<span style='color:#94a3b8;font-size:13px'>" +
+            (lines["REASONING"] || "Analysis complete.") +
+            "</span>";
+
+        document.getElementById("aiRecommendation")
+            .classList.remove("hidden");
+
+        addCourtLog("AI analysis complete");
+
+    } catch(err) {
+
+        output.innerHTML =
+            "<span style='color:#f87171'>AI analysis failed. Check connection.</span>";
+
+        addCourtLog("AI analysis failed");
+    }
+}
+
+function applyRecommendation(){
+
+    const verdict =
+        document.getElementById("aiSuggestedVerdict").textContent;
+
+    const jail =
+        document.getElementById("aiSuggestedJail").textContent;
+
+    const fine =
+        document.getElementById("aiSuggestedFine").textContent;
+
+    if(verdict === "—"){
+        alert("Run Analyze Case first.");
+        return;
+    }
+
+    document.getElementById("verdictJailTime").value =
+        jail === "NONE" ? "" : jail;
+
+    document.getElementById("verdictFine").value =
+        fine === "NONE" ? "" : fine;
+
+    addCourtLog("AI recommendation applied to verdict fields");
 }

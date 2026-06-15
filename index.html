@@ -321,173 +321,157 @@
 </div>
 <section id="courtroomPage" class="hidden">
 
-    
-
     <div class="courtroom-layout">
 
-        <!-- LEFT -->
-
+        <!-- LEFT COLUMN -->
         <div class="court-column">
+<div class="court-panel" id="caseFilePanel">
+    <h3>📁 Case File</h3>
 
-            <div class="court-panel">
+    <!-- VIEW MODE -->
+    <div id="caseViewMode">
 
-                <h3>📁 Case File</h3>
+        <div class="view-field">
+            <div class="view-label">CASE TITLE</div>
+            <div id="viewCaseTitle" class="view-value">—</div>
+        </div>
 
-                <div id="caseInformation">
-<h3>Case File</h3>
+        <div class="view-field">
+            <div class="view-label">DEFENDANT</div>
+            <div id="viewDefendant" class="view-value">—</div>
+        </div>
 
-<input id="courtCaseTitle" placeholder="Case Title">
+        <div class="view-field">
+            <div class="view-label">USERNAME</div>
+            <div id="viewUsername" class="view-value">—</div>
+        </div>
 
-<input id="courtDefendant" placeholder="Defendant">
+        <div class="view-field">
+            <div class="view-label">CHARGES</div>
+            <div id="viewCharges" class="view-value">—</div>
+        </div>
 
-<input id="courtUsername" placeholder="Username">
+        <div class="view-field">
+            <div class="view-label">WITNESSES</div>
+            <div id="viewWitnesses" class="view-value">—</div>
+        </div>
 
-<textarea id="courtCharges" placeholder="Charges"></textarea>
+        <button class="judge-btn" onclick="enterEditMode()">
+            ✏ Edit Case
+        </button>
 
-<textarea id="courtWitnesses" placeholder="Witnesses"></textarea>
+    </div>
 
-<button class="judge-btn" onclick="saveCourtCase()">
-    Save Case Changes
-</button>
-                </div>
+    <!-- EDIT MODE -->
+    <div id="caseEditMode" class="hidden">
 
-            </div>
+        <input id="courtCaseTitle" placeholder="Case Title">
+        <input id="courtDefendant" placeholder="Defendant">
+        <input id="courtUsername" placeholder="Username">
+        <textarea id="courtCharges" placeholder="Charges"></textarea>
+        <textarea id="courtWitnesses" placeholder="Witnesses"></textarea>
 
-            <div class="court-panel">
+        <div class="case-file-actions">
+            <button class="judge-btn" onclick="saveCourtCase()">
+                💾 Save Changes
+            </button>
+            <button class="judge-btn" onclick="cancelEdit()">
+                Cancel
+            </button>
+        </div>
 
-                <h3>📝 Court Records</h3>
-
-                <div id="courtLog"></div>
-
-                <hr>
-
-                <div id="evidenceArea">
-
-    <div class="empty-state">
-        No evidence uploaded.
     </div>
 
 </div>
-
-            </div>
-        
-
-        <!-- CENTER -->
-
-        <div class="court-column center-column">
-
-            <div class="court-display">
-
-                <h2>ACTIVE HEARING</h2>
-
-                <div class="pulse-circle"></div>
-
-                <p>
-                    Court proceedings currently active
-                </p>
-
-            </div>
+           
 
             <div class="court-panel">
-
-                <h3>⚖ Judge Command Console</h3>
-
-                <div class="judge-console">
-
-                    <button class="judge-btn">
-                        Call Witness
-                    </button>
-
-                    <button class="judge-btn">
-                        Upload Evidence
-                    </button>
-
-                    <button class="judge-btn">
-                        Open Arguments
-                    </button>
-
-                    <button class="judge-btn">
-                        AI Summary
-                    </button>
-
-                    <button class="judge-btn">
-                        Generate Transcript
-                    </button>
-
-                    <button class="judge-btn">
-                        Recess Court
-                    </button>
-
-                    <button class="judge-btn danger">
-                        End Court
-                    </button>
-
-                </div>
-
+                <h3>📝 Court Records</h3>
+                <div id="courtLog"></div>
             </div>
 
         </div>
 
-        <!-- RIGHT -->
+        <!-- CENTER COLUMN -->
+        <div class="court-column center-column">
 
+            <div class="court-display">
+
+                <div class="court-display-top">
+                    <div class="record-label">STATUS</div>
+                    <div id="courtStatusBadge" class="status-badge hearing">ACTIVE HEARING</div>
+                </div>
+
+                <div class="pulse-circle"></div>
+
+               
+
+                <div class="court-case-id-row">
+                    <span class="record-label">CASE ID</span>
+                    <span id="recordCaseId" class="court-case-id-value">NO CASE</span>
+                </div>
+
+            </div>
+
+            <div class="court-panel">
+                <h3>⚖ Judge Command Console</h3>
+
+              <div class="judge-console">
+    <button class="judge-btn" onclick="callWitness()">Call Witness</button>
+    <button class="judge-btn" onclick="uploadEvidence()">Upload Evidence</button>
+    <button class="judge-btn" onclick="openArguments()">Open Arguments</button>
+    <button class="judge-btn" onclick="aiSummary()">AI Summary</button>
+    <button class="judge-btn" onclick="generateTranscript()">Generate Transcript</button>
+    <button class="judge-btn" onclick="recessCourt()">Recess Court</button>
+    <button class="judge-btn danger" onclick="endCourt()">End Court</button>
+</div>
+            </div>
+
+        </div>
+
+        <!-- RIGHT COLUMN -->
         <div class="court-column">
 
             <div class="court-panel">
+    <h3>⚖ Verdict</h3>
 
-                <h3>⚖ Verdict</h3>
+    <div id="verdictDisplay" class="hidden"></div>
 
-                <div class="verdict-buttons">
+    <div class="verdict-buttons">
+        <button class="guilty-btn" onclick="setVerdict('GUILTY')">GUILTY</button>
+        <button class="not-guilty-btn" onclick="setVerdict('NOT GUILTY')">NOT GUILTY</button>
+    </div>
 
-                    <button class="guilty-btn">
-                        GUILTY
-                    </button>
+    <input id="verdictJailTime" type="text" placeholder="Jail Time">
+    <input id="verdictFine" type="text" placeholder="Fine Amount">
+    <textarea id="verdictNotes" placeholder="Judge Notes"></textarea>
+</div>
 
-                    <button class="not-guilty-btn">
-                        NOT GUILTY
-                    </button>
+           <div class="court-panel">
+    <h3>🤖 AI Sentencing Assistant</h3>
 
-                </div>
+    <div id="aiAssistantOutput">
+        No AI analysis generated.
+    </div>
 
-                <input
-                    type="text"
-                    placeholder="Jail Time"
-                >
+    <div id="aiRecommendation" class="hidden">
+        <div class="ai-rec-row">
+            <span class="record-label">SUGGESTED VERDICT</span>
+            <span id="aiSuggestedVerdict" class="ai-rec-value">—</span>
+        </div>
+        <div class="ai-rec-row">
+            <span class="record-label">SUGGESTED JAIL TIME</span>
+            <span id="aiSuggestedJail" class="ai-rec-value">—</span>
+        </div>
+        <div class="ai-rec-row">
+            <span class="record-label">SUGGESTED FINE</span>
+            <span id="aiSuggestedFine" class="ai-rec-value">—</span>
+        </div>
+    </div>
 
-                <input
-                    type="text"
-                    placeholder="Fine Amount"
-                >
-
-                <textarea
-                    placeholder="Judge Notes"
-                ></textarea>
-
-            </div>
-
-            <div class="court-panel">
-
-                <h3>🤖 AI Sentencing Assistant</h3>
-
-                <div id="aiAssistantOutput">
-
-                    No AI analysis generated.
-
-                </div>
-
-                <button class="judge-btn">
-
-                    Analyze Case
-
-                </button>
-
-                <button class="judge-btn">
-
-                    Apply Recommendation
-
-                </button>
-
-            </div>
-
+    <button class="judge-btn" onclick="analyzeCase()">Analyze Case</button>
+    <button class="judge-btn" onclick="applyRecommendation()">Apply Recommendation</button>
+</div>
         </div>
 
     </div>

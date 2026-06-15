@@ -599,14 +599,10 @@ body{
 
     max-width:1800px;
 
-    margin:20px auto;
+    margin:0 auto;
 
-    padding:20px;
+    padding:15px 20px;
 }
-
-
-
-/* MAIN LAYOUT */
 
 .courtroom-layout{
 
@@ -625,8 +621,15 @@ body{
 
     flex-direction:column;
 
-    gap:20px;
+    gap:15px;
 }
+
+
+
+/* MAIN LAYOUT */
+
+
+
 
 /* PANELS */
 
@@ -656,7 +659,7 @@ body{
 
     border-radius:18px;
 
-    min-height:300px;
+    padding:25px 20px;
 
     display:flex;
 
@@ -667,6 +670,43 @@ body{
     align-items:center;
 
     text-align:center;
+
+    gap:10px;
+}
+
+.court-display-top{
+
+    display:flex;
+
+    flex-direction:column;
+
+    align-items:center;
+
+    gap:6px;
+}
+
+.court-case-id-row{
+
+    display:flex;
+
+    flex-direction:column;
+
+    align-items:center;
+
+    gap:4px;
+
+    margin-top:4px;
+}
+
+.court-case-id-value{
+
+    font-size:20px;
+
+    font-weight:700;
+
+    color:white;
+
+    letter-spacing:1px;
 }
 
 .pulse-circle{
@@ -815,7 +855,7 @@ body{
 
 #courtLog{
 
-    max-height:300px;
+    max-height:150px;
 
     overflow-y:auto;
 
@@ -976,4 +1016,168 @@ body{
     color:#94a3b8;
 
     opacity:.8;
+}
+/* ========================================= */
+/* COURT OPERATIONS RECORD */
+/* ========================================= */
+
+#courtRecordCard{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:10px;
+}
+
+.record-label{
+
+    font-size:12px;
+
+    letter-spacing:1px;
+
+    color:#94a3b8;
+
+    text-transform:uppercase;
+}
+
+.record-value{
+
+    font-size:22px;
+
+    font-weight:700;
+
+    color:white;
+}
+
+.status-badge{
+
+    width:fit-content;
+
+    padding:8px 14px;
+
+    border-radius:999px;
+
+    font-size:12px;
+
+    font-weight:700;
+
+    letter-spacing:.5px;
+}
+
+.status-badge.hearing{
+
+    background:#1e3a5f;
+
+    border:1px solid #3b82f6;
+
+    color:#dbeafe;
+}
+/* ================================================= */
+/* STATUS BADGE VARIANTS */
+/* ================================================= */
+
+.status-badge.recessed{
+    background:#422006;
+    border:1px solid #f97316;
+    color:#fed7aa;
+}
+
+.status-badge.adjourned{
+    background:#1e1b4b;
+    border:1px solid #818cf8;
+    color:#e0e7ff;
+}
+
+.status-badge.closed{
+    background:#1c1917;
+    border:1px solid #78716c;
+    color:#d6d3d1;
+}
+
+.log-time{
+    color:#94a3b8;
+    font-size:12px;
+}
+/* ================================================= */
+/* CASE FILE VIEW MODE */
+/* ================================================= */
+
+.view-field{
+    margin-bottom:14px;
+}
+
+.view-label{
+    font-size:11px;
+    letter-spacing:1px;
+    color:#94a3b8;
+    text-transform:uppercase;
+    margin-bottom:4px;
+}
+
+.view-value{
+    font-size:15px;
+    font-weight:500;
+    color:white;
+    background:#0f172a;
+    padding:10px 14px;
+    border-radius:10px;
+    border:1px solid #1f2937;
+    min-height:38px;
+    white-space:pre-wrap;
+}
+
+.case-file-actions{
+    display:flex;
+    gap:10px;
+    margin-top:14px;
+}
+
+.case-file-actions .judge-btn{
+    flex:1;
+}
+/* ================================================= */
+/* VERDICT RESULT */
+/* ================================================= */
+
+.verdict-result{
+    text-align:center;
+    font-size:22px;
+    font-weight:800;
+    letter-spacing:2px;
+    padding:16px;
+    border-radius:12px;
+    margin-bottom:16px;
+}
+
+.guilty-result{
+    background:#450a0a;
+    border:1px solid #dc2626;
+    color:#fca5a5;
+}
+
+.not-guilty-result{
+    background:#052e16;
+    border:1px solid #16a34a;
+    color:#86efac;
+}
+/* ================================================= */
+/* AI RECOMMENDATION */
+/* ================================================= */
+
+.ai-rec-row{
+    display:flex;
+    flex-direction:column;
+    gap:4px;
+    margin-bottom:12px;
+    background:#0f172a;
+    padding:10px 14px;
+    border-radius:10px;
+    border:1px solid #1f2937;
+}
+
+.ai-rec-value{
+    font-size:15px;
+    font-weight:700;
+    color:white;
 }
