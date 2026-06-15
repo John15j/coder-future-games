@@ -836,11 +836,11 @@ REASONING: [1-2 sentences explaining the recommendation]
 
     try {
 
-        const response = await fetch("https://api.anthropic.com/v1/messages", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
+        const response = await fetch("https://coder.andradejouee23.workers.dev", {
+    method: "POST",
+    headers: {
+        "Content-Type": "application/json"
+    },
             body: JSON.stringify({
                 model: "claude-sonnet-4-6",
                 max_tokens: 1000,
