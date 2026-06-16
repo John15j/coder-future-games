@@ -411,16 +411,54 @@ function setCourtStatus(statusKey){
 
     const s = STATUSES[statusKey];
 
-    const badge =
-        document.getElementById("courtStatusBadge");
+    const badge = document.getElementById("courtStatusBadge");
+    const panel = document.getElementById("courtDisplayPanel");
+    const pulse = document.getElementById("pulseCircle");
 
     if(!badge) return;
 
     badge.textContent = s.label;
-
     badge.className = "status-badge " + s.css;
 
+    panel.className = "court-display";
+    pulse.className = "pulse-circle";
+
+    if(statusKey === "ACTIVE"){
+        pulse.classList.add("pulse-active");
+    } else if(statusKey === "RECESSED"){
+        panel.classList.add("status-recessed");
+        pulse.classList.add("pulse-recessed");
+    } else if(statusKey === "ADJOURNED"){
+        panel.classList.add("status-adjourned");
+        pulse.classList.add("pulse-adjourned");
+    } else if(statusKey === "CLOSED"){
+        panel.classList.add("status-closed");
+        pulse.classList.add("pulse-closed");
+    }
+
+    document.querySelectorAll(".status-pill").forEach(p => {
+        p.classList.remove("selected");
+    });
+
+    const pillMap = {
+        ACTIVE: ".active-pill",
+        RECESSED: ".recess-pill",
+        ADJOURNED: ".adjourned-pill",
+        CLOSED: ".closed-pill"
+    };
+
+    const selectedPill = document.querySelector(pillMap[statusKey]);
+    if(selectedPill) selectedPill.classList.add("selected");
+
     addCourtLog("Status changed: " + s.label);
+
+    if(statusKey === "ADJOURNED"){
+        setTimeout(() => {
+            document.getElementById("courtroomPage").classList.add("hidden");
+            document.getElementById("dashboard").classList.remove("hidden");
+            currentStatus = "ACTIVE";
+        }, 2000);
+    }
 }
 
 /* ================================================= */
@@ -798,120 +836,497 @@ function setVerdict(verdict){
 }
 
 /* ================================================= */
-/* AI SENTENCING ASSISTANT */
+/* CHARGE MANAGER */
 /* ================================================= */
 
-async function analyzeCase(){
+let charges = [];
+let orders = [];
 
-    if(!selectedCase){
-        alert("No case loaded. Save the case first.");
+function addCharge(){
+
+    const input = document.getElementById("chargeInput");
+    const value = input.value.trim();
+
+    if(!value) return;
+
+    charges.push({
+        text: value,
+        status: "pending"
+    });
+
+    input.value = "";
+    renderCharges();
+    addCourtLog("Charge added: " + value);
+}
+
+function toggleCharge(index){
+
+    if(charges[index].status === "pending"){
+        charges[index].status = "proven";
+    } else if(charges[index].status === "proven"){
+        charges[index].status = "unproven";
+    } else {
+        charges[index].status = "pending";
+    }
+
+    renderCharges();
+    addCourtLog("Charge updated: " + charges[index].text + " — " + charges[index].status.toUpperCase());
+}
+
+function removeCharge(index){
+    const text = charges[index].text;
+    charges.splice(index, 1);
+    renderCharges();
+    addCourtLog("Charge removed: " + text);
+}
+
+function renderCharges(){
+
+    const list = document.getElementById("chargeList");
+
+    if(charges.length === 0){
+        list.innerHTML = "<div class='empty-state'>No charges added.</div>";
         return;
     }
 
-    const output =
-        document.getElementById("aiAssistantOutput");
+    list.innerHTML = "";
 
-    output.innerHTML =
-        "<span style='color:#94a3b8'>Analyzing case...</span>";
+    charges.forEach((c, i) => {
 
-    addCourtLog("AI analysis requested");
+        const div = document.createElement("div");
+        div.className = "charge-item status-" + c.status;
+      div.innerHTML = `
+            <span class="charge-text">${c.text}</span>
+            ${c.classification ? `<span class="charge-class">${c.classification}</span>` : ""}
+            <div class="charge-actions-row">
+                <span class="charge-status-badge ${c.status}">${c.status.toUpperCase()}</span>
+                <button onclick="toggleCharge(${i})">Toggle</button>
+                <button onclick="aiValidateCharge(${i})">🤖 Validate</button>
+                <button onclick="removeCharge(${i})">✕</button>
+            </div>
+            ${c.aiNote ? `<div class="charge-ai-note">${c.aiNote}</div>` : ""}
+        `;
 
-    const prompt = `
-You are a strict Roblox roleplay court judge assistant for the Greenville Roleplay Court System.
+        list.appendChild(div);
+    });
+}
 
-Analyze this case and provide a sentencing recommendation.
+/* ================================================= */
+/* COURT ORDER MANAGER */
+/* ================================================= */
 
-CASE TITLE: ${selectedCase.title}
-DEFENDANT: ${selectedCase.defendant}
-USERNAME: ${selectedCase.username}
-CHARGES: ${selectedCase.charges}
-WITNESSES: ${selectedCase.witnesses}
+function addOrder(){
 
-Respond in this exact format and nothing else:
-VERDICT: [GUILTY or NOT GUILTY]
-JAIL TIME: [amount in minutes, or NONE]
-FINE: [dollar amount, or NONE]
-REASONING: [1-2 sentences explaining the recommendation]
-    `.trim();
+    const input = document.getElementById("orderInput");
+    const value = input.value.trim();
+
+    if(!value) return;
+
+    orders.push({
+        text: value,
+        time: new Date().toLocaleTimeString()
+    });
+
+    input.value = "";
+    renderOrders();
+    addCourtLog("Court order issued: " + value);
+}
+
+function removeOrder(index){
+    const text = orders[index].text;
+    orders.splice(index, 1);
+    renderOrders();
+    addCourtLog("Court order removed: " + text);
+}
+
+function renderOrders(){
+
+    const list = document.getElementById("orderList");
+
+    if(orders.length === 0){
+        list.innerHTML = "<div class='empty-state'>No orders issued.</div>";
+        return;
+    }
+
+    list.innerHTML = "";
+
+    orders.forEach((o, i) => {
+
+        const div = document.createElement("div");
+        div.className = "order-item";
+        div.innerHTML = `
+            <div class="order-text">${o.text}</div>
+            <div class="order-meta">
+                <span class="log-time">${o.time}</span>
+                <button onclick="removeOrder(${i})">✕</button>
+            </div>
+        `;
+
+        list.appendChild(div);
+    });
+}
+
+/* ================================================= */
+/* AI ASSISTANT POPUP */
+/* ================================================= */
+
+let aiMinimized = false;
+
+function openAIWindow(){
+
+    document.getElementById("aiPopup")
+        .classList.remove("hidden");
+
+    aiMinimized = false;
+
+    document.getElementById("aiPopupBody")
+        .style.display = "flex";
+}
+
+function closeAIWindow(){
+
+    document.getElementById("aiPopup")
+        .classList.add("hidden");
+}
+
+function minimizeAI(){
+
+    aiMinimized = !aiMinimized;
+
+    const body = document.getElementById("aiPopupBody");
+    const btn = document.getElementById("minimizeBtn");
+
+    if(aiMinimized){
+        body.style.display = "none";
+        btn.textContent = "▢";
+    } else {
+        body.style.display = "flex";
+        btn.textContent = "—";
+    }
+}
+
+/* DRAG */
+
+const popup = document.getElementById("aiPopup");
+const header = document.getElementById("aiPopupHeader");
+
+let isDragging = false;
+let dragOffsetX = 0;
+let dragOffsetY = 0;
+
+header.addEventListener("mousedown", e => {
+    isDragging = true;
+    dragOffsetX = e.clientX - popup.offsetLeft;
+    dragOffsetY = e.clientY - popup.offsetTop;
+});
+
+document.addEventListener("mousemove", e => {
+    if(!isDragging) return;
+    popup.style.left = (e.clientX - dragOffsetX) + "px";
+    popup.style.top  = (e.clientY - dragOffsetY) + "px";
+    popup.style.right = "auto";
+    popup.style.bottom = "auto";
+});
+
+document.addEventListener("mouseup", () => {
+    isDragging = false;
+});
+
+/* CHAT */
+
+let aiChatHistory = [];
+
+async function sendAIMessage(){
+
+    const input = document.getElementById("aiChatInput");
+    const message = input.value.trim();
+
+    if(!message) return;
+
+    input.value = "";
+
+    appendAIMessage("You", message, "user");
+
+    aiChatHistory.push({
+        role: "user",
+        content: message
+    });
+
+    appendAIMessage("AI", "Thinking...", "ai thinking");
+
+    const caseContext = selectedCase ? `
+Current case context:
+- Case Title: ${selectedCase.title}
+- Defendant: ${selectedCase.defendant}
+- Username: ${selectedCase.username}
+- Charges: ${selectedCase.charges}
+- Witnesses: ${selectedCase.witnesses}
+- Verdict: ${selectedCase.verdict}
+    `.trim() : "No case currently loaded.";
 
     try {
 
-        const response = await fetch("https://coder.andradejouee23.workers.dev", {
-    method: "POST",
-    headers: {
-        "Content-Type": "application/json"
-    },
-            body: JSON.stringify({
+        const response = await fetch("https://muddy-cherry-4b6f.andradejouee23.workers.dev", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+           body: JSON.stringify({
                 model: "claude-sonnet-4-6",
                 max_tokens: 1000,
                 messages: [
-                    { role: "user", content: prompt }
+                    {
+                        role: "system",
+                        content: `You are a court AI assistant for the Greenville Roleplay Court System (GRCS), a Roblox roleplay game based in Greenville, Wisconsin.
+
+You assist judges during live court hearings. Follow these rules:
+- Use real Wisconsin state law as the basis for all legal guidance and sentencing
+- Keep all responses short and simple — 2 to 4 sentences max
+- Never explain what you are or mention Roblox
+- Address the judge formally as "Your Honor" when appropriate
+- When asked for sentencing, base it on Wisconsin statutes but convert jail time to minutes for roleplay (example: 1 year = 60 minutes)
+- If no case is loaded just give general Wisconsin court guidance
+
+${caseContext}`
+                    },
+                    ...aiChatHistory
                 ]
             })
         });
 
         const data = await response.json();
 
-        const text = data.content[0].text;
+        if(data.error){
+            removeThinking();
+            appendAIMessage("AI", "API Error: " + JSON.stringify(data.error), "ai error");
+            return;
+        }
 
-        const lines = {};
+        if(!data.choices || !data.choices[0]){
+            removeThinking();
+            appendAIMessage("AI", "API Error: " + JSON.stringify(data), "ai error");
+            return;
+        }
 
-        text.split("\n").forEach(line => {
-            const parts = line.split(": ");
-            if(parts.length >= 2){
-                lines[parts[0].trim()] = parts.slice(1).join(": ").trim();
-            }
+        const reply = data.choices[0].message.content;
+
+        removeThinking();
+        appendAIMessage("AI", reply, "ai");
+
+        aiChatHistory.push({
+            role: "assistant",
+            content: reply
         });
 
-        document.getElementById("aiSuggestedVerdict").textContent =
-            lines["VERDICT"] || "—";
+   } catch(err) {
 
-        document.getElementById("aiSuggestedJail").textContent =
-            lines["JAIL TIME"] || "—";
-
-        document.getElementById("aiSuggestedFine").textContent =
-            lines["FINE"] || "—";
-
-        output.innerHTML =
-            "<span style='color:#94a3b8;font-size:13px'>" +
-            (lines["REASONING"] || "Analysis complete.") +
-            "</span>";
-
-        document.getElementById("aiRecommendation")
-            .classList.remove("hidden");
-
-        addCourtLog("AI analysis complete");
-
-    } catch(err) {
-
-        output.innerHTML =
-            "<span style='color:#f87171'>AI analysis failed. Check connection.</span>";
-
-        addCourtLog("AI analysis failed");
+        removeThinking();
+        appendAIMessage("AI", "Error: " + err.message, "ai error");
     }
 }
 
-function applyRecommendation(){
+function appendAIMessage(sender, text, type){
 
-    const verdict =
-        document.getElementById("aiSuggestedVerdict").textContent;
+    const log = document.getElementById("aiChatLog");
+    const div = document.createElement("div");
+    div.className = "ai-message " + type;
 
-    const jail =
-        document.getElementById("aiSuggestedJail").textContent;
+    div.innerHTML = `
+        <span class="ai-sender">${sender}</span>
+        <span class="ai-text">${text}</span>
+    `;
 
-    const fine =
-        document.getElementById("aiSuggestedFine").textContent;
+    log.appendChild(div);
+    log.scrollTop = log.scrollHeight;
+}
 
-    if(verdict === "—"){
-        alert("Run Analyze Case first.");
+function removeThinking(){
+
+    const thinking = document.querySelector(".ai-message.thinking");
+    if(thinking) thinking.remove();
+}
+/* ================================================= */
+/* AI CHARGE SUGGESTIONS */
+/* ================================================= */
+
+async function aiSuggestCharges(){
+
+    if(!selectedCase && charges.length === 0){
+        alert("Please fill in the case details or add some information first.");
         return;
     }
 
-    document.getElementById("verdictJailTime").value =
-        jail === "NONE" ? "" : jail;
+    const btn = document.querySelector(".ai-suggest-btn");
 
-    document.getElementById("verdictFine").value =
-        fine === "NONE" ? "" : fine;
+    const caseInfo = selectedCase ? `
+Case Title: ${selectedCase.title}
+Defendant: ${selectedCase.defendant}
+Known info: ${selectedCase.charges}
+Witnesses: ${selectedCase.witnesses}
+    ` : `Current charges entered: ${charges.map(c => c.text).join(", ")}`;
 
-    addCourtLog("AI recommendation applied to verdict fields");
+    addCourtLog("AI charge suggestion requested");
+
+    try {
+
+        const response = await fetch("https://muddy-cherry-4b6f.andradejouee23.workers.dev", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                model: "llama-3.3-70b-versatile",
+                messages: [
+                    {
+                        role: "system",
+                        content: `You are a Wisconsin court charge advisor for the Greenville Roleplay Court System.
+Based on the case info, suggest 2-4 appropriate Wisconsin criminal charges.
+Respond ONLY with a JSON array like this and nothing else:
+[{"charge":"Charge name","classification":"Felony/Misdemeanor/Citation","statute":"Wis. Stat. § XXX"}]`
+                    },
+                    {
+                        role: "user",
+                        content: caseInfo
+                    }
+                ],
+                max_tokens: 500
+            })
+        });
+
+        const data = await response.json();
+        const text = data.choices[0].message.content;
+
+        const clean = text.replace(/```json|```/g, "").trim();
+        const suggestions = JSON.parse(clean);
+
+        suggestions.forEach(s => {
+            charges.push({
+                text: s.charge,
+                status: "pending",
+                classification: s.classification + " — " + s.statute,
+                aiNote: null
+            });
+        });
+
+        renderCharges();
+        addCourtLog("AI suggested " + suggestions.length + " charges");
+
+    } catch(err) {
+        alert("AI suggestion failed. Try again.");
+        addCourtLog("AI charge suggestion failed");
+    }
+}
+
+/* ================================================= */
+/* AI VALIDATE CHARGE */
+/* ================================================= */
+
+async function aiValidateCharge(index){
+
+    const charge = charges[index];
+
+    if(!charge) return;
+
+    addCourtLog("AI validating charge: " + charge.text);
+
+    try {
+
+        const response = await fetch("https://muddy-cherry-4b6f.andradejouee23.workers.dev", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                model: "llama-3.3-70b-versatile",
+                messages: [
+                    {
+                        role: "system",
+                        content: `You are a Wisconsin criminal law expert for the Greenville Roleplay Court System.
+Validate the given charge under Wisconsin law.
+Respond ONLY with a JSON object like this and nothing else:
+{"valid":true,"classification":"Felony/Misdemeanor/Citation","statute":"Wis. Stat. § XXX","note":"One sentence explanation"}`
+                    },
+                    {
+                        role: "user",
+                        content: "Validate this charge: " + charge.text
+                    }
+                ],
+                max_tokens: 200
+            })
+        });
+
+        const data = await response.json();
+        const text = data.choices[0].message.content;
+
+        const clean = text.replace(/```json|```/g, "").trim();
+        const result = JSON.parse(clean);
+
+        charges[index].classification = result.classification + " — " + result.statute;
+        charges[index].aiNote = result.note;
+
+        renderCharges();
+        addCourtLog("Charge validated: " + charge.text + " — " + result.classification);
+
+    } catch(err) {
+        addCourtLog("AI validation failed for: " + charge.text);
+    }
+}
+
+/* ================================================= */
+/* AI GENERATE COURT ORDER */
+/* ================================================= */
+
+async function aiGenerateOrder(){
+
+    if(!selectedCase){
+        alert("No case loaded. Save the case first.");
+        return;
+    }
+
+    addCourtLog("AI court order generation requested");
+
+    const chargeList = charges.map(c => c.text).join(", ") || selectedCase.charges;
+    const verdict = selectedCase.verdict || "Pending";
+    const jailTime = selectedCase.jailTime || "N/A";
+    const fine = selectedCase.fineAmount || "N/A";
+
+    try {
+
+        const response = await fetch("https://muddy-cherry-4b6f.andradejouee23.workers.dev", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                model: "llama-3.3-70b-versatile",
+                messages: [
+                    {
+                        role: "system",
+                        content: `You are a Wisconsin court clerk for the Greenville Roleplay Court System.
+Generate a formal court order based on the case details.
+Keep it under 3 sentences. Be formal and professional.
+Start with "BY ORDER OF THE COURT:"`
+                    },
+                    {
+                        role: "user",
+                        content: `
+Defendant: ${selectedCase.defendant}
+Charges: ${chargeList}
+Verdict: ${verdict}
+Jail Time: ${jailTime}
+Fine: ${fine}
+                        `
+                    }
+                ],
+                max_tokens: 300
+            })
+        });
+
+        const data = await response.json();
+        const order = data.choices[0].message.content;
+
+        orders.push({
+            text: order,
+            time: new Date().toLocaleTimeString()
+        });
+
+        renderOrders();
+        addCourtLog("AI court order generated and issued");
+
+    } catch(err) {
+        alert("AI order generation failed. Try again.");
+        addCourtLog("AI order generation failed");
+    }
 }

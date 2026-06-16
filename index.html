@@ -395,23 +395,28 @@
         <!-- CENTER COLUMN -->
         <div class="court-column center-column">
 
-            <div class="court-display">
+           <div class="court-display" id="courtDisplayPanel">
 
-                <div class="court-display-top">
-                    <div class="record-label">STATUS</div>
-                    <div id="courtStatusBadge" class="status-badge hearing">ACTIVE HEARING</div>
-                </div>
+    <div class="court-display-top">
+        <div class="record-label">STATUS</div>
+        <div id="courtStatusBadge" class="status-badge hearing">ACTIVE HEARING</div>
+    </div>
 
-                <div class="pulse-circle"></div>
+    <div class="pulse-circle" id="pulseCircle"></div>
 
-               
+    <div class="court-case-id-row">
+        <span class="record-label">CASE ID</span>
+        <span id="recordCaseId" class="court-case-id-value">NO CASE</span>
+    </div>
 
-                <div class="court-case-id-row">
-                    <span class="record-label">CASE ID</span>
-                    <span id="recordCaseId" class="court-case-id-value">NO CASE</span>
-                </div>
+    <div class="status-control-bar">
+        <button class="status-pill active-pill" onclick="setCourtStatus('ACTIVE')">● Active</button>
+        <button class="status-pill recess-pill" onclick="setCourtStatus('RECESSED')">⏸ Recess</button>
+        <button class="status-pill adjourned-pill" onclick="setCourtStatus('ADJOURNED')">🔔 Adjourn</button>
+        <button class="status-pill closed-pill" onclick="setCourtStatus('CLOSED')">🔒 Close</button>
+    </div>
 
-            </div>
+</div>
 
             <div class="court-panel">
                 <h3>⚖ Judge Command Console</h3>
@@ -420,10 +425,11 @@
     <button class="judge-btn" onclick="callWitness()">Call Witness</button>
     <button class="judge-btn" onclick="uploadEvidence()">Upload Evidence</button>
     <button class="judge-btn" onclick="openArguments()">Open Arguments</button>
-    <button class="judge-btn" onclick="aiSummary()">AI Summary</button>
+    
     <button class="judge-btn" onclick="generateTranscript()">Generate Transcript</button>
-    <button class="judge-btn" onclick="recessCourt()">Recess Court</button>
+    
     <button class="judge-btn danger" onclick="endCourt()">End Court</button>
+<button class="judge-btn ai-btn" onclick="openAIWindow()">🤖 AI Assistant</button>
 </div>
             </div>
 
@@ -447,36 +453,80 @@
     <textarea id="verdictNotes" placeholder="Judge Notes"></textarea>
 </div>
 
-           <div class="court-panel">
-    <h3>🤖 AI Sentencing Assistant</h3>
+         <div class="court-panel" id="chargeOrderPanel">
 
-    <div id="aiAssistantOutput">
-        No AI analysis generated.
-    </div>
+    <h3>⚖ Charges & Court Orders</h3>
 
-    <div id="aiRecommendation" class="hidden">
-        <div class="ai-rec-row">
-            <span class="record-label">SUGGESTED VERDICT</span>
-            <span id="aiSuggestedVerdict" class="ai-rec-value">—</span>
-        </div>
-        <div class="ai-rec-row">
-            <span class="record-label">SUGGESTED JAIL TIME</span>
-            <span id="aiSuggestedJail" class="ai-rec-value">—</span>
-        </div>
-        <div class="ai-rec-row">
-            <span class="record-label">SUGGESTED FINE</span>
-            <span id="aiSuggestedFine" class="ai-rec-value">—</span>
-        </div>
-    </div>
+    <!-- CHARGE MANAGER -->
+    <div class="sub-section-label">CHARGES</div>
 
-    <button class="judge-btn" onclick="analyzeCase()">Analyze Case</button>
-    <button class="judge-btn" onclick="applyRecommendation()">Apply Recommendation</button>
+<div class="charge-input-row">
+    <input id="chargeInput" placeholder="Enter charge..." />
+    <button class="judge-btn" onclick="addCharge()">Add</button>
+</div>
+
+<button class="judge-btn ai-suggest-btn" onclick="aiSuggestCharges()">
+    🤖 AI Suggest Charges
+</button>
+
+<div id="chargeList" class="charge-list">
+    <div class="empty-state">No charges added.</div>
+</div>
+
+    <hr class="panel-divider">
+
+    <!-- COURT ORDER -->
+   <div class="sub-section-label">COURT ORDERS</div>
+
+<div class="charge-input-row">
+    <input id="orderInput" placeholder="Enter court order..." />
+    <button class="judge-btn" onclick="addOrder()">Issue</button>
+</div>
+
+<button class="judge-btn ai-suggest-btn" onclick="aiGenerateOrder()">
+    🤖 AI Generate Order
+</button>
+
+<div id="orderList" class="charge-list">
+    <div class="empty-state">No orders issued.</div>
 </div>
         </div>
 
     </div>
 
 </section>
+<!-- AI ASSISTANT POPUP -->
+<div id="aiPopup" class="ai-popup hidden">
+
+    <div class="ai-popup-header" id="aiPopupHeader">
+
+        <div class="ai-popup-title">
+            🤖 Court AI Assistant
+        </div>
+
+        <div class="ai-popup-controls">
+            <button onclick="minimizeAI()" id="minimizeBtn">—</button>
+            <button onclick="closeAIWindow()">✕</button>
+        </div>
+
+    </div>
+
+   <div id="aiPopupBody" class="ai-popup-body">
+
+    <div id="aiChatLog" class="ai-chat-log"></div>
+
+    <div class="ai-input-row">
+        <input
+            id="aiChatInput"
+            placeholder="Ask the AI assistant..."
+            onkeydown="if(event.key==='Enter') sendAIMessage()"
+        />
+        <button class="judge-btn" onclick="sendAIMessage()">Send</button>
+    </div>
+
+</div>
+
+</div>
 <!-- ================================================= -->
 <!-- FOOTER -->
 <!-- ================================================= -->
