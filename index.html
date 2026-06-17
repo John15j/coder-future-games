@@ -568,7 +568,43 @@
 
             <div class="completion-panel">
                 <div class="completion-label">FINE</div>
-                <div id="compFine"
+                <div id="compFine" class="completion-value">—</div>
+            </div>
+
+        </div>
+
+        <div class="completion-section">
+            <div class="completion-label">CHARGES</div>
+            <div id="compCharges" class="completion-text">—</div>
+        </div>
+
+        <div class="completion-section">
+            <div class="completion-label">COURT ORDERS ISSUED</div>
+            <div id="compOrders" class="completion-text">—</div>
+        </div>
+
+        <div class="completion-section">
+            <div class="completion-label">JUDGE NOTES</div>
+            <div id="compNotes" class="completion-text">—</div>
+        </div>
+
+        <div class="completion-section">
+            <div class="completion-label">COURT LOG</div>
+            <div id="compLog" class="completion-log"></div>
+        </div>
+
+        <div class="completion-actions">
+            <button class="completion-btn" onclick="downloadPDF()">
+                📄 Download PDF Report
+            </button>
+            <button class="completion-btn secondary" onclick="returnToDashboard()">
+                ← Return to Dashboard
+            </button>
+        </div>
+
+    </div>
+
+</div>
 <!-- ================================================= -->
 <!-- FOOTER -->
 <!-- ================================================= -->
