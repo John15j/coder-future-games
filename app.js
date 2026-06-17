@@ -452,13 +452,7 @@ function setCourtStatus(statusKey){
 
     addCourtLog("Status changed: " + s.label);
 
-    if(statusKey === "ADJOURNED"){
-        setTimeout(() => {
-            document.getElementById("courtroomPage").classList.add("hidden");
-            document.getElementById("dashboard").classList.remove("hidden");
-            currentStatus = "ACTIVE";
-        }, 2000);
-    }
+    
 }
 
 /* ================================================= */
@@ -522,23 +516,256 @@ function recessCourt(){
 function endCourt(){
 
     const confirmEnd =
-        confirm("Are you sure you want to end court? This will close the session.");
+        confirm("Are you sure you want to end court? This will open the session summary.");
 
     if(!confirmEnd) return;
 
     setCourtStatus("ADJOURNED");
 
     setTimeout(() => {
+        showCourtCompletion();
+    }, 1000);
+}
 
-        document.getElementById("courtroomPage")
-            .classList.add("hidden");
+function showCourtCompletion(){
 
-        document.getElementById("dashboard")
-            .classList.remove("hidden");
+    document.getElementById("courtroomPage")
+        .classList.add("hidden");
 
-        currentStatus = "ACTIVE";
+    document.getElementById("courtCompletion")
+        .classList.remove("hidden");
 
-    }, 2000);
+    const c = selectedCase;
+
+    document.getElementById("compCaseId").textContent =
+        c ? c.id : temporaryCaseId || "—";
+
+    document.getElementById("compVerdict").textContent =
+        c ? (c.verdict || "No Verdict") : "No Verdict";
+
+    document.getElementById("compDefendant").textContent =
+        c ? (c.defendant || "—") : "—";
+
+    document.getElementById("compUsername").textContent =
+        c ? (c.username || "—") : "—";
+
+    document.getElementById("compJailTime").textContent =
+        c ? (c.jailTime || "None") : "None";
+
+    document.getElementById("compFine").textContent =
+        c ? (c.fineAmount || "None") : "None";
+
+    document.getElementById("compNotes").textContent =
+        c ? (c.judgeNotes || "No notes recorded.") : "No notes recorded.";
+
+    const chargeText = charges.length > 0
+        ? charges.map(ch => "• " + ch.text + (ch.classification ? " (" + ch.classification + ")" : "")).join("\n")
+        : (c ? c.charges : "No charges recorded.");
+
+    document.getElementById("compCharges").textContent = chargeText;
+
+    const orderText = orders.length > 0
+        ? orders.map(o => "• " + o.text).join("\n")
+        : "No court orders issued.";
+
+    document.getElementById("compOrders").textContent = orderText;
+
+    const logEl = document.getElementById("compLog");
+    logEl.innerHTML = "";
+
+    const logItems = document.querySelectorAll("#courtLog .feed-item");
+
+    if(logItems.length === 0){
+        logEl.innerHTML = "<div class='empty-state'>No log entries.</div>";
+    } else {
+        logItems.forEach(item => {
+            const div = document.createElement("div");
+            div.className = "comp-log-entry";
+            div.textContent = item.textContent;
+            logEl.appendChild(div);
+        });
+    }
+
+    const verdictEl = document.getElementById("compVerdict");
+    if(c && c.verdict === "GUILTY"){
+        verdictEl.style.color = "#fca5a5";
+    } else if(c && c.verdict === "NOT GUILTY"){
+        verdictEl.style.color = "#86efac";
+    }
+}
+
+function returnToDashboard(){
+
+    document.getElementById("courtCompletion")
+        .classList.add("hidden");
+
+    document.getElementById("dashboard")
+        .classList.remove("hidden");
+
+    currentStatus = "ACTIVE";
+    charges = [];
+    orders = [];
+    selectedCase = null;
+    temporaryCaseId = null;
+
+    document.getElementById("courtLog").innerHTML = "";
+    document.getElementById("chargeList").innerHTML = "<div class='empty-state'>No charges added.</div>";
+    document.getElementById("orderList").innerHTML = "<div class='empty-state'>No orders issued.</div>";
+}
+
+function downloadPDF(){
+
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+
+    const c = selectedCase;
+    const pageWidth = doc.internal.pageSize.getWidth();
+    let y = 20;
+
+    function addLine(text, size, bold, color){
+        doc.setFontSize(size || 12);
+        doc.setFont("helvetica", bold ? "bold" : "normal");
+        if(color){
+            doc.setTextColor(color[0], color[1], color[2]);
+        } else {
+            doc.setTextColor(0, 0, 0);
+        }
+        const lines = doc.splitTextToSize(text, pageWidth - 40);
+        doc.text(lines, 20, y);
+        y += (lines.length * (size || 12) * 0.4) + 4;
+        if(y > 270){
+            doc.addPage();
+            y = 20;
+        }
+    }
+
+    function addDivider(){
+        doc.setDrawColor(200, 200, 200);
+        doc.line(20, y, pageWidth - 20, y);
+        y += 6;
+    }
+
+    function addLabel(text){
+        doc.setFontSize(9);
+        doc.setFont("helvetica", "bold");
+        doc.setTextColor(100, 100, 100);
+        doc.text(text.toUpperCase(), 20, y);
+        y += 5;
+    }
+
+    /* HEADER */
+    doc.setFillColor(17, 24, 39);
+    doc.rect(0, 0, pageWidth, 40, "F");
+
+    doc.setFontSize(18);
+    doc.setFont("helvetica", "bold");
+    doc.setTextColor(255, 255, 255);
+    doc.text("GREENVILLE ROLEPLAY COURT SYSTEM", pageWidth / 2, 18, { align: "center" });
+
+    doc.setFontSize(11);
+    doc.setFont("helvetica", "normal");
+    doc.setTextColor(148, 163, 184);
+    doc.text("Official Court Record — Confidential", pageWidth / 2, 28, { align: "center" });
+
+    doc.setFontSize(9);
+    doc.text("Generated: " + new Date().toLocaleString(), pageWidth / 2, 36, { align: "center" });
+
+    y = 52;
+
+    /* CASE INFO */
+    addLabel("Case Information");
+    addDivider();
+
+    addLabel("Case ID");
+    addLine(c ? c.id : temporaryCaseId || "—", 13, true);
+
+    addLabel("Case Title");
+    addLine(c ? (c.title || "—") : "—", 12);
+
+    addLabel("Defendant");
+    addLine(c ? (c.defendant || "—") : "—", 12);
+
+    addLabel("Username");
+    addLine(c ? (c.username || "—") : "—", 12);
+
+    y += 4;
+
+    /* VERDICT */
+    addLabel("Verdict");
+    addDivider();
+
+    const verdict = c ? (c.verdict || "No Verdict") : "No Verdict";
+    const verdictColor = verdict === "GUILTY" ? [220, 38, 38] : verdict === "NOT GUILTY" ? [22, 163, 74] : [0,0,0];
+    addLine(verdict, 16, true, verdictColor);
+
+    addLabel("Jail Time");
+    addLine(c ? (c.jailTime || "None") : "None", 12);
+
+    addLabel("Fine Amount");
+    addLine(c ? (c.fineAmount || "None") : "None", 12);
+
+    addLabel("Judge Notes");
+    addLine(c ? (c.judgeNotes || "None") : "None", 12);
+
+    y += 4;
+
+    /* CHARGES */
+    addLabel("Charges");
+    addDivider();
+
+    if(charges.length > 0){
+        charges.forEach(ch => {
+            addLine("• " + ch.text + (ch.classification ? " — " + ch.classification : ""), 11);
+        });
+    } else {
+        addLine(c ? (c.charges || "No charges recorded.") : "No charges recorded.", 11);
+    }
+
+    y += 4;
+
+    /* COURT ORDERS */
+    addLabel("Court Orders Issued");
+    addDivider();
+
+    if(orders.length > 0){
+        orders.forEach(o => {
+            addLine("• " + o.text + " (" + o.time + ")", 11);
+        });
+    } else {
+        addLine("No court orders issued.", 11);
+    }
+
+    y += 4;
+
+    /* COURT LOG */
+    addLabel("Court Session Log");
+    addDivider();
+
+    const logItems = document.querySelectorAll("#courtLog .feed-item");
+
+    if(logItems.length > 0){
+        logItems.forEach(item => {
+            addLine(item.textContent.trim(), 10);
+        });
+    } else {
+        addLine("No log entries.", 10);
+    }
+
+    y += 8;
+
+    /* FOOTER */
+    addDivider();
+    doc.setFontSize(9);
+    doc.setFont("helvetica", "normal");
+    doc.setTextColor(100, 100, 100);
+    doc.text("This document is an official record of the Greenville Roleplay Court System.", pageWidth / 2, y, { align: "center" });
+    y += 5;
+    doc.text("Presiding Judge: Judge Andrade — Court Operations Center", pageWidth / 2, y, { align: "center" });
+
+    const filename = "GRCS-" + (c ? c.id : "session") + "-report.pdf";
+    doc.save(filename);
+
+    addCourtLog("PDF report downloaded");
 }
 function saveCourtCase(){
 

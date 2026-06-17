@@ -1558,3 +1558,144 @@ body{
     box-shadow:0 0 20px rgba(120,113,108,.4);
     animation:none;
 }
+/* ================================================= */
+/* COURT COMPLETION SCREEN */
+/* ================================================= */
+
+#courtCompletion{
+    min-height:100vh;
+    background:#0b1220;
+    padding:40px 20px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+}
+
+#courtCompletion.hidden{
+    display:none;
+}
+
+.completion-container{
+    max-width:900px;
+    width:100%;
+}
+
+.completion-header{
+    text-align:center;
+    margin-bottom:40px;
+    padding-bottom:30px;
+    border-bottom:1px solid #1f2937;
+}
+
+.completion-seal{
+    font-size:60px;
+    margin-bottom:16px;
+}
+
+.completion-header h1{
+    font-size:36px;
+    font-weight:800;
+    margin-bottom:8px;
+}
+
+.completion-header p{
+    color:#94a3b8;
+    font-size:14px;
+    letter-spacing:2px;
+    text-transform:uppercase;
+}
+
+.completion-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr 1fr;
+    gap:16px;
+    margin-bottom:24px;
+}
+
+.completion-panel{
+    background:#111827;
+    border:1px solid #1f2937;
+    border-radius:14px;
+    padding:16px 20px;
+}
+
+.completion-label{
+    font-size:11px;
+    letter-spacing:1px;
+    color:#94a3b8;
+    text-transform:uppercase;
+    margin-bottom:6px;
+}
+
+.completion-value{
+    font-size:20px;
+    font-weight:700;
+    color:white;
+}
+
+.completion-section{
+    background:#111827;
+    border:1px solid #1f2937;
+    border-radius:14px;
+    padding:16px 20px;
+    margin-bottom:16px;
+}
+
+.completion-text{
+    color:white;
+    font-size:14px;
+    line-height:1.8;
+    white-space:pre-wrap;
+    margin-top:6px;
+}
+
+.completion-log{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    margin-top:8px;
+    max-height:200px;
+    overflow-y:auto;
+}
+
+.comp-log-entry{
+    background:#0f172a;
+    border:1px solid #1f2937;
+    border-radius:8px;
+    padding:8px 12px;
+    font-size:13px;
+    color:#94a3b8;
+}
+
+.completion-actions{
+    display:flex;
+    gap:16px;
+    margin-top:30px;
+    justify-content:center;
+}
+
+.completion-btn{
+    padding:14px 30px;
+    border-radius:12px;
+    font-size:15px;
+    font-weight:700;
+    cursor:pointer;
+    border:none;
+    background:#2563eb;
+    color:white;
+    transition:.2s;
+}
+
+.completion-btn:hover{
+    background:#1d4ed8;
+    transform:translateY(-2px);
+}
+
+.completion-btn.secondary{
+    background:#1f2937;
+    border:1px solid #334155;
+}
+
+.completion-btn.secondary:hover{
+    background:#334155;
+}
